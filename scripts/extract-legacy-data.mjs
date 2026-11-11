@@ -1,190 +1,253 @@
 // scripts/extract-legacy-data.mjs
-// Phase 0b (docs/MIGRATION-PLAN.md §5A step 1): read-only extraction of the data
-// that must move off theme settings onto products/categories.
+// Phase 0b of docs/MIGRATION-PLAN.md (section 5A): read-only extraction of the
+// content the old Twig theme keeps in theme settings, so it can be moved onto
+// products and categories.
 //
-// READ-ONLY. It issues only HTTP GETs to the PUBLIC storefront (sitemaps) and,
-// optionally, the public Store API. It never writes to the store, never touches
-// the Partners Portal, never authenticates with merchant credentials.
+// READ-ONLY: plain HTTP GETs of public storefront pages. Nothing is written to
+// the store.
 //
-// IMPORTANT — what this script CAN and CANNOT produce (verified in Phase 0):
-//   The per-product/-category CONTENT (facts, FAQ, feature badges, in-product
-//   cards, suggested games, category banners, menu/footer links) is NOT in the
-//   live pages' server HTML and NOT in docs/legacy/old-twilight.json (that file
-//   is the theme MANIFEST/schema: every content collection has value:[]). The
-//   old Twig theme renders this content CLIENT-SIDE from the merchant's SAVED
-//   theme settings, which are served only through token-gated calls the
-//   storefront JS makes. A plain read-only HTTP crawl therefore cannot auto-fill
-//   the content columns.
+// How it works: the old theme renders this content on the server, so it is in
+// each page's HTML. The selectors below come from the old theme's
+// pages/product/single.twig and pages/product/index.twig and were checked
+// against the live product page p1571449334 on 11 Nov 2026.
 //
-//   So this script builds the SPINE of the spreadsheet — every live product and
-//   category (id, slug, ar/en URL) with one empty, correctly-named column per
-//   piece of 5A content — ready to be filled from ONE of:
-//     (a) the owner exporting saved theme settings from the Salla dashboard, or
-//     (b) an authorized JS-rendering pass that scrapes each product's rendered DOM.
-//   Column ids below mirror the exact subfield ids in docs/legacy/old-twilight.json.
+// Input : docs/legacy/data/urls.json  ({products:[{id,ar,en}], categories:[...]})
+// Output: docs/legacy/data/products.json     full data, both languages
+//         docs/legacy/data/products.csv      one row per product (opens in Excel)
+//         docs/legacy/data/faq.csv           one row per product question
+//         docs/legacy/data/store-wide.json   FAQ shown on every product + universal features
+//         docs/legacy/data/categories.csv    banner / hero text per category
 //
-// OPTIONAL native enrichment (off by default): if you pass a public store token
-// the storefront itself uses, the script will add NATIVE product data
-// (name, price, has_metadata, tags) from api.salla.dev. This is NOT the 5A
-// content above — it only helps the owner see which products already have native
-// specs/tags. Enable with:  STORE_TOKEN=<token> node scripts/extract-legacy-data.mjs --enrich
-//
-// Usage:
-//   node scripts/extract-legacy-data.mjs                 # spine only (default)
-//   node scripts/extract-legacy-data.mjs --out docs/legacy/data
-//   STORE_TOKEN=... node scripts/extract-legacy-data.mjs --enrich
-//
-// Output: <out>/products.csv and <out>/categories.csv (default out: docs/legacy/data)
+// Usage (from the repo root):  node scripts/extract-legacy-data.mjs
+//        optional:             node scripts/extract-legacy-data.mjs --limit 3
 
-import { writeFile, mkdir } from 'node:fs/promises';
-import { dirname, join } from 'node:path';
+import { readFile, writeFile } from 'node:fs/promises';
+import { JSDOM } from 'jsdom';
 
-const STORE = 'https://theplayroom.sa';
-const SITEMAP = `${STORE}/sitemap.xml`;
-const UA = 'theplayroom-migration-audit (read-only sitemap crawl)';
-const args = process.argv.slice(2);
-const OUT = argVal('--out') ?? 'docs/legacy/data';
-const ENRICH = args.includes('--enrich');
-const STORE_TOKEN = process.env.STORE_TOKEN || '';
-const THROTTLE_MS = 1100; // be polite
-
-function argVal(flag) {
-  const i = args.indexOf(flag);
-  return i >= 0 ? args[i + 1] : undefined;
-}
+const DIR = 'docs/legacy/data';
+const UA =
+  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';
+const limitArg = process.argv.indexOf('--limit');
+const LIMIT = limitArg > -1 ? Number(process.argv[limitArg + 1]) : Infinity;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-async function get(url, as = 'text', withToken = false) {
-  const headers = { 'User-Agent': UA, Accept: as === 'json' ? 'application/json' : '*/*' };
-  // Store API enrichment only. The anonymous call returns HTTP 422 — the storefront
-  // sends a store-identifying token. The EXACT header name is NOT confirmed here
-  // (read_network_requests shows URLs, not request headers): inspect the storefront's
-  // /products/{id}/details request in DevTools and set TOKEN_HEADER accordingly before
-  // first use. Common candidates: 'Authorization' (Bearer), or a Salla-specific header.
-  if (withToken && STORE_TOKEN) {
-    const TOKEN_HEADER = process.env.TOKEN_HEADER || 'Authorization';
-    headers[TOKEN_HEADER] = TOKEN_HEADER === 'Authorization' ? `Bearer ${STORE_TOKEN}` : STORE_TOKEN;
+async function getDoc(url) {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    try {
+      const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'text/html' } });
+      if (res.ok) return new JSDOM(await res.text()).window.document;
+      console.error(`  HTTP ${res.status} ${url}`);
+      if (res.status === 404) return null;
+    } catch (e) {
+      console.error(`  ${e.message} ${url}`);
+    }
+    await sleep(1500 * attempt);
   }
-  const res = await fetch(url, { headers });
-  if (!res.ok) throw new Error(`GET ${url} -> HTTP ${res.status}`);
-  return as === 'json' ? res.json() : res.text();
+  return null;
 }
 
-function locs(xml) {
-  return [...xml.matchAll(/<loc>([^<]+)<\/loc>/g)].map((m) => decodeURIComponent(m[1].trim()));
+const T = (el) => (el ? el.textContent.replace(/\s+/g, ' ').trim() : '');
+const attr = (el, name) => (el ? el.getAttribute(name) || '' : '');
+// Old theme wraps Salla CDN images in a resize prefix; store the original URL.
+const rawImg = (u) => u.replace(/\/cdn-cgi\/image\/[^/]+\//, '/');
+
+export function extractProduct(doc) {
+  // The template can print a fact block more than once; keep every distinct text.
+  const fact = (iconClass) => {
+    const texts = [...doc.querySelectorAll(`.prod-acc-item svg.${iconClass}`)].map((svg) => {
+      const content = svg.closest('.prod-acc-item')?.querySelector('.prod-acc-content');
+      if (!content) return '';
+      const lis = [...content.querySelectorAll('li')];
+      return lis.length ? lis.map(T).filter(Boolean).join('\n') : T(content);
+    });
+    return [...new Set(texts.filter(Boolean))];
+  };
+  const whats = doc.getElementById('whatsapp-btn-wrapper');
+  return {
+    name: T(doc.querySelector('h1')),
+    for_who: fact('lucide-users'),
+    material: fact('lucide-leaf'),
+    inner_box: fact('lucide-package'),
+    dimensions_image: rawImg(attr(doc.querySelector('#dimensions img'), 'src')),
+    features: [...doc.querySelectorAll('section[style*="253, 248, 243"] .group')].map((g) => ({
+      title: T(g.querySelector('p')),
+      image: rawImg(attr(g.querySelector('img'), 'src')),
+    })),
+    cards: [...doc.querySelectorAll('salla-slider.mains-slider .swiper-slide')].map((s) => ({
+      title: T(s.querySelector('h3')),
+      desc: T(s.querySelector('p')),
+      image: rawImg(attr(s.querySelector('img'), 'src')),
+    })),
+    faq: [...doc.querySelectorAll('.faq-div .faq-item')].map((f) => ({
+      q: T(f.querySelector('.faq-btn span')),
+      a: T(f.querySelector('.faq-content')),
+    })),
+    suggested_games: [...doc.querySelectorAll('custom-salla-product-card[isspecial]')]
+      .map((c) => {
+        try {
+          return String(JSON.parse(c.getAttribute('product')).id);
+        } catch {
+          return '';
+        }
+      })
+      .filter(Boolean),
+    whatsapp_only: !!whats && !/display:\s*none/.test(attr(whats, 'style')),
+    universal: [...doc.querySelectorAll('section.mt-12 > .hidden > .text-center')].map((u) => ({
+      title: T(u.querySelectorAll('p')[0]),
+      desc: T(u.querySelectorAll('p')[1]),
+      image: rawImg(attr(u.querySelector('img'), 'src')),
+    })),
+  };
 }
 
-// A storefront URL looks like /{locale}/{slug}/p{id} (product) or /c{id} (category).
-function classify(url) {
-  const u = new URL(url);
-  const parts = u.pathname.split('/').filter(Boolean); // [locale, ...slug, idSeg]
-  if (parts.length < 2) return null;
-  const locale = parts[0] === 'ar' || parts[0] === 'en' ? parts[0] : null;
-  if (!locale) return null;
-  const last = parts[parts.length - 1];
-  const slug = decodeURIComponent(parts.slice(1, -1).join('/'));
-  let m;
-  if ((m = last.match(/^p(\d+)$/))) return { kind: 'product', id: m[1], locale, slug, url };
-  if ((m = last.match(/^c(\d+)$/))) return { kind: 'category', id: m[1], locale, slug, url };
-  return null; // /p/<text> CMS pages, home, etc. are ignored
+export function extractCategory(doc) {
+  const picture = doc.querySelector('section.container picture');
+  const bannerBox = picture?.closest('section');
+  const hero = doc.querySelector('section.bg-gradient-to-b');
+  return {
+    banner_image: rawImg(attr(picture?.querySelector('img'), 'src')),
+    banner_mobile_image: rawImg(attr(picture?.querySelector('source'), 'srcset')),
+    banner_title: T(bannerBox?.querySelector('h1')),
+    banner_desc: T(bannerBox?.querySelector('p')),
+    hero_title: T(hero?.querySelector('h1')),
+    hero_desc: T(hero?.querySelector('p.text-lg')),
+    page_title: T(doc.querySelector('h1')),
+  };
 }
 
-// CSV helpers
-const esc = (v) => {
+const csvCell = (v) => {
   const s = v == null ? '' : String(v);
-  return /[",\n]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
+  return /[",\n\r]/.test(s) ? `"${s.replace(/"/g, '""')}"` : s;
 };
-const toCsv = (cols, rows) => [cols.join(','), ...rows.map((r) => cols.map((c) => esc(r[c])).join(','))].join('\n') + '\n';
+const toCsv = (rows, cols) =>
+  '﻿' + [cols.join(','), ...rows.map((r) => cols.map((c) => csvCell(r[c])).join(','))].join('\r\n');
 
 async function main() {
-  console.error(`Fetching sitemap index: ${SITEMAP}`);
-  const index = await get(SITEMAP);
-  const subs = locs(index).filter((u) => /sitemap-\d+\.xml$/.test(u)); // product/category sitemaps, skip blog
-  console.error(`Sub-sitemaps: ${subs.length} -> ${subs.join(', ')}`);
-
-  const products = new Map(); // id -> { id, ar_slug, ar_url, en_slug, en_url }
-  const categories = new Map();
-  for (const s of subs) {
-    const xml = await get(s);
-    for (const url of locs(xml)) {
-      const c = classify(url);
-      if (!c) continue;
-      const bag = c.kind === 'product' ? products : categories;
-      const row = bag.get(c.id) ?? { id: c.id };
-      row[`${c.locale}_slug`] = c.slug;
-      row[`${c.locale}_url`] = c.url;
-      bag.set(c.id, row);
+  const urls = JSON.parse(await readFile(`${DIR}/urls.json`, 'utf8'));
+  const products = [];
+  const list = urls.products.slice(0, LIMIT);
+  for (const [i, p] of list.entries()) {
+    console.error(`product ${i + 1}/${list.length}  ${p.id}`);
+    const row = { id: p.id, ar_url: p.ar, en_url: p.en };
+    for (const lang of ['ar', 'en']) {
+      const doc = await getDoc(p[lang]);
+      row[lang] = doc ? extractProduct(doc) : null;
+      await sleep(400);
     }
-    await sleep(THROTTLE_MS);
-  }
-  console.error(`Found ${products.size} products, ${categories.size} categories.`);
-
-  // Content columns (empty; ids mirror docs/legacy/old-twilight.json subfields).
-  const productContentCols = [
-    'fact_for_who',        // products_settings.for_who
-    'fact_material',       // products_settings.material
-    'fact_inner_box',      // products_settings.inner_box
-    'dimensions_image',    // products_settings.image_dimensions
-    'faq_json',            // products_questions (per-product rows: [{title,desc}])
-    'features_json',       // special_features ([{image,title}])
-    'cards_json',          // slider_in_products ([{image,title,desc}])
-    'suggested_games_ids', // products_play_games.products (ids)
-    'whatsapp_only',       // product is in a categories_whatsapp category
-    'cart_upsell',         // product in products_in_cart
-    'native_name',         // native enrichment (optional)
-    'native_price',
-    'native_has_metadata',
-    'native_tags',
-    'content_source_note',
-  ];
-  const categoryContentCols = [
-    'banner_image',        // categories_banners.image
-    'banner_mobile_image', // categories_banners.mobile_image
-    'banner_title',        // categories_banners.title
-    'banner_desc',         // categories_banners.desc / category_all_desc
-    'description',         // subcategories.desc / category description
-    'parent_id',           // category tree
-    'content_source_note',
-  ];
-
-  const productRows = [...products.values()].sort((a, b) => a.id - b.id);
-  const categoryRows = [...categories.values()].sort((a, b) => a.id - b.id);
-  for (const r of productRows) r.content_source_note = 'content from saved theme settings — fill via dashboard export or JS-render crawl';
-  for (const r of categoryRows) r.content_source_note = 'content from saved theme settings — fill via dashboard export or JS-render crawl';
-
-  if (ENRICH) {
-    if (!STORE_TOKEN) {
-      console.error('--enrich requires STORE_TOKEN (the public token the storefront JS sends). Skipping enrichment.');
-    } else {
-      console.error(`Enriching ${productRows.length} products from the public Store API (native data only)...`);
-      for (const r of productRows) {
-        try {
-          const d = await get(`https://api.salla.dev/store/v1/products/${r.id}/details`, 'json', true);
-          const p = d.data ?? d;
-          r.native_name = p.name;
-          r.native_price = typeof p.price === 'object' ? p.price?.amount : p.price;
-          r.native_has_metadata = p.has_metadata;
-          r.native_tags = (p.tags ?? []).map((t) => t.name).join('|');
-        } catch (e) {
-          r.native_name = `ERROR: ${e.message}`;
-        }
-        await sleep(THROTTLE_MS);
-      }
-    }
+    products.push(row);
   }
 
-  const localeCols = ['id', 'ar_slug', 'ar_url', 'en_slug', 'en_url'];
-  const outProducts = join(OUT, 'products.csv');
-  const outCategories = join(OUT, 'categories.csv');
-  await mkdir(dirname(outProducts), { recursive: true });
-  await writeFile(outProducts, toCsv([...localeCols, ...productContentCols], productRows), 'utf8');
-  await writeFile(outCategories, toCsv([...localeCols, ...categoryContentCols], categoryRows), 'utf8');
-  console.error(`Wrote ${outProducts} (${productRows.length} rows)`);
-  console.error(`Wrote ${outCategories} (${categoryRows.length} rows)`);
-  console.error('NOTE: content columns are intentionally empty — see header comment.');
+  // A question shown on every product that has an FAQ is a store-wide question.
+  const withFaq = products.filter((p) => p.ar?.faq.length);
+  const counts = new Map();
+  for (const p of withFaq) for (const f of p.ar.faq) counts.set(f.q, (counts.get(f.q) || 0) + 1);
+  const isGlobal = (q) => withFaq.length > 1 && counts.get(q) === withFaq.length;
+  const first = withFaq[0];
+  const storeWide = {
+    faq: first
+      ? first.ar.faq
+          .map((f, idx) => ({ ...f, idx }))
+          .filter((f) => isGlobal(f.q))
+          .map((f) => ({ q_ar: f.q, a_ar: f.a, q_en: first.en?.faq[f.idx]?.q || '', a_en: first.en?.faq[f.idx]?.a || '' }))
+      : [],
+    universal_features_ar: products.find((p) => p.ar?.universal.length)?.ar.universal || [],
+    universal_features_en: products.find((p) => p.en?.universal.length)?.en.universal || [],
+  };
+
+  const flat = products.map((p) => {
+    const a = p.ar || {};
+    const e = p.en || {};
+    const own = (a.faq || []).filter((f) => !isGlobal(f.q));
+    return {
+      id: p.id,
+      name_ar: a.name,
+      name_en: e.name,
+      ar_url: p.ar_url,
+      whatsapp_only: a.whatsapp_only ? 'yes' : '',
+      for_who: (a.for_who || []).join(' || '),
+      material: (a.material || []).join(' || '),
+      inner_box: (a.inner_box || []).join(' || '),
+      for_who_en_page: (e.for_who || []).join(' || '),
+      material_en_page: (e.material || []).join(' || '),
+      inner_box_en_page: (e.inner_box || []).join(' || '),
+      dimensions_image: a.dimensions_image,
+      features_ar: (a.features || []).map((f) => f.title).join(' | '),
+      features_en: (e.features || []).map((f) => f.title).join(' | '),
+      cards_ar: (a.cards || []).map((c) => c.title).join(' | '),
+      suggested_games_ids: (a.suggested_games || []).join(' '),
+      faq_total: (a.faq || []).length,
+      faq_product_specific: own.length,
+      fetched: p.ar ? 'ok' : 'FAILED',
+    };
+  });
+
+  const faqRows = [];
+  for (const p of products)
+    (p.ar?.faq || []).forEach((f, idx) => {
+      if (isGlobal(f.q)) return;
+      faqRows.push({
+        product_id: p.id,
+        product: p.ar.name,
+        question_ar: f.q,
+        answer_ar: f.a,
+        question_en: p.en?.faq[idx]?.q || '',
+        answer_en: p.en?.faq[idx]?.a || '',
+      });
+    });
+
+  const categories = [];
+  const clist = urls.categories.slice(0, LIMIT);
+  for (const [i, c] of clist.entries()) {
+    console.error(`category ${i + 1}/${clist.length}  ${c.id}`);
+    const ar = await getDoc(c.ar);
+    await sleep(400);
+    const en = await getDoc(c.en);
+    await sleep(400);
+    const a = ar ? extractCategory(ar) : {};
+    const e = en ? extractCategory(en) : {};
+    categories.push({
+      id: c.id,
+      ar_url: c.ar,
+      title_ar: a.page_title,
+      title_en: e.page_title,
+      banner_image: a.banner_image,
+      banner_mobile_image: a.banner_mobile_image,
+      banner_title_ar: a.banner_title,
+      banner_desc_ar: a.banner_desc,
+      banner_title_en: e.banner_title,
+      banner_desc_en: e.banner_desc,
+      hero_desc_ar: a.hero_desc,
+      hero_desc_en: e.hero_desc,
+      fetched: ar ? 'ok' : 'FAILED',
+    });
+  }
+
+  await writeFile(`${DIR}/products.json`, JSON.stringify(products, null, 1));
+  await writeFile(`${DIR}/store-wide.json`, JSON.stringify(storeWide, null, 1));
+  await writeFile(`${DIR}/products.csv`, toCsv(flat, Object.keys(flat[0] || { id: '' })));
+  await writeFile(
+    `${DIR}/faq.csv`,
+    toCsv(faqRows, ['product_id', 'product', 'question_ar', 'answer_ar', 'question_en', 'answer_en'])
+  );
+  await writeFile(`${DIR}/categories.csv`, toCsv(categories, Object.keys(categories[0] || { id: '' })));
+
+  const n = (f) => flat.filter(f).length;
+  console.log(`\nProducts fetched: ${n((r) => r.fetched === 'ok')}/${flat.length}`);
+  console.log(`  with facts: ${n((r) => r.for_who || r.material || r.inner_box)}`);
+  console.log(`  with dimensions image: ${n((r) => r.dimensions_image)}`);
+  console.log(`  with feature badges: ${n((r) => r.features_ar)}`);
+  console.log(`  with cards: ${n((r) => r.cards_ar)}`);
+  console.log(`  with suggested games: ${n((r) => r.suggested_games_ids)}`);
+  console.log(`  WhatsApp-only: ${n((r) => r.whatsapp_only)}`);
+  console.log(`Store-wide FAQ questions: ${storeWide.faq.length}`);
+  console.log(`Product-specific FAQ rows: ${faqRows.length}`);
+  console.log(`Categories with a banner: ${categories.filter((c) => c.banner_image).length}/${categories.length}`);
 }
 
-main().catch((e) => {
-  console.error('FAILED:', e.message);
-  process.exit(1);
-});
+// Run only when executed directly, so the extract functions can be imported in tests.
+if (process.argv[1] && import.meta.url.endsWith(process.argv[1].replace(/\\/g, '/').split('/').pop())) {
+  main().catch((e) => {
+    console.error(e);
+    process.exit(1);
+  });
+}

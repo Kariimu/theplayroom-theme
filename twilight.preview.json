@@ -1,0 +1,576 @@
+{
+  "enabled": true,
+  "settings": {},
+  "layout": [
+    {
+      "id": "b-bbe80ef9b3f2",
+      "path": "enhanced-slider",
+      "fields": {
+        "key": "186b3f4f-25cf-4d3c-abca-cef7eed6f0ab",
+        "slides": [
+          {
+            "ar": {
+              "title": "روِّج لمنتجاتك كصور متحركة",
+              "description": "اعرض المنتجات التي تود إبرازها لزوّار متجرك في هذه المساحة"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/838851fd-7682-4de2-9f14-f48701b23d5a-original.webp",
+            "video": "https://www.youtube.com/watch?v=vFEs4jQIigc&pp=ygUebGl0ZSBzaG9wcGluZyBiYWNrZ3JvdW5kIHZpZGVv",
+            "__hidden": "",
+            "without_overlay": false,
+            "title": "روِّج لمنتجاتك كصور متحركة",
+            "description": "اعرض المنتجات التي تود إبرازها لزوّار متجرك في هذه المساحة"
+          },
+          {
+            "ar": {
+              "title": "شجّع زوار متجرك على الشراء عبر عروض خاصة",
+              "description": "اعرض المنتجات التي تود إبرازها لزوّار متجرك في هذه المساحة"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/d96a825c-0f22-4754-8511-e6a6225f9402-original.webp",
+            "video": "",
+            "__hidden": "",
+            "without_overlay": false,
+            "title": "شجّع زوار متجرك على الشراء عبر عروض خاصة",
+            "description": "اعرض المنتجات التي تود إبرازها لزوّار متجرك في هذه المساحة"
+          }
+        ],
+        "versions": null,
+        "auto_play": false,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-abe273d8d878",
+      "path": "main-links",
+      "fields": {
+        "ar": {
+          "title": ""
+        },
+        "key": "2b1b130b-5b37-422a-9683-e0fd367460c0",
+        "links": [
+          {
+            "ar": {
+              "title": "عطر رجالي"
+            },
+            "icon": "sicon-packed-box",
+            "image": "https://cdn.files.salla.network/other/1510890315/c2b6b4f5-4134-4b96-9072-bc73674417ab-original.webp",
+            "__hidden": "",
+            "title": "عطر رجالي"
+          },
+          {
+            "ar": {
+              "title": "عطر شرقي"
+            },
+            "icon": "sicon-fabric-swatch",
+            "image": "https://cdn.files.salla.network/other/1510890315/9d293706-07c3-485d-80d5-fe7650ae274a-original.webp",
+            "__hidden": "",
+            "title": "عطر شرقي"
+          },
+          {
+            "ar": {
+              "title": "فرنسيات"
+            },
+            "icon": "sicon-cake",
+            "image": "https://cdn.files.salla.network/other/1510890315/25e3508a-cc6d-4a9c-bf67-89ed95a18030-original.webp",
+            "__hidden": "",
+            "title": "فرنسيات"
+          },
+          {
+            "ar": {
+              "title": "عود فاخر"
+            },
+            "icon": "sicon-game-controller-alt",
+            "image": "https://cdn.files.salla.network/other/1510890315/15138cfc-cf8f-4f97-834c-0e16aac5f8e6-original.webp",
+            "__hidden": "",
+            "title": "عود فاخر"
+          },
+          {
+            "ar": {
+              "title": "عطر نسائي"
+            },
+            "icon": "sicon-barcode-scan",
+            "image": "https://cdn.files.salla.network/other/1510890315/2f269add-6253-4891-a875-299e47cd592e-original.webp",
+            "__hidden": "",
+            "title": "عطر نسائي"
+          },
+          {
+            "ar": {
+              "title": "مسك أبيض"
+            },
+            "icon": "sicon-inbox-full",
+            "image": "https://cdn.files.salla.network/other/1510890315/c2254166-055b-4089-8c11-fa545425e110-original.webp",
+            "__hidden": "",
+            "title": "مسك أبيض"
+          },
+          {
+            "ar": {
+              "title": "عنبر دافئ"
+            },
+            "icon": "sicon-calendar-date",
+            "image": "https://cdn.files.salla.network/other/1510890315/3e789966-ba6a-4f40-bfd4-2b478d8316e5-original.webp",
+            "__hidden": "",
+            "title": "عنبر دافئ"
+          },
+          {
+            "ar": {
+              "title": "حمضيات"
+            },
+            "en": {
+              "title": ""
+            },
+            "icon": "sicon-store2",
+            "image": "https://cdn.files.salla.network/other/1510890315/a3c13805-1348-41b1-99a0-cd16d7773da7-original.webp",
+            "__hidden": false,
+            "title": "حمضيات"
+          },
+          {
+            "ar": {
+              "title": "ورد دمشقي"
+            },
+            "en": {
+              "title": ""
+            },
+            "icon": "sicon-store2",
+            "image": "https://cdn.files.salla.network/other/1510890315/25947e14-43cb-49a1-af03-31a532874134-original.webp",
+            "__hidden": false,
+            "title": "ورد دمشقي"
+          },
+          {
+            "ar": {
+              "title": "هديا عطرية"
+            },
+            "en": {
+              "title": ""
+            },
+            "icon": "sicon-store2",
+            "image": "https://cdn.files.salla.network/other/1510890315/90efaef3-fe8d-4751-90bd-159ae2336815-original.webp",
+            "__hidden": false,
+            "title": "هديا عطرية"
+          }
+        ],
+        "versions": null,
+        "show_cats": false,
+        "show_controls": true,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        },
+        "merge_with_top_component": false,
+        "title": ""
+      }
+    },
+    {
+      "id": "b-6da60104945b",
+      "path": "photos-slider",
+      "fields": {
+        "items": [
+          {
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/offers",
+            "image": "https://cdn.files.salla.network/other/1510890315/2f0abd2c-46b7-4121-a74f-fdabf2ae4893-original.webp"
+          },
+          {
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/offers",
+            "image": "https://cdn.files.salla.network/other/1510890315/158545f6-d27e-48eb-839a-28273cee0c70-original.webp"
+          },
+          {
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/offers",
+            "image": "https://cdn.files.salla.network/other/1510890315/3ea109ef-72a4-494d-b90f-fe6d187d82bb-original.webp"
+          }
+        ],
+        "is_repeated": false,
+        "position": 1,
+        "key": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-80139cc9024d",
+      "path": "fixed-products",
+      "fields": {
+        "products": {
+          "source": "latest"
+        },
+        "title": "وصل حديثاً",
+        "limit": 10,
+        "isVertical": true,
+        "display_all_url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/latest-products",
+        "position": 1,
+        "key": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-0a10b3ce6574",
+      "path": "products-slider",
+      "fields": {
+        "products": {
+          "source": "latest"
+        },
+        "title": "وصل للتو",
+        "limit": 8,
+        "display_all_url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/latest-products",
+        "position": 1,
+        "key": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-2904b99342b0",
+      "path": "enhanced-slider",
+      "fields": {
+        "key": "186b3f4f-25cf-4d3c-abca-cef7eed6f0ab",
+        "slides": [
+          {
+            "ar": {
+              "title": "موسم يزهر بالجمال",
+              "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/d96a825c-0f22-4754-8511-e6a6225f9402-original.webp",
+            "video": "",
+            "__hidden": false,
+            "without_overlay": false,
+            "title": "موسم يزهر بالجمال",
+            "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+          },
+          {
+            "ar": {
+              "title": "موسم يزهر بالجمال",
+              "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+            },
+            "en": {
+              "title": "",
+              "description": ""
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/a51f8ec1-8372-47d8-8e43-de95c06a49ca-original.webp",
+            "video": "",
+            "__hidden": false,
+            "without_overlay": false,
+            "title": "موسم يزهر بالجمال",
+            "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+          },
+          {
+            "ar": {
+              "title": "موسم يزهر بالجمال",
+              "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+            },
+            "en": {
+              "title": "",
+              "description": ""
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/75ba1a0c-426b-4b70-8d7e-0ac6b540e1f5-original.webp",
+            "video": "",
+            "__hidden": false,
+            "without_overlay": false,
+            "title": "موسم يزهر بالجمال",
+            "description": "عطور ومكياج وعناية بالبشرة بإصدارات جديدة تنبض بروح الربيع هذا الموسم."
+          }
+        ],
+        "versions": null,
+        "auto_play": true,
+        "in_container": true,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-c31bab2ba0ff",
+      "path": "enhanced-square-banners",
+      "fields": {
+        "key": "b89edc4a-ce0b-468f-8323-2da48147bb32",
+        "banners": [
+          {
+            "ar": {
+              "title": "تصفَّح حسب التصنيف",
+              "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/2b8ef19f-d94b-483f-9158-414ae287bd14-original.webp",
+            "__hidden": "",
+            "title": "تصفَّح حسب التصنيف",
+            "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+          },
+          {
+            "ar": {
+              "title": "تصفَّح حسب التصنيف",
+              "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/a51f8ec1-8372-47d8-8e43-de95c06a49ca-original.webp",
+            "__hidden": "",
+            "title": "تصفَّح حسب التصنيف",
+            "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+          },
+          {
+            "ar": {
+              "title": "تصفَّح حسب التصنيف",
+              "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/405ca33e-c009-406d-8ced-953cde75872c-original.webp",
+            "__hidden": "",
+            "title": "تصفَّح حسب التصنيف",
+            "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+          },
+          {
+            "ar": {
+              "title": "تصفَّح حسب التصنيف",
+              "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/3ea109ef-72a4-494d-b90f-fe6d187d82bb-original.webp",
+            "__hidden": "",
+            "title": "تصفَّح حسب التصنيف",
+            "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+          },
+          {
+            "ar": {
+              "title": "تصفَّح حسب التصنيف",
+              "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+            },
+            "image": "https://cdn.files.salla.network/other/1510890315/75ba1a0c-426b-4b70-8d7e-0ac6b540e1f5-original.webp",
+            "__hidden": "",
+            "title": "تصفَّح حسب التصنيف",
+            "description": "سهِّل تجربة التسوُّق والوصول لمنتجاتك"
+          }
+        ],
+        "versions": null,
+        "languages": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-d99c1a17ba39",
+      "path": "custom-testimonials",
+      "fields": {
+        "key": "541cc423-90c7-4230-8a33-a0342cfde4ad",
+        "items": [
+          {
+            "ar": {
+              "text": "العنبر الأصيل بخور تجربة رائعة، رائحة فخمة وملفتة للانتباه. أحببت اللمسة النهائية التي تتركها على الثوب، سأكرر الشراء بالتأكيد ️"
+            },
+            "name": "ندى الحسيني",
+            "stars": 5,
+            "avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_female.png",
+            "__hidden": "",
+            "text": "العنبر الأصيل بخور تجربة رائعة، رائحة فخمة وملفتة للانتباه. أحببت اللمسة النهائية التي تتركها على الثوب، سأكرر الشراء بالتأكيد ️"
+          },
+          {
+            "ar": {
+              "text": "المسك الأبيض بخور رائحته مميزة جدًا، خفيفة في البداية وتتطور لتصبح أكثر دفئًا مع مرور الوقت. أفضل عطر اشتريته هذا العا"
+            },
+            "name": "خالد الأحمد",
+            "stars": 5,
+            "avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_male.png",
+            "__hidden": "",
+            "text": "المسك الأبيض بخور رائحته مميزة جدًا، خفيفة في البداية وتتطور لتصبح أكثر دفئًا مع مرور الوقت. أفضل عطر اشتريته هذا العا"
+          },
+          {
+            "ar": {
+              "text": "بلو لافيرن بخور رائحته جميلة وملفتة، أحببت طريقة التعبئة ووضوح التفاصيل. سأوصي به لجميع أصدقائي الذين يحبون العطور الشرقية."
+            },
+            "name": "خالد المسعودي",
+            "stars": 5,
+            "avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_male.png",
+            "__hidden": "",
+            "text": "بلو لافيرن بخور رائحته جميلة وملفتة، أحببت طريقة التعبئة ووضوح التفاصيل. سأوصي به لجميع أصدقائي الذين يحبون العطور الشرقية."
+          },
+          {
+            "ar": {
+              "text": "العنبر الأصيل عطر فاخر ودرجته عالية جدًا، يبقى على الملابس لفترة طويلة. أحببت تجربتي الأولى وسأقوم بشراء المزيد من نفس الماركة.️"
+            },
+            "name": "عبدالعزيز اليامي",
+            "stars": 5,
+            "avatar": "https://cdn.assets.salla.network/prod/stores/themes/default/assets/images/avatar_male.png",
+            "__hidden": "",
+            "text": "العنبر الأصيل عطر فاخر ودرجته عالية جدًا، يبقى على الملابس لفترة طويلة. أحببت تجربتي الأولى وسأقوم بشراء المزيد من نفس الماركة.️"
+          },
+          {
+            "ar": {
+              "text": "العنبر الأصيل عطر فاخر ودرجته عالية جدًا، يبقى على الملابس لفترة طويلة. أحببت تجربتي الأولى وسأقوم بشراء المزيد من نفس الماركة."
+            },
+            "en": {
+              "text": ""
+            },
+            "name": "خالد الشهراني",
+            "stars": 5,
+            "avatar": "https://cdn.files.salla.network/other/1510890315/c2b6b4f5-4134-4b96-9072-bc73674417ab-original.webp",
+            "__hidden": false,
+            "text": "العنبر الأصيل عطر فاخر ودرجته عالية جدًا، يبقى على الملابس لفترة طويلة. أحببت تجربتي الأولى وسأقوم بشراء المزيد من نفس الماركة."
+          }
+        ],
+        "versions": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-fd2e842d3ed7",
+      "path": "store-features",
+      "fields": {
+        "features": [
+          {
+            "icon": "sicon-store2",
+            "title": "تسوق آمن",
+            "description": "استمتع بتجربة آمنة وخصوصية تامة"
+          },
+          {
+            "icon": "sicon-shipping-fast",
+            "title": "خدمة العملاء",
+            "description": "تواصل معنا في أي وقت"
+          },
+          {
+            "icon": "sicon-fire",
+            "title": "شحن سريع",
+            "description": "استلم طلبك في وقت قياسي"
+          }
+        ],
+        "position": 1,
+        "key": null,
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        }
+      }
+    },
+    {
+      "id": "b-898154112fd5",
+      "path": "blog",
+      "fields": {
+        "ar": {
+          "title": "المدونة",
+          "description": "اكتشف روائحنا من خلال تجارب عملائنا الآخرين."
+        },
+        "key": "f3372a16-2ec0-4345-b03f-867f443f628e",
+        "posts": [
+          {
+            "id": "-/a-1673272609",
+            "title": "هيا نتحدث عن التكنولوجيا!",
+            "promotion_title": "التكنولوجيا: شريك حياتنا في العصر الحديث",
+            "body": "<p class=\"ql-direction-rtl\">تشكل التكنولوجيا نسيج حياتنا اليومية، فهي تحيط بنا من كل جانب وتؤثر على كل ما نقوم به. من الهواتف الذكية التي لا نفارقها إلى السيارات ذاتية القيادة، والتطبيقات التي تسهل حياتنا، والتقدم الطبي الذي يطيل أعمارنا، لا يمكننا تخيل الحياة بدونها.</p><p class=\"ql-direction-rtl\"><br></p><p class=\"ql-direction-rtl\"><br></p><h3 class=\"ql-direction-rtl\"><strong>لماذا تهتم التكنولوجيا بنا؟</strong></h3><ul><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">التواصل:</span> سهلت التكنولوجيا التواصل بين الناس في جميع أنحاء العالم، حيث أصبح بإمكاننا التواصل مع أحبائنا في أي وقت ومن أي مكان.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">التعليم:</span> أصبحت المعلومات متاحة بسهولة أكبر بفضل الإنترنت، مما يسهل عملية التعلم ويوفر فرصًا تعليمية جديدة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الترفيه:</span> تقدم التكنولوجيا مجموعة واسعة من الخيارات الترفيهية، مثل الألعاب والتلفزيون والسينما عبر الإنترنت.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الصحة:</span> تساهم التكنولوجيا في تطوير علاجات جديدة للأمراض وتحسين الرعاية الصحية.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الاقتصاد:</span> تعتبر التكنولوجيا محركًا رئيسيًا للاقتصاد العالمي، حيث تساهم في خلق فرص عمل جديدة وزيادة الإنتاجية.</li></ul><h3 class=\"ql-direction-rtl\"><strong>مجالات التكنولوجيا الواعدة</strong></h3><ul><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الذكاء الاصطناعي:</span> يعتبر الذكاء الاصطناعي أحد أسرع المجالات نموًا في مجال التكنولوجيا، حيث يتم استخدامه في العديد من التطبيقات، مثل السيارات ذاتية القيادة والمساعدون الشخصيون.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">إنترنت الأشياء:</span> يربط إنترنت الأشياء الأجهزة اليومية بالإنترنت، مما يتيح التحكم فيها عن بعد وجمع البيانات وتحليلها.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الواقع الافتراضي والواقع المعزز:</span> يوفر الواقع الافتراضي والواقع المعزز تجارب غامرة جديدة في مجالات الترفيه والتعليم والتدريب.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">البيانات الضخمة:</span> تساعد البيانات الضخمة الشركات على اتخاذ قرارات أفضل وتحسين عملياتها.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الطباعة ثلاثية الأبعاد:</span> تتيح الطباعة ثلاثية الأبعاد إنتاج منتجات مخصصة بسرعة وبتكلفة منخفضة.</li></ul><p class=\"ql-direction-rtl\"><br></p><p class=\"ql-direction-rtl\"><br></p><h3 class=\"ql-direction-rtl\"><strong>التحديات التي تواجه التكنولوجيا</strong></h3><ul><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الخصوصية:</span> مع تزايد جمع البيانات الشخصية، تزداد المخاوف بشأن الخصوصية وأمن البيانات.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الأمن السيبراني:</span> تتعرض الأنظمة التكنولوجية للهجمات السيبرانية بشكل متزايد، مما يتطلب اتخاذ تدابير أمنية قوية.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الفجوة الرقمية:</span> لا يزال هناك فجوة رقمية كبيرة بين الدول المتقدمة والنامية، مما يؤدي إلى عدم المساواة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الاعتماد على التكنولوجيا:</span> يزيد الاعتماد على التكنولوجيا من خطر التعطل في حالة حدوث أعطال تقنية واسعة النطاق.</li></ul><h3 class=\"ql-direction-rtl\"><strong>المستقبل</strong></h3><p class=\"ql-direction-rtl\">مستقبل التكنولوجيا واعد ومليء بالإمكانيات، حيث من المتوقع أن تشهد التكنولوجيا تطورات هائلة في السنوات القادمة، مما سيؤثر بشكل كبير على حياتنا.</p><p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">ما هي أبرز التكنولوجيات التي تثير اهتمامك؟ وما هي التحديات التي ترى أنها تواجه التكنولوجيا في المستقبل؟</span></p><p><br></p>",
+            "summary": "التكنولوجيا: شريك حياتنا في العصر الحديث",
+            "image": {
+              "url": "https://cdn.salla.sa/mQgZlG/138121bb-15c2-4116-943c-c78353cca6bf-1000x923.1884057971-O4M8sqpH7c3H4dj00U851Y6yzKFTaMT7oVx8I4We.jpg",
+              "alt": "هيا نتحدث عن التكنولوجيا!"
+            },
+            "thumbnail": "https://cdn.salla.sa/mQgZlG/747803b7-a9da-4f7a-b22e-8bf8198250d6-500x461.59420289855-O4M8sqpH7c3H4dj00U851Y6yzKFTaMT7oVx8I4We.jpg",
+            "has_image": true,
+            "created_at": {
+              "year": 2024,
+              "month": 12,
+              "day": 31,
+              "dayOfWeek": 2,
+              "dayOfYear": 366,
+              "hour": 11,
+              "minute": 39,
+              "second": 22,
+              "micro": 0,
+              "timestamp": 1735634362,
+              "formatted": "2024-12-31 11:39:22",
+              "timezone": "<object>"
+            },
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/-/a-1673272609",
+            "author": {
+              "name": "Demo Store",
+              "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/author/830898378"
+            },
+            "tags": [],
+            "likes_count": 0,
+            "comments_count": 0
+          },
+          {
+            "id": "-/a-1141563175",
+            "title": "التكنولوجيا: سحر العصر الرقمي",
+            "promotion_title": "تعتبر التكنولوجيا شريان الحياة في عصرنا الحالي، فهي تغزو كل جوانب حياتنا اليومية",
+            "body": "<p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">مقدمة:</span></p><p class=\"ql-direction-rtl\">تعتبر التكنولوجيا شريان الحياة في عصرنا الحالي، فهي تغزو كل جوانب حياتنا اليومية، من أبسط الأمور كالتواصل مع الأصدقاء وعائلتنا، إلى أضخم المشاريع التي تساهم في تطوير البشرية. ولعل مجال الذكاء الاصطناعي هو أكثر المجالات التي تشغلني، حيث يفتح آفاقًا جديدة ومثيرة للاهتمام.</p><p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الذكاء الاصطناعي: ثورة في عالم التكنولوجيا</span></p><p class=\"ql-direction-rtl\">الذكاء الاصطناعي هو محاكاة للذكاء البشري في الآلات، وبرمجتها لأداء المهام التي تتطلب عادة ذكاءً بشريًا، مثل التعلم واتخاذ القرار وحل المشكلات. يشهد هذا المجال تطوراً هائلاً في السنوات الأخيرة، حيث أصبح الذكاء الاصطناعي جزءًا لا يتجزأ من حياتنا اليومية، بدءًا من الهواتف الذكية وحتى السيارات ذاتية القيادة.</p><p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">تطبيقات الذكاء الاصطناعي في حياتنا اليومية</span></p><ul><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">المساعدون الشخصيون:</span> أصبح بإمكاننا الآن التحدث إلى أجهزتنا والتفاعل معها بشكل طبيعي، حيث تقوم هذه المساعدون بتنفيذ أوامرنا وإجراء عمليات البحث نيابة عنا.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الترجمة الآلية:</span> ساهمت تقنيات الذكاء الاصطناعي في تطوير أدوات ترجمة فورية ودقيقة، مما سهل التواصل بين الثقافات المختلفة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">التشخيص الطبي:</span> يستخدم الذكاء الاصطناعي في تحليل الصور الطبية وتشخيص الأمراض بدقة عالية وسرعة فائقة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">السيارات ذاتية القيادة:</span> تمثل السيارات ذاتية القيادة قفزة نوعية في مجال النقل، حيث تعتمد على مجموعة من أجهزة الاستشعار والكاميرات والبرمجيات التي تعمل بالذكاء الاصطناعي لاتخاذ القرارات أثناء القيادة.</li></ul><p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">مستقبل الذكاء الاصطناعي</span></p><p class=\"ql-direction-rtl\">يشهد الذكاء الاصطناعي تطوراً متسارعاً، ومن المتوقع أن يشهد المستقبل المزيد من التطبيقات المبتكرة في مختلف المجالات. ومن أبرز التحديات التي تواجه هذا المجال هي:</p><ul><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الأمن السيبراني:</span> مع تزايد الاعتماد على الذكاء الاصطناعي، يزداد خطر الهجمات السيبرانية التي تستهدف هذه الأنظمة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الوظائف:</span> قد يؤدي انتشار الذكاء الاصطناعي إلى فقدان العديد من الوظائف، مما يتطلب إعادة تأهيل القوى العاملة.</li><li class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">الأخلاقيات:</span> يثير الذكاء الاصطناعي العديد من التساؤلات الأخلاقية، مثل المسؤولية عن الأخطاء التي قد ترتكبها هذه الأنظمة.</li></ul><p class=\"ql-direction-rtl\"><span style=\"background-color: rgba(0, 0, 0, 0);\">خاتمة:</span></p><p>لا شك أن التكنولوجيا بشكل عام، والذكاء الاصطناعي بشكل خاص، يلعبان دورًا حاسمًا في تشكيل مستقبلنا. وعلى الرغم من التحديات التي تواجه هذا المجال، إلا أن الإمكانات التي يوفرها الذكاء الاصطناعي لا حصر لها. ومن الضروري أن نستغل هذه الإمكانات لتحقيق تقدم في جميع المجالات، مع الحرص على معالجة التحديات الأخلاقية والقانونية التي يطرحها هذا المجال.</p>",
+            "summary": "تعتبر التكنولوجيا شريان الحياة في عصرنا الحالي، فهي تغزو كل جوانب حياتنا اليومية",
+            "image": {
+              "url": "https://cdn.salla.sa/mQgZlG/78778fbd-bcc6-4211-ae2a-c03b60efb223-1000x1000-4hqFxp80qOTQPcdz93LiHAwOF6BLkJeAPg75ZD0B.jpg",
+              "alt": "التكنولوجيا: سحر العصر الرقمي"
+            },
+            "thumbnail": "https://cdn.salla.sa/mQgZlG/d752f65d-b46a-491c-a30e-5ba3b4f05157-500x500-4hqFxp80qOTQPcdz93LiHAwOF6BLkJeAPg75ZD0B.jpg",
+            "has_image": true,
+            "created_at": {
+              "year": 2024,
+              "month": 12,
+              "day": 31,
+              "dayOfWeek": 2,
+              "dayOfYear": 366,
+              "hour": 11,
+              "minute": 31,
+              "second": 17,
+              "micro": 0,
+              "timestamp": 1735633877,
+              "formatted": "2024-12-31 11:31:17",
+              "timezone": "<object>"
+            },
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/-/a-1141563175",
+            "author": {
+              "name": "Demo Store",
+              "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/author/830898378"
+            },
+            "tags": [],
+            "likes_count": 0,
+            "comments_count": 0
+          },
+          {
+            "id": "-/a-160640909",
+            "title": "الأجهزة الإلكترونية وأثرها على الصحة النفسية",
+            "promotion_title": "الإلكترونيات",
+            "body": "<p>تجربة قائمة غير مرقمة</p><ul><li>العنصر الأول </li><li>العنصر الثاني </li></ul><p><br></p><p>تجربة قائمة مرقمة</p><ol><li>العنصر الأول </li><li>العنصر الثاني </li></ol><p><br></p><p>الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;الأجهزة الإلكترونية وأثرها على الصحة النفسية&nbsp;</p>",
+            "summary": "الإلكترونيات",
+            "image": {
+              "url": "https://cdn.salla.sa/mQgZlG/ffc4cddb-ab68-46c0-b3f5-1c638b9330e5-1000x800.796812749-uEWz6xrMcR93jEQbkTBTxQ2V36obD7c8ey2NK3HJ.jpg",
+              "alt": "الأجهزة الإلكترونية وأثرها على الصحة النفسية"
+            },
+            "thumbnail": "https://cdn.salla.sa/mQgZlG/1b822747-259f-4e4f-94ef-255312b47fb9-500x400.3984063745-uEWz6xrMcR93jEQbkTBTxQ2V36obD7c8ey2NK3HJ.jpg",
+            "has_image": true,
+            "created_at": {
+              "year": 2024,
+              "month": 11,
+              "day": 7,
+              "dayOfWeek": 4,
+              "dayOfYear": 312,
+              "hour": 17,
+              "minute": 38,
+              "second": 5,
+              "micro": 0,
+              "timestamp": 1730990285,
+              "formatted": "2024-11-07 17:38:05",
+              "timezone": "<object>"
+            },
+            "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/-/a-160640909",
+            "author": {
+              "name": "Demo Store",
+              "url": "https://demostore.salla.sa/ar/dev-vgckq3fssfhjewwi/blog/author/830898378"
+            },
+            "tags": [],
+            "likes_count": 0,
+            "comments_count": 0
+          }
+        ],
+        "versions": null,
+        "background_color": "#f9fafb",
+        "channel_visibility": {
+          "desktop": true,
+          "mobile": true
+        },
+        "title": "المدونة",
+        "description": "اكتشف روائحنا من خلال تجارب عملائنا الآخرين."
+      }
+    }
+  ]
+}
