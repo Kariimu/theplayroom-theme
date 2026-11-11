@@ -1,11 +1,11 @@
 {
     "type": "react",
     "name": {
-        "ar": "رائد",
-        "en": "Raed"
+        "en": "Theplayroom_theme",
+        "ar": "Theplayroom_theme"
     },
-    "repository": "https://github.com/SallaApp/theme-raed-react",
-    "author_email": "support@salla.sa",
+    "repository": "https://github.com/Kariimu/theplayroom-theme",
+    "author_email": "karmezt123@gmail.com",
     "features": [
         "mega-menu",
         "fonts",
@@ -2261,9 +2261,9 @@
             ]
         }
     ],
-    "support_url": "https://salla.com/",
+    "support_url": null,
     "description": {
-        "ar": "مجموعة كبيرة من المزايا لدعم تجارتك وتقديم تجربة تسوق مثيرة لعملائك",
-        "en": "A wide range of features to support your business and provide an exciting shopping experience for your customers"
+        "en": "",
+        "ar": ""
     }
 }
