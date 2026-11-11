@@ -101,3 +101,16 @@ pnpm check:manifest   # after editing twilight.json: duplicate ids, missing opti
 ```
 
 Do not start `pnpm dev` yourself; ask the user to run it. Typecheck needs `app/routeTree.gen.ts`, which `pnpm build` or `pnpm dev` generates.
+
+## This project: The Playroom (store-specific rules)
+
+This repo is the React rebuild of the Salla theme for theplayroom.sa (wooden toys, Arabic-first, English supported). It started as the unmodified React Raed starter. The old Twig theme is the live site and the behaviour spec.
+
+- Read `docs/MIGRATION-PLAN.md` before any migration task and follow its phases. Section 5A is binding: no root-level `collection` settings and no product pickers in `twilight.json`; product and category content lives on the product/category (specs, tags, description, category fields), not in theme settings.
+- `docs/legacy/` describes the old theme (settings inventory, custom features, known issues, `old-twilight.json`). Port behaviour, not code. Do not port anything listed in `docs/legacy/09-known-issues.md`.
+- The old theme folder (`../Theplayroom-theme`) is read-only reference. Never edit it.
+- Keep home-block `key` (UUID) and `path` values identical to `docs/legacy/old-twilight.json` for blocks that exist in both themes.
+- Git: work on the `migration` branch. Never commit to or push `master`, never publish, and never change anything in the Salla Partners Portal; the owner does releases. Salla builds whatever is pushed, and only `master` can be submitted for publication.
+- Every user-visible string goes in both `locales/ar.json` and `locales/en.json`. Check every UI change at `/ar` and `/en`, on mobile and desktop.
+- When you fork an engine component, add the row to `FORKS.md` in the same commit.
+- Partners theme: `Theplayroom_theme`, Theme ID `1869420365`. Live store for reference only: https://theplayroom.sa/ar
