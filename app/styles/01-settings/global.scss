@@ -14,6 +14,16 @@ $main-text-color: var(--main-text-color);
   // Twilight web components ship their own CSS and read only this token for the
   // default corner radius; keep it equal to Tailwind's `rounded` for this theme.
   --s-radius: 16px;
+
+  /* The Playroom — page background (old theme body) and the four soft brand
+     tints used by the home blocks and category hero. Mirrored in
+     tailwind.config.cjs as `brand-*-light` so opacity utilities (`/30`) work. */
+  --body-bg: #fcf9f5;
+  --brand-yellow-light: #fdf1d3;
+  --brand-blue-light: #e9edf2;
+  --brand-orange-light: #feece5;
+  --brand-red-light: #f9ebeb;
+
   --infinte-color: #c9c9c9;
   --main-text-color: #231f1e;
   --main-text-color-dark: #2b2d34;

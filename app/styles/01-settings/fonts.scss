@@ -1,0 +1,25 @@
+/*
+ * Custom fonts — The Playroom.
+ *
+ * `dongol` (400) and `Dongol` (500) are the store's custom display font. The old
+ * Twig theme declared both @font-face blocks against Salla's custom-font CDN but
+ * applied neither in markup. They are self-hosted here from `public/fonts/`
+ * (copied from the CDN before the Twig theme retires) and exposed as the Tailwind
+ * `font-dongol` family, but — matching the old theme — not applied globally.
+ * Apply `.font-dongol` / `font-dongol` where a display heading wants it.
+ */
+@font-face {
+  font-family: 'dongol';
+  src: url('/fonts/dongol-400.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Dongol';
+  src: url('/fonts/dongol-500.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}

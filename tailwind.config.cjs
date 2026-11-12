@@ -33,6 +33,9 @@ module.exports = {
     fontFamily: {
       sans: ['var(--font-main)', '-apple-system', 'BlinkMacSystemFont'],
       primary: 'var(--font-main)',
+      // The Playroom display font (self-hosted @font-face in 01-settings/fonts.scss);
+      // available as `font-dongol`, not applied globally.
+      dongol: ['Dongol', 'dongol', 'var(--font-main)', 'sans-serif'],
     },
     extend: {
       transitionTimingFunction: {
@@ -47,6 +50,12 @@ module.exports = {
         danger: '#AE0A0A',
         primary: 'var(--color-primary)',
         'primary-dark': 'var(--color-primary-dark)',
+        // The Playroom soft brand tints (hex so `/opacity` utilities work);
+        // mirrored as CSS vars in 01-settings/global.scss.
+        'brand-yellow-light': '#fdf1d3',
+        'brand-blue-light': '#e9edf2',
+        'brand-orange-light': '#feece5',
+        'brand-red-light': '#f9ebeb',
       },
       spacing: {
         3.75: '15px',
