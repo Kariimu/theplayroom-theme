@@ -1,6 +1,7 @@
 export { BannerSection } from './BannerSection';
 export { Brands } from './Brands';
 export { CommonQuestionsSection } from './CommonQuestionsSection';
+export { CustomBrandsSection } from './CustomBrandsSection';
 export { FeaturesSection } from './FeaturesSection';
 export { Features2Section } from './Features2Section';
 export { CustomTestimonials } from './CustomTestimonials';

@@ -1716,3 +1716,20 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
     @apply mt-2 text-sm leading-relaxed text-gray-500 line-clamp-2 lg:mt-3 lg:text-base;
   }
 }
+
+/* custom-brands-section: a continuous logo strip. The track is the brand list
+   twice (CustomBrandsSection.tsx); animating exactly half its width loops it
+   seamlessly. Only animated when motion is allowed — otherwise it's a plain
+   scrollable row. */
+@keyframes custom-brands-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.custom-brands-marquee__track--animated {
+  animation: custom-brands-marquee 30s linear infinite;
+}

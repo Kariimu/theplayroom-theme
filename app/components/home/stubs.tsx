@@ -14,7 +14,6 @@ export interface HomeBlockStubProps {
  */
 export const CUSTOM_HOME_BLOCK_KEYS = [
   'reviews-section',
-  'custom-brands-section',
   'reels-section',
   'gallery-section',
   'modern-banner-section',

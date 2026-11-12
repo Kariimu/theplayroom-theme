@@ -23,8 +23,8 @@ describe('home block stubs', () => {
   });
 
   it('expose exactly the remaining keys, each with a component', () => {
-    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(6);
-    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(6);
+    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(5);
+    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(5);
     for (const key of CUSTOM_HOME_BLOCK_KEYS) {
       // memo() returns a component object, not a bare function — assert it renders.
       const Stub = homeBlockStubs[key as CustomHomeBlockKey];
