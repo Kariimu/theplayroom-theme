@@ -103,6 +103,7 @@ If a Tier 1 row fails, drop that row one tier down; do not fall back to a root c
 - **Facts (row 65):** only 3 of the 14 carry for_who / material / inner_box (بيت الألعاب, صندوق التخزين, مجموعة المغامرة). All 14 already have Salla spec groups.
 - **No product is WhatsApp-only today** (`categories_whatsapp`, row 73, is effectively unused on the catalogue).
 - **Not observed on the 14** (all zero in the sheet): dimensions image, feature badges, image cards, suggested games — the products that would carry these are mostly among the 29 that redirect. Re-check if any of those 29 are later unhidden.
+- **Category banners (row 76): none configured today.** 0 of the 52 rendering categories emit the `<picture>` banner markup (`categories_banners` is unused on the live store). The extractor's selector matches the old theme's `pages/product/index.twig` (`section.container picture`) exactly — the empty column is absence of data, not a bad selector — so row 76 has nothing to migrate unless the owner adds category banners. Category titles extract fine (52/52).
 
 ## 6. Feature mapping (store-specific work, see 06 for current behaviour)
 | # | Feature | Target implementation | Notes |
