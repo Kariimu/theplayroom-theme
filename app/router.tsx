@@ -9,6 +9,7 @@ import {
 import { SliderSkeleton } from '@salla.sa/twilight-components-react';
 import { routeTree } from './routeTree.gen';
 import {
+  BannerSection,
   Brands,
   CustomTestimonials,
   EnhancedSlider,
@@ -87,7 +88,8 @@ registerHomeComponents({
   'slider-products-with-header': SliderProductsWithHeader,
   'enhanced-square-banners': EnhancedSquareBanners,
   blog: Blog,
-  // Stage 1: the twelve custom blocks are declared in twilight.json but not
+  'banner-section': BannerSection,
+  // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
   ...homeBlockStubs,
@@ -104,6 +106,12 @@ registerHomeComponentConfig({
   blog: {
     className: 's-block s-block--blog s-block--full-bg',
     height: 'clamp(480px, 45vw, 660px)',
+  },
+  // A single `image_desktop` (640×427) or `image_mobile` (1200×300) banner, no
+  // slider — same ratio-based clamp idea as the slider entries below, sized to
+  // the container (not the full viewport) since the image sits in `.container`.
+  'banner-section': {
+    height: 'clamp(140px, 30vw, 427px)',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',

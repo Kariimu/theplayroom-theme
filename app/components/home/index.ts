@@ -1,3 +1,4 @@
+export { BannerSection } from './BannerSection';
 export { Brands } from './Brands';
 export { CustomTestimonials } from './CustomTestimonials';
 export { EnhancedSlider } from './EnhancedSlider';

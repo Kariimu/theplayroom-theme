@@ -6,14 +6,13 @@ export interface HomeBlockStubProps {
 }
 
 /**
- * The twelve custom home blocks declared in `twilight.json` that are not built
- * yet. Each is bound to a Stage-1 placeholder (below) so the owner can add every
+ * The custom home blocks declared in `twilight.json` that are not built yet.
+ * Each is bound to a Stage-1 placeholder (below) so the owner can add every
  * block in the dev settings panel and confirm it renders and receives its
  * fields. The real components land in Stage 3; as each is built, remove its key
  * here and register the real one. Delete this file when the list is empty.
  */
 export const CUSTOM_HOME_BLOCK_KEYS = [
-  'banner-section',
   'reviews-section',
   'custom-brands-section',
   'shopping1-section',
