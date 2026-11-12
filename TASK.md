@@ -24,7 +24,7 @@ Read first: `AGENTS.md` (engine rules + Playroom section) and `docs/MIGRATION-PL
 | # | Decision | Needed by |
 |---|---|---|
 | D1 | Salla's answers to the questions in plan section 2 (Twig end date for this store, saved-settings migration, framework accepted) | Stage 14 |
-| D2 | FAQ: keep in theme files (edit = theme update), or keep editable in the dashboard through the `common-questions-section` block | Stage 1 |
+| ~~D2~~ | **Resolved 12 Nov 2026: dashboard-editable** through the `common-questions-section` block (and/or product specs), not hard-coded in theme files | Stage 1 |
 | D3 | Gallery page: rebuild as `/gallery` from products tagged `gallery`, or drop it and keep the home gallery/reels blocks | Stage 4 |
 | D4 | Side cart drawer: skip (as today) or build | Stage 6 |
 | D5 | Cloudflare: are AI crawlers allowed on theplayroom.sa? (needed for GEO) | Stage 10 |
@@ -34,15 +34,15 @@ Read first: `AGENTS.md` (engine rules + Playroom section) and `docs/MIGRATION-PL
 
 ## Stage 1 — Plan update and manifest
 Goal: the plan reflects what Phase 0 proved, and `twilight.json` is final.
-- [ ] Write a "Phase 0 findings" section in `docs/MIGRATION-PLAN.md` (observed data shapes for specs, tags, category fields, menus) and set the final tier for every row of 5A
-- [ ] `app/lib/tags.ts`: the single list of tag conventions (`whatsapp`, `cart-upsell`, `feature:`, `card:`, `set:`, existing `Group-Value` filter tags)
-- [ ] `twilight.json`: keep starter base; add only the "keep" settings from 5A with ids and Arabic labels copied from `docs/legacy/old-twilight.json`; no root collections, no root product pickers
-- [ ] Six shared home blocks: same `key`/`path`, add the old fields the starter lacks, same field ids
-- [ ] Twelve custom home blocks declared with `key`, `path`, title, icon, fields copied exactly (including the field id `fatures`)
-- [ ] Stub component per new block, registered in `app/router.tsx` with `...DefaultHomeComponents` first
-- [ ] Decide what `twilight.preview.json` is for; keep it documented or remove it
+- [ ] Write a "Phase 0 findings" section in `docs/MIGRATION-PLAN.md` (observed data shapes for specs, tags, category fields, menus) and set the final tier for every row of 5A — **BLOCKED**: the spike report lives only in an earlier chat, not this repo (TASK line 19). Owner will paste it; the four 5A verification items are flagged PENDING in the plan and tiers stay provisional until then.
+- [x] `app/lib/tags.ts`: the single list of tag conventions (`whatsapp`, `cart-upsell`, `feature:`, `card:`, `set:`, `Group-Value` filter tags) + dev-only unknown-tag warning, with tests
+- [x] `twilight.json`: starter base + the Tier-4 "keep" settings (`show_whatsapp`, `whatsapp_number`, `footer_logo`, `footer_description`) with old ids/Arabic labels; no root collections, no root product pickers. `categories_whatsapp` held pending the spike (tags vs fallback dropdown)
+- [x] Six shared home blocks: already carry the legacy `key`/`path` in the starter and lack no legacy field (verified) — no change needed
+- [x] Twelve custom home blocks declared with exact `key`/`path`/title/icon/fields (incl. `fatures`); two value-only fixes for the React validator (boolean `0→false`, collection `maxLength` string→int), no ids touched
+- [x] Stub component per new block (`app/components/home/stubs.tsx`), registered in `app/router.tsx` after `...DefaultHomeComponents`, with tests
+- [x] `twilight.preview.json`: kept + documented (dev-server home preview layout; starter default for now, real arrangement rebuilt in Stage 3)
 Done when: all 18 blocks can be added in the dev settings panel and render (stubs show their data keys).
-Result:
+Result: **Partial — mechanical manifest + code complete, Phase 0 findings blocked on the owner's spike report.** `pnpm build`, `typecheck`, `check:manifest` green; all new tests pass; no new test failures (10 pre-existing failures in PageAdvertisements/ProductDetails/ProductGallery exist on the `migration` base, unrelated to this stage). twilight.json: 23 components (11 starter + 12 custom), 33 settings. OWNER: (1) paste the Phase 0 spike report so the findings section + final tiers can be written; (2) run `salla theme dev --store <store-id>` and add each of the 18 blocks in the settings panel at `/ar` and `/en`, confirming each renders its data keys. PR into `migration` after the report lands and tiers are locked.
 
 ## Stage 2 — Foundation
 - [ ] Design tokens, body background, custom fonts (`dongol`), Tailwind config ported from the old theme (`docs/legacy/06` §13–14, old `master.twig` `:root`, old `styles.scss`)

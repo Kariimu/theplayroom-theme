@@ -28,6 +28,7 @@ import {
   FeaturedProductsWithSpecialProduct,
 } from './components/home/FeaturedProducts';
 import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
+import { homeBlockStubs } from './components/home/stubs';
 import { registerThemeHooks } from './hooks';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
 
@@ -77,6 +78,10 @@ registerHomeComponents({
   'slider-products-with-header': SliderProductsWithHeader,
   'enhanced-square-banners': EnhancedSquareBanners,
   blog: Blog,
+  // Stage 1: the twelve custom blocks are declared in twilight.json but not
+  // built yet — bind each to a placeholder so it can be added and renders its
+  // fields in the dev panel. Replaced by the real components in Stage 3.
+  ...homeBlockStubs,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
