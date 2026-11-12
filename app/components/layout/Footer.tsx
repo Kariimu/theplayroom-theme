@@ -200,16 +200,19 @@ function FooterApps({ className }: { className: string }) {
   );
 }
 
-/** The logo link, same shape in both layouts -- only its own spacing differs. */
+/** The logo link, same shape in both layouts -- only its own spacing differs.
+ *  Prefers the theme's `footer_logo` setting (5A Tier 4), falling back to the
+ *  store logo. */
 function FooterLogo({ className }: { className: string }) {
-  const { store } = useTwilight();
+  const { store, theme } = useTwilight();
+  const footerLogo = (theme?.settings as { footer_logo?: string } | undefined)?.footer_logo;
   return (
     <Link
       to="/"
       className={`store-footer__logo inline-flex items-center m-0 transition-opacity hover:opacity-75 ${className}`}
     >
       <Image
-        src={store.logo}
+        src={footerLogo || store.logo}
         alt={store.name || 'Store'}
         width={150}
         height={44}
@@ -220,10 +223,17 @@ function FooterLogo({ className }: { className: string }) {
   );
 }
 
-/** Merchant-authored description HTML -- mirrors the Twig theme's
- *  `store.description|raw`. Renders nothing when the store has none set. */
+/** Footer blurb: the theme's `footer_description` setting (5A Tier 4,
+ *  `format: text`) as plain text, else the store's description HTML (Twig's
+ *  `store.description|raw`). Renders nothing when neither is set. */
 function FooterDescription({ className }: { className: string }) {
-  const { store } = useTwilight();
+  const { store, theme } = useTwilight();
+  const footerDescription = (
+    theme?.settings as { footer_description?: string } | undefined
+  )?.footer_description?.trim();
+  if (footerDescription) {
+    return <div className={`store-footer__desc opacity-80 ${className}`}>{footerDescription}</div>;
+  }
   if (!store.description) return null;
   return (
     <div
