@@ -11,6 +11,7 @@ import { routeTree } from './routeTree.gen';
 import {
   BannerSection,
   Brands,
+  CommonQuestionsSection,
   CustomTestimonials,
   EnhancedSlider,
   FeaturedProducts,
@@ -93,6 +94,7 @@ registerHomeComponents({
   'banner-section': BannerSection,
   'features-section': FeaturesSection,
   'features2-section': Features2Section,
+  'common-questions-section': CommonQuestionsSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -124,6 +126,10 @@ registerHomeComponentConfig({
   // Up to 3 larger feature cards (icon, title, description).
   'features2-section': {
     height: '280px',
+  },
+  // A collapsed accordion of up to 15 Q&As; closed-row height × a handful visible.
+  'common-questions-section': {
+    height: '400px',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',
