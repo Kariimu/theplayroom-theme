@@ -44,15 +44,15 @@ Goal: the plan reflects what Phase 0 proved, and `twilight.json` is final.
 Done when: all 18 blocks can be added in the dev settings panel and render (stubs show their data keys).
 Result: **Complete.** `docs/PHASE-0-FINDINGS.md` replaces the lost spike report; findings + final tiers written into plan §5B, all three "Confirm in Stage 1" items repo-verified. `app/lib/tags.ts` (conventions + `tagIdFromUrl` for list-by-tag) and `app/components/home/stubs.tsx` (12 placeholders) added with tests. `twilight.json`: 23 components (11 starter + 12 custom), 34 settings (4 Tier-4 keep + a section heading); `categories_whatsapp` left out (tags cover it); no root collections/pickers. `twilight.preview.json` kept + documented. `pnpm build`, `typecheck`, `check:manifest` and all new tests green; the 10 pre-existing failures (PageAdvertisements/ProductDetails/ProductGallery) are on the `migration` base, unrelated. Owner confirmed in live preview that all 18 blocks add and render their data keys (the 12 custom ones show the Stage-1 placeholder by design). Next: open PR `stage-1-manifest` → `migration`.
 
-## Stage 2 — Foundation
-- [ ] Design tokens, body background, custom fonts (`dongol`), Tailwind config ported from the old theme (`docs/legacy/06` §13–14, old `master.twig` `:root`, old `styles.scss`)
-- [ ] Layout and header: logo, menu from the dashboard menu, side menu, search with suggestions from `locales`
-- [ ] Footer: dashboard footer menu, logo/description settings, native payment and trust components
-- [ ] Floating WhatsApp button through the `body:end` hook slot (`show_whatsapp`, `whatsapp_number`)
-- [ ] Product card: wrap the engine card, register as `product:card`; WhatsApp button for products tagged `whatsapp`, number from the setting
-- [ ] Store-wide content into `locales`: 4 universal features, search suggestions, FAQ per D2 (source: `docs/legacy/data/store-wide.json`)
+## Stage 2 — Foundation  (IN PROGRESS — branch `stage-2-foundation`, stacked on `stage-1-manifest`)
+- [x] Design tokens, body background (#fcf9f5), `dongol` self-hosted + LTR system-font fallback, 4 brand tints in Tailwind + `:root`
+- [ ] Layout and header: logo, menu from the dashboard menu, side menu, search with suggestions from `locales` — **not started** (needs browser verification; side-menu display rule per Phase 0 §4)
+- [ ] Footer: dashboard footer menu, logo/description settings, native payment and trust components — **not started** (confirm native payment/trust components render — tier-table item)
+- [x] Floating WhatsApp button through the `body:end` hook slot (`show_whatsapp`, `whatsapp_number`)
+- [ ] Product card: wrap the engine card, register as `product:card`; WhatsApp button for products tagged `whatsapp` — **not started**. The starter already has a `ProductCard.tsx` wrapper but it is **not** registered as `product:card` and has no WhatsApp-enquiry logic; needs the recipe + browser verification of the DOM/portal swap.
+- [~] Store-wide content into `locales`: 4 universal features (done, EN authored, images in `public/features/`) + WhatsApp enquiry message (done). FAQ excluded per D2. **Search suggestions (`search_texts`): the merchant's saved values are not in the repo — OWNER to provide, or point me at where they show on the live site, so I don't invent them.**
 Done when: home, a category and a product page show the Playroom header, footer, colours, fonts and card in both languages.
-Result:
+Result: **In progress (3 of 6 items).** Done + committed: foundation tokens/fonts/background; floating WhatsApp (body:end hook); store-wide locales (universal features + enquiry message). Each with tests; typecheck + build + check:manifest green; 15 new tests pass (pre-existing 10 failures unrelated, on the migration base). **Remaining: product card (register + WhatsApp logic), header, footer** — the visually-sensitive items that need the owner at `/ar` and `/en`, mobile and desktop. OWNER input needed: `search_texts` values. Next session continues these three, then the full done-check + PR into `migration` (rebase once Stage 1 merges).
 
 ## Stage 3 — Home blocks
 Build the twelve stubs into real blocks, simplest first; one commit per block, each with a test.
