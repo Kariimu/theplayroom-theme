@@ -30,7 +30,6 @@ import {
 import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
 import { homeBlockStubs } from './components/home/stubs';
 import { registerThemeHooks } from './hooks';
-import { ProductCard } from './components/product';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
 
 const ProductListPage = lazy(() =>
@@ -43,10 +42,14 @@ registerThemeHooks();
 registry.register('product:list-page', ProductListPage);
 registry.register('product:list-skeleton', ProductListSkeleton);
 
-// Theme product card everywhere the engine resolves `product:card` (lists,
-// category, related). Both calls are required — `override` alone is ignored.
-registry.register('product:card', ProductCard);
-registry.override('product:card', ProductCard);
+// NOTE: we deliberately do NOT register `product:card`. The theme `ProductCard`
+// wraps the engine `ProductCard`, which itself resolves `product:card` from the
+// registry — registering the wrapper makes it re-resolve to itself and recurse
+// infinitely (freezes the page when a product list mounts; the recipe warns
+// "do not render the engine card inside your override"). The theme card is used
+// directly in the home blocks (FeaturedProducts etc.), which is safe. A global
+// override needs a from-scratch card (no engine-card wrap) — Stage 4/5, when the
+// list/product pages are forked.
 
 registerHomeComponents({
   ...DefaultHomeComponents,
