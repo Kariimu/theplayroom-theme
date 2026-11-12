@@ -14,6 +14,7 @@ export { MainLinks } from './MainLinks';
 export { ModernBannerSection } from './ModernBannerSection';
 export { PhotosSlider } from './PhotosSlider';
 export { ProductsSection } from './ProductsSection';
+export { ReelsSection } from './ReelsSection';
 export { ReviewsSection } from './ReviewsSection';
 export { ProductsSlider } from './ProductsSlider';
 export { ShoppingSection } from './ShoppingSection';

@@ -9,11 +9,11 @@ import twilight from '../../../twilight.json';
 
 describe('home block stubs', () => {
   it('render the block key and its data keys', () => {
-    const Stub = homeBlockStubs['reels-section'];
-    const { getByText, container } = render(<Stub data={{ title_section: 'x', reels: [] }} />);
-    expect(getByText('reels-section')).toBeTruthy();
-    expect(getByText('data: title_section, reels')).toBeTruthy();
-    expect(container.querySelector('[data-home-stub="reels-section"]')).toBeTruthy();
+    const Stub = homeBlockStubs['instagram-section'];
+    const { getByText, container } = render(<Stub data={{ page_name: 'x', posts: [] }} />);
+    expect(getByText('instagram-section')).toBeTruthy();
+    expect(getByText('data: page_name, posts')).toBeTruthy();
+    expect(container.querySelector('[data-home-stub="instagram-section"]')).toBeTruthy();
   });
 
   it('say so when the block has no data', () => {
@@ -23,8 +23,8 @@ describe('home block stubs', () => {
   });
 
   it('expose exactly the remaining keys, each with a component', () => {
-    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(2);
-    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(2);
+    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(1);
+    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(1);
     for (const key of CUSTOM_HOME_BLOCK_KEYS) {
       // memo() returns a component object, not a bare function — assert it renders.
       const Stub = homeBlockStubs[key as CustomHomeBlockKey];

@@ -12,10 +12,7 @@ export interface HomeBlockStubProps {
  * fields. The real components land in Stage 3; as each is built, remove its key
  * here and register the real one. Delete this file when the list is empty.
  */
-export const CUSTOM_HOME_BLOCK_KEYS = [
-  'reels-section',
-  'instagram-section',
-] as const;
+export const CUSTOM_HOME_BLOCK_KEYS = ['instagram-section'] as const;
 
 export type CustomHomeBlockKey = (typeof CUSTOM_HOME_BLOCK_KEYS)[number];
 

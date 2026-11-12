@@ -27,6 +27,7 @@ import {
   PhotosSlider,
   ProductsSection,
   ProductsSlider,
+  ReelsSection,
   ReviewsSection,
   ShoppingSection,
   SliderProductsWithHeader,
@@ -107,6 +108,7 @@ registerHomeComponents({
   'reviews-section': ReviewsSection,
   'gallery-section': GallerySection,
   'modern-banner-section': ModernBannerSection,
+  'reels-section': ReelsSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -166,6 +168,11 @@ registerHomeComponentConfig({
   // Header + a 16:9/21:9 banner with hotspots + a feature grid + a WhatsApp footer.
   'modern-banner-section': {
     height: 'clamp(560px, 70vw, 900px)',
+  },
+  // A 9:16 video row, ~260px cards plus a product footer.
+  'reels-section': {
+    height: '480px',
+    placeholder: <SliderSkeleton />,
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',
