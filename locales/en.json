@@ -56,6 +56,7 @@
   "blocks.footer.mobile": "Mobile",
   "blocks.footer.phone": "Phone",
   "blocks.footer.whatsapp": "WhatsApp",
+  "blocks.floating_whatsapp.label": "Chat on WhatsApp",
   "blocks.footer.sbc_trusted_by": "Trusted by",
   "blocks.footer.sbc_platform": "Business Platform",
   "blocks.footer.newsletter": "Newsletter",
