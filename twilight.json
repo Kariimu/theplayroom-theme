@@ -476,6 +476,13 @@
             "selected": false
         },
         {
+            "type": "static",
+            "format": "title",
+            "id": "static-label8",
+            "value": "<div class='rounded-lg' style='background-color: #21636d; display: flex; justify-content: center; align-items: center;padding: 15px;margin-bottom: 20px !important; flex-direction: column;gap: 15px;'><h6 style='color: #ffffff;font-size: 15px; font-weight: bold;'> واتساب والفوتر</h6></div>",
+            "variant": "h6"
+        },
+        {
             "id": "show_whatsapp",
             "type": "boolean",
             "format": "switch",
