@@ -7,6 +7,7 @@ import {
   isWhatsappProduct,
   parseGroupValueTag,
   prefixedTagKeys,
+  tagIdFromUrl,
   tagNames,
   warnUnknownTagKey,
 } from '../../app/lib/tags';
@@ -71,6 +72,19 @@ describe('parseGroupValueTag', () => {
   it('is null without a real group/value split', () => {
     for (const t of ['whatsapp', '-value', 'group-', '-', '  ']) {
       expect(parseGroupValueTag(t)).toBeNull();
+    }
+  });
+});
+
+describe('tagIdFromUrl', () => {
+  it('reads the numeric id from a tag page URL', () => {
+    expect(tagIdFromUrl('https://theplayroom.sa/ar/مجموعة-التسلق/tag-1143764859')).toBe(1143764859);
+    expect(tagIdFromUrl('/ar/x/tag-42?page=2')).toBe(42);
+  });
+
+  it('is null when there is no tag id (list responses send url: null)', () => {
+    for (const u of [null, undefined, '', 'https://theplayroom.sa/ar/category/c123', 'tag-']) {
+      expect(tagIdFromUrl(u)).toBeNull();
     }
   });
 });

@@ -70,6 +70,18 @@ export function prefixedTagKeys(
 }
 
 /**
+ * The numeric tag id from a tag page URL (`…/tag-1143764859` → `1143764859`), or
+ * null. Tag objects carry `{ name, url }` with **no id field** (Phase 0 §2), yet
+ * listing a product's companions by tag needs the numeric id
+ * (`product.list({ source: 'tags', sourceValue })` takes a number). On list
+ * responses `url` can be null — then there is no id to list by.
+ */
+export function tagIdFromUrl(url: string | null | undefined): number | null {
+  const match = (url ?? '').match(/tag-(\d+)(?:[/?#]|$)/);
+  return match ? Number(match[1]) : null;
+}
+
+/**
  * A merchant filter tag `"<group>-<value>"` (06 §6), split on the first hyphen
  * so a value keeps its own hyphens (`"Age Range-7 months - 5 years"` → group
  * `"Age Range"`, value `"7 months - 5 years"`). Returns null when there is no
