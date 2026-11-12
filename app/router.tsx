@@ -24,6 +24,7 @@ import {
   PhotosSlider,
   ProductsSection,
   ProductsSlider,
+  ShoppingSection,
   SliderProductsWithHeader,
   EnhancedSquareBanners,
 } from './components/home';
@@ -97,6 +98,7 @@ registerHomeComponents({
   'features2-section': Features2Section,
   'common-questions-section': CommonQuestionsSection,
   'products-section': ProductsSection,
+  'shopping1-section': ShoppingSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -136,6 +138,10 @@ registerHomeComponentConfig({
   'products-section': {
     height: '450px',
     placeholder: <ProductsListSkeleton />,
+  },
+  // A 2–5 column card grid, up to 10 image+title+subtitle tiles.
+  'shopping1-section': {
+    height: 'clamp(280px, 40vw, 420px)',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',

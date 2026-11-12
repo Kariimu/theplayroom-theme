@@ -12,5 +12,6 @@ export { MainLinks } from './MainLinks';
 export { PhotosSlider } from './PhotosSlider';
 export { ProductsSection } from './ProductsSection';
 export { ProductsSlider } from './ProductsSlider';
+export { ShoppingSection } from './ShoppingSection';
 export { SliderProductsWithHeader } from './SliderProductsWithHeader';
 export { EnhancedSquareBanners } from './EnhancedSquareBanners';
