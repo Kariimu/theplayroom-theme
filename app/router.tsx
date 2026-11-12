@@ -21,6 +21,7 @@ import {
   FeaturesSection,
   GallerySection,
   FixedProducts,
+  InstagramSection,
   LatestProducts,
   MainLinks,
   ModernBannerSection,
@@ -39,7 +40,6 @@ import {
   FeaturedProductsWithSpecialProduct,
 } from './components/home/FeaturedProducts';
 import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
-import { homeBlockStubs } from './components/home/stubs';
 import { registerThemeHooks } from './hooks';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
 
@@ -109,10 +109,7 @@ registerHomeComponents({
   'gallery-section': GallerySection,
   'modern-banner-section': ModernBannerSection,
   'reels-section': ReelsSection,
-  // Stage 1: the remaining custom blocks are declared in twilight.json but not
-  // built yet — bind each to a placeholder so it can be added and renders its
-  // fields in the dev panel. Replaced by the real components in Stage 3.
-  ...homeBlockStubs,
+  'instagram-section': InstagramSection,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
@@ -221,6 +218,10 @@ registerHomeComponentConfig({
     placeholder: <SliderSkeleton />,
     className: (data) =>
       `s-block s-block--photos-slider-with-text${data.in_container ? ' s-block--photos-slider-with-text-boxed' : ''}`,
+  },
+  // Profile header + a 2–5 column post grid, up to 20 square tiles.
+  'instagram-section': {
+    height: 'clamp(480px, 60vw, 760px)',
   },
 });
 
