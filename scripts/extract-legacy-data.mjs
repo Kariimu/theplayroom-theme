@@ -33,15 +33,29 @@ const limitArg = process.argv.indexOf('--limit');
 const LIMIT = limitArg > -1 ? Number(process.argv[limitArg + 1]) : Infinity;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
-// Returns { doc, redirected } on a 200, or null when the page could not be
-// fetched. Salla 302s the 29 hidden sitemap products to the storefront home;
-// those come back redirected:true with doc = the home page (no product markup).
+// A redirect that lands on the storefront home (`/ar` or `/en`) means the page
+// is gone: Salla sends the 29 hidden products and dead categories there. A
+// redirect to another slug (same `c<id>`/`p<id>`) is just a rename — keep it.
+const isHome = (u) => {
+  try {
+    return /^\/(ar|en)\/?$/.test(new URL(u).pathname);
+  } catch {
+    return false;
+  }
+};
+
+// Returns { doc, redirected, finalUrl } on a 200, or null when the page could
+// not be fetched. redirected:true with a home finalUrl == gone.
 async function getDoc(url) {
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'text/html' } });
       if (res.ok)
-        return { doc: new JSDOM(await res.text()).window.document, redirected: res.redirected };
+        return {
+          doc: new JSDOM(await res.text()).window.document,
+          redirected: res.redirected,
+          finalUrl: res.url,
+        };
       console.error(`  HTTP ${res.status} ${url}`);
       if (res.status === 404) return null;
     } catch (e) {
@@ -210,13 +224,18 @@ async function main() {
     await sleep(400);
     const enR = await getDoc(c.en);
     await sleep(400);
-    const ar = arR && !arR.redirected ? arR.doc : null;
-    const en = enR && !enR.redirected ? enR.doc : null;
+    // A category whose sitemap slug 301s to a new slug (same c<id>) is live —
+    // keep it. Only a redirect to the home page means the category is gone.
+    const arDead = !!(arR?.redirected && isHome(arR.finalUrl));
+    const enDead = !!(enR?.redirected && isHome(enR.finalUrl));
+    const ar = arR && !arDead ? arR.doc : null;
+    const en = enR && !enDead ? enR.doc : null;
     const a = ar ? extractCategory(ar) : {};
     const e = en ? extractCategory(en) : {};
     categories.push({
       id: c.id,
       ar_url: c.ar,
+      final_url: arR?.redirected ? decodeURIComponent(arR.finalUrl) : '',
       title_ar: a.page_title,
       title_en: e.page_title,
       banner_image: a.banner_image,
@@ -227,7 +246,8 @@ async function main() {
       banner_desc_en: e.banner_desc,
       hero_desc_ar: a.hero_desc,
       hero_desc_en: e.hero_desc,
-      fetched: arR?.redirected ? 'redirected' : ar ? 'ok' : 'FAILED',
+      // 'redirected' = gone (lands on home); 'renamed' = live at a new slug.
+      fetched: arDead ? 'redirected' : arR?.redirected ? 'renamed' : ar ? 'ok' : 'FAILED',
     });
   }
 
@@ -252,7 +272,11 @@ async function main() {
   console.log(`  WhatsApp-only: ${n((r) => r.whatsapp_only)}`);
   console.log(`Store-wide FAQ questions: ${storeWide.faq.length}`);
   console.log(`Product-specific FAQ rows: ${faqRows.length}`);
-  console.log(`Categories with a banner: ${categories.filter((c) => c.banner_image).length}/${categories.length}`);
+  const cn = (f) => categories.filter(f).length;
+  console.log(
+    `Categories: ${cn((c) => c.fetched === 'ok' || c.fetched === 'renamed')} live (${cn((c) => c.fetched === 'renamed')} at a renamed slug), ${cn((c) => c.fetched === 'redirected')} gone, of ${categories.length}`
+  );
+  console.log(`  with a banner: ${categories.filter((c) => c.banner_image).length}`);
 }
 
 // Run only when executed directly, so the extract functions can be imported in tests.
