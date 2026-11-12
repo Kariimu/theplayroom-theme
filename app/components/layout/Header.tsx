@@ -15,6 +15,7 @@ import { HOME_ROUTE_ID, PRODUCT_ROUTE_ID } from '../../lib/routeIds';
 import { HeaderMainMenu } from './HeaderMainMenu';
 import { HeaderNav } from './HeaderNav';
 import { HeaderTopnav } from './HeaderTopnav';
+import { SearchSuggestions } from './SearchSuggestions';
 import { PageAdvertisements } from './PageAdvertisements';
 
 /** Opens the Salla search modal (the `<SallaSearch />` at the end of the header). */
@@ -288,6 +289,9 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
       </div>
 
       {showIntro && <HeaderIntro isHomePage={isHomePage} />}
+
+      {/* Curated "popular searches" (old `search_texts`) under the bar on home. */}
+      {isHomePage && <SearchSuggestions className="site-header__suggestions" />}
 
       <HeaderNav open={navOpen} onClose={() => setNavOpen(false)} />
 
