@@ -6,7 +6,7 @@ import {
   registerHomeComponentConfig,
   DefaultHomeComponents,
 } from '@salla.sa/twilight-theme-engine/routes/home';
-import { SliderSkeleton } from '@salla.sa/twilight-components-react';
+import { ProductsListSkeleton, SliderSkeleton } from '@salla.sa/twilight-components-react';
 import { routeTree } from './routeTree.gen';
 import {
   BannerSection,
@@ -22,6 +22,7 @@ import {
   LatestProducts,
   MainLinks,
   PhotosSlider,
+  ProductsSection,
   ProductsSlider,
   SliderProductsWithHeader,
   EnhancedSquareBanners,
@@ -95,6 +96,7 @@ registerHomeComponents({
   'features-section': FeaturesSection,
   'features2-section': Features2Section,
   'common-questions-section': CommonQuestionsSection,
+  'products-section': ProductsSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -130,6 +132,10 @@ registerHomeComponentConfig({
   // A collapsed accordion of up to 15 Q&As; closed-row height × a handful visible.
   'common-questions-section': {
     height: '400px',
+  },
+  'products-section': {
+    height: '450px',
+    placeholder: <ProductsListSkeleton />,
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',
