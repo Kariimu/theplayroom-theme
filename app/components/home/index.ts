@@ -11,6 +11,7 @@ export { FeaturedProducts, featuredProductsConfig } from './FeaturedProducts';
 export { FixedProducts } from './FixedProducts';
 export { LatestProducts } from './LatestProducts';
 export { MainLinks } from './MainLinks';
+export { ModernBannerSection } from './ModernBannerSection';
 export { PhotosSlider } from './PhotosSlider';
 export { ProductsSection } from './ProductsSection';
 export { ReviewsSection } from './ReviewsSection';
