@@ -1,10 +1,8 @@
 import { memo } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
+import { cleanWhatsappNumber } from '../../lib/whatsapp';
 
-/** Digits only for a `wa.me` link (drops spaces, `+`, `-`, and anything non-numeric). */
-export function cleanWhatsappNumber(raw: string | number | null | undefined): string {
-  return String(raw ?? '').replace(/\D/g, '');
-}
+export { cleanWhatsappNumber };
 
 export interface FloatingWhatsAppProps {
   /** The `whatsapp_number` setting (manifest `integer`). */

@@ -55,6 +55,10 @@ vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (_k: string, fallback?: string) => fallback ?? _k }),
 }));
 
+vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
+  useTwilight: () => ({ theme: { settings: { whatsapp_number: '966532603300' } } }),
+}));
+
 const product = { id: 42, name: 'Test product' } as never;
 
 beforeEach(() => {
@@ -147,6 +151,33 @@ describe('ProductCard', () => {
     await waitFor(() => expect(getByTestId('footer').querySelector('button')).toBeTruthy());
 
     expect(() => unmount()).not.toThrow();
+  });
+
+  it('swaps add-to-cart for a WhatsApp enquiry on a whatsapp-tagged product', async () => {
+    const wa = { id: 7, name: 'Climbing wall', tags: [{ name: 'whatsapp' }] } as never;
+    const { getByTestId } = render(<ProductCard product={wa} />);
+
+    await waitFor(() => {
+      const link = getByTestId('footer').querySelector(
+        'a.s-product-card-whatsapp-btn'
+      ) as HTMLAnchorElement | null;
+      expect(link).toBeTruthy();
+      expect(link!.getAttribute('href')).toContain('https://wa.me/966532603300');
+    });
+    // the engine buy button is hidden, not removed
+    expect(
+      getByTestId('footer').querySelector('salla-add-product-button')?.getAttribute('style')
+    ).toContain('display: none');
+  });
+
+  it('keeps add-to-cart for a product without the whatsapp tag', async () => {
+    const { getByTestId } = render(<ProductCard product={product} />);
+
+    await waitFor(() => expect(getByTestId('footer').querySelector('button')).toBeTruthy());
+    expect(getByTestId('footer').querySelector('a.s-product-card-whatsapp-btn')).toBeNull();
+    expect(
+      getByTestId('footer').querySelector('salla-add-product-button')?.getAttribute('style') ?? ''
+    ).not.toContain('display: none');
   });
 
   it('survives the engine unmounting its own conditional wishlist button on a layout change', async () => {
