@@ -12,6 +12,7 @@ export { LatestProducts } from './LatestProducts';
 export { MainLinks } from './MainLinks';
 export { PhotosSlider } from './PhotosSlider';
 export { ProductsSection } from './ProductsSection';
+export { ReviewsSection } from './ReviewsSection';
 export { ProductsSlider } from './ProductsSlider';
 export { ShoppingSection } from './ShoppingSection';
 export { SliderProductsWithHeader } from './SliderProductsWithHeader';

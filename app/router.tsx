@@ -25,6 +25,7 @@ import {
   PhotosSlider,
   ProductsSection,
   ProductsSlider,
+  ReviewsSection,
   ShoppingSection,
   SliderProductsWithHeader,
   EnhancedSquareBanners,
@@ -101,6 +102,7 @@ registerHomeComponents({
   'products-section': ProductsSection,
   'shopping1-section': ShoppingSection,
   'custom-brands-section': CustomBrandsSection,
+  'reviews-section': ReviewsSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -148,6 +150,10 @@ registerHomeComponentConfig({
   // A logo row (grid or marquee), one line of ~100px-tall logos.
   'custom-brands-section': {
     height: '140px',
+  },
+  // A centered rating number, heading, description and CTA.
+  'reviews-section': {
+    height: '220px',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',

@@ -13,7 +13,6 @@ export interface HomeBlockStubProps {
  * here and register the real one. Delete this file when the list is empty.
  */
 export const CUSTOM_HOME_BLOCK_KEYS = [
-  'reviews-section',
   'reels-section',
   'gallery-section',
   'modern-banner-section',
