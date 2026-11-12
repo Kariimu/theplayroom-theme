@@ -97,6 +97,13 @@ If a Tier 1 row fails, drop that row one tier down; do not fall back to a root c
 3. Owner (or a bulk import, if Salla's product import covers specs and tags) enters the data on the products and categories **while the Twig theme is still live**. The old theme ignores it, so there is no downtime and no big-bang switch.
 4. Old settings are left untouched until cut-over, for rollback.
 
+**Phase 0b extraction result (owner-verified on the live site, 11 Nov 2026 — `scripts/extract-legacy-data.mjs`, data in `docs/legacy/data/`):**
+- **Catalogue is 14 products, not 43.** Of the 43 sitemap products, only 14 render a product page; the other 29 (including the flagship climbing products) 302-redirect to the storefront home. Rows for those are marked `redirected` in `products.csv`. Treat the 14 as the live catalogue.
+- **FAQ is store-wide, not per-product.** All 14 render the same 16 questions, so row 67 (per-product FAQ → specs) has no data; everything goes through row 68 (Tier 3, one `locales` list). The 16 Qs are **Arabic only** — EN product pages do not render the FAQ, so the English copy must be written for the migration, not extracted. Captured in `store-wide.json`; `faq.csv` is header-only by design.
+- **Facts (row 65):** only 3 of the 14 carry for_who / material / inner_box (بيت الألعاب, صندوق التخزين, مجموعة المغامرة). All 14 already have Salla spec groups.
+- **No product is WhatsApp-only today** (`categories_whatsapp`, row 73, is effectively unused on the catalogue).
+- **Not observed on the 14** (all zero in the sheet): dimensions image, feature badges, image cards, suggested games — the products that would carry these are mostly among the 29 that redirect. Re-check if any of those 29 are later unhidden.
+
 ## 6. Feature mapping (store-specific work, see 06 for current behaviour)
 | # | Feature | Target implementation | Notes |
 |---|---|---|---|

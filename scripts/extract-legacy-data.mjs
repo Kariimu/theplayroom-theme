@@ -14,8 +14,10 @@
 // Input : docs/legacy/data/urls.json  ({products:[{id,ar,en}], categories:[...]})
 // Output: docs/legacy/data/products.json     full data, both languages
 //         docs/legacy/data/products.csv      one row per product (opens in Excel)
-//         docs/legacy/data/faq.csv           one row per product question
-//         docs/legacy/data/store-wide.json   FAQ shown on every product + universal features
+//         docs/legacy/data/faq.csv           one row per product-specific question
+//                                            (header-only when the FAQ is entirely store-wide)
+//         docs/legacy/data/store-wide.json   the FAQ shown on every product page (Arabic only;
+//                                            EN product pages do not render the FAQ) + universal features
 //         docs/legacy/data/categories.csv    banner / hero text per category
 //
 // Usage (from the repo root):  node scripts/extract-legacy-data.mjs
@@ -31,11 +33,15 @@ const limitArg = process.argv.indexOf('--limit');
 const LIMIT = limitArg > -1 ? Number(process.argv[limitArg + 1]) : Infinity;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
+// Returns { doc, redirected } on a 200, or null when the page could not be
+// fetched. Salla 302s the 29 hidden sitemap products to the storefront home;
+// those come back redirected:true with doc = the home page (no product markup).
 async function getDoc(url) {
   for (let attempt = 1; attempt <= 3; attempt++) {
     try {
       const res = await fetch(url, { headers: { 'User-Agent': UA, Accept: 'text/html' } });
-      if (res.ok) return new JSDOM(await res.text()).window.document;
+      if (res.ok)
+        return { doc: new JSDOM(await res.text()).window.document, redirected: res.redirected };
       console.error(`  HTTP ${res.status} ${url}`);
       if (res.status === 404) return null;
     } catch (e) {
@@ -128,10 +134,11 @@ async function main() {
   const list = urls.products.slice(0, LIMIT);
   for (const [i, p] of list.entries()) {
     console.error(`product ${i + 1}/${list.length}  ${p.id}`);
-    const row = { id: p.id, ar_url: p.ar, en_url: p.en };
+    const row = { id: p.id, ar_url: p.ar, en_url: p.en, redirected: false };
     for (const lang of ['ar', 'en']) {
-      const doc = await getDoc(p[lang]);
-      row[lang] = doc ? extractProduct(doc) : null;
+      const r = await getDoc(p[lang]);
+      if (lang === 'ar' && r?.redirected) row.redirected = true; // Arabic is authoritative
+      row[lang] = r && !r.redirected ? extractProduct(r.doc) : null;
       await sleep(400);
     }
     products.push(row);
@@ -177,7 +184,7 @@ async function main() {
       suggested_games_ids: (a.suggested_games || []).join(' '),
       faq_total: (a.faq || []).length,
       faq_product_specific: own.length,
-      fetched: p.ar ? 'ok' : 'FAILED',
+      fetched: p.redirected ? 'redirected' : p.ar ? 'ok' : 'FAILED',
     };
   });
 
@@ -199,10 +206,12 @@ async function main() {
   const clist = urls.categories.slice(0, LIMIT);
   for (const [i, c] of clist.entries()) {
     console.error(`category ${i + 1}/${clist.length}  ${c.id}`);
-    const ar = await getDoc(c.ar);
+    const arR = await getDoc(c.ar);
     await sleep(400);
-    const en = await getDoc(c.en);
+    const enR = await getDoc(c.en);
     await sleep(400);
+    const ar = arR && !arR.redirected ? arR.doc : null;
+    const en = enR && !enR.redirected ? enR.doc : null;
     const a = ar ? extractCategory(ar) : {};
     const e = en ? extractCategory(en) : {};
     categories.push({
@@ -218,7 +227,7 @@ async function main() {
       banner_desc_en: e.banner_desc,
       hero_desc_ar: a.hero_desc,
       hero_desc_en: e.hero_desc,
-      fetched: ar ? 'ok' : 'FAILED',
+      fetched: arR?.redirected ? 'redirected' : ar ? 'ok' : 'FAILED',
     });
   }
 
@@ -232,7 +241,9 @@ async function main() {
   await writeFile(`${DIR}/categories.csv`, toCsv(categories, Object.keys(categories[0] || { id: '' })));
 
   const n = (f) => flat.filter(f).length;
-  console.log(`\nProducts fetched: ${n((r) => r.fetched === 'ok')}/${flat.length}`);
+  console.log(
+    `\nProduct pages (catalogue): ${n((r) => r.fetched === 'ok')}/${flat.length}  (redirected to home: ${n((r) => r.fetched === 'redirected')})`
+  );
   console.log(`  with facts: ${n((r) => r.for_who || r.material || r.inner_box)}`);
   console.log(`  with dimensions image: ${n((r) => r.dimensions_image)}`);
   console.log(`  with feature badges: ${n((r) => r.features_ar)}`);
