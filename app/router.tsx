@@ -19,6 +19,7 @@ import {
   featuredProductsConfig,
   Features2Section,
   FeaturesSection,
+  GallerySection,
   FixedProducts,
   LatestProducts,
   MainLinks,
@@ -103,6 +104,7 @@ registerHomeComponents({
   'shopping1-section': ShoppingSection,
   'custom-brands-section': CustomBrandsSection,
   'reviews-section': ReviewsSection,
+  'gallery-section': GallerySection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -154,6 +156,10 @@ registerHomeComponentConfig({
   // A centered rating number, heading, description and CTA.
   'reviews-section': {
     height: '220px',
+  },
+  // Up to 5 photo tiles (2–5 columns), square on phones, portrait on desktop.
+  'gallery-section': {
+    height: 'clamp(260px, 36vw, 420px)',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',

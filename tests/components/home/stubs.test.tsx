@@ -17,14 +17,14 @@ describe('home block stubs', () => {
   });
 
   it('say so when the block has no data', () => {
-    const Stub = homeBlockStubs['gallery-section'];
+    const Stub = homeBlockStubs['modern-banner-section'];
     const { getByText } = render(<Stub />);
     expect(getByText('no data')).toBeTruthy();
   });
 
   it('expose exactly the remaining keys, each with a component', () => {
-    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(4);
-    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(4);
+    expect(CUSTOM_HOME_BLOCK_KEYS).toHaveLength(3);
+    expect(new Set(CUSTOM_HOME_BLOCK_KEYS).size).toBe(3);
     for (const key of CUSTOM_HOME_BLOCK_KEYS) {
       // memo() returns a component object, not a bare function — assert it renders.
       const Stub = homeBlockStubs[key as CustomHomeBlockKey];

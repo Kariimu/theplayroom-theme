@@ -4,6 +4,7 @@ export { CommonQuestionsSection } from './CommonQuestionsSection';
 export { CustomBrandsSection } from './CustomBrandsSection';
 export { FeaturesSection } from './FeaturesSection';
 export { Features2Section } from './Features2Section';
+export { GallerySection } from './GallerySection';
 export { CustomTestimonials } from './CustomTestimonials';
 export { EnhancedSlider } from './EnhancedSlider';
 export { FeaturedProducts, featuredProductsConfig } from './FeaturedProducts';
