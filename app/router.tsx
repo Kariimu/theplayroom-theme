@@ -15,6 +15,7 @@ import {
   EnhancedSlider,
   FeaturedProducts,
   featuredProductsConfig,
+  FeaturesSection,
   FixedProducts,
   LatestProducts,
   MainLinks,
@@ -89,6 +90,7 @@ registerHomeComponents({
   'enhanced-square-banners': EnhancedSquareBanners,
   blog: Blog,
   'banner-section': BannerSection,
+  'features-section': FeaturesSection,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -112,6 +114,10 @@ registerHomeComponentConfig({
   // the container (not the full viewport) since the image sits in `.container`.
   'banner-section': {
     height: 'clamp(140px, 30vw, 427px)',
+  },
+  // A row of up to 4 icon+title items, 2 per row on phones.
+  'features-section': {
+    height: '160px',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',

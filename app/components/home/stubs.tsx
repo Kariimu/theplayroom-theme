@@ -18,7 +18,6 @@ export const CUSTOM_HOME_BLOCK_KEYS = [
   'shopping1-section',
   'products-section',
   'reels-section',
-  'features-section',
   'gallery-section',
   'modern-banner-section',
   'features2-section',
