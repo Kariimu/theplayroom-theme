@@ -20,7 +20,6 @@ export const CUSTOM_HOME_BLOCK_KEYS = [
   'reels-section',
   'gallery-section',
   'modern-banner-section',
-  'features2-section',
   'common-questions-section',
   'instagram-section',
 ] as const;

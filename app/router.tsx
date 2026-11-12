@@ -15,6 +15,7 @@ import {
   EnhancedSlider,
   FeaturedProducts,
   featuredProductsConfig,
+  Features2Section,
   FeaturesSection,
   FixedProducts,
   LatestProducts,
@@ -91,6 +92,7 @@ registerHomeComponents({
   blog: Blog,
   'banner-section': BannerSection,
   'features-section': FeaturesSection,
+  'features2-section': Features2Section,
   // Stage 1: the remaining custom blocks are declared in twilight.json but not
   // built yet — bind each to a placeholder so it can be added and renders its
   // fields in the dev panel. Replaced by the real components in Stage 3.
@@ -118,6 +120,10 @@ registerHomeComponentConfig({
   // A row of up to 4 icon+title items, 2 per row on phones.
   'features-section': {
     height: '160px',
+  },
+  // Up to 3 larger feature cards (icon, title, description).
+  'features2-section': {
+    height: '280px',
   },
   'custom-testimonials': {
     className: 's-block s-block--custom-testimonials s-block--full-bg',
