@@ -39,7 +39,6 @@ type ProductCardProps = ComponentProps<typeof EngineProductCard>;
 export function ProductCard(props: ProductCardProps) {
   const ref = useRef<HTMLDivElement>(null);
   const [footerEl, setFooterEl] = useState<HTMLElement | null>(null);
-  const [waSlotEl, setWaSlotEl] = useState<HTMLElement | null>(null);
   const { t } = useTranslation();
   const { theme } = useTwilight();
   const { product, isPlaceholder } = useMemo(
@@ -71,13 +70,9 @@ export function ProductCard(props: ProductCardProps) {
 
     const sync = () => {
       root.querySelectorAll<HTMLElement>('salla-add-product-button').forEach((el) => {
-        if (isWhatsapp) {
-          // Hide the buy button and mount the enquiry link where it sat.
-          el.style.display = 'none';
-          if (el.parentElement) setWaSlotEl(el.parentElement);
-          return;
-        }
-        // engine ships the card button fill="outline"; make it solid + centre its spinner
+        // engine ships the card button fill="outline"; make it solid + centre its spinner.
+        // For whatsapp products the button is hidden by CSS (`[data-whatsapp]`) and the
+        // enquiry link is portaled into the footer below — no DOM surgery here.
         el.setAttribute('fill', 'solid');
         el.setAttribute('loader-position', 'center');
       });
@@ -97,13 +92,14 @@ export function ProductCard(props: ProductCardProps) {
     const observer = new MutationObserver(sync);
     observer.observe(root, { childList: true, subtree: true });
     return () => observer.disconnect();
-  }, [isWhatsapp]);
+  }, []);
 
   return (
     <div
       ref={ref}
       style={{ display: 'contents' }}
       data-image-placeholder={isPlaceholder ? 'true' : undefined}
+      data-whatsapp={isWhatsapp ? 'true' : undefined}
     >
       <EngineProductCard {...props} product={product} />
       {footerEl &&
@@ -113,7 +109,7 @@ export function ProductCard(props: ProductCardProps) {
           footerEl
         )}
       {isWhatsapp &&
-        waSlotEl &&
+        footerEl &&
         waHref &&
         createPortal(
           <a
@@ -127,7 +123,7 @@ export function ProductCard(props: ProductCardProps) {
             </svg>
             <span>{t('blocks.whatsapp.enquiry_button', 'Enquire on WhatsApp')}</span>
           </a>,
-          waSlotEl
+          footerEl
         )}
     </div>
   );

@@ -1,3 +1,10 @@
+/* For a `whatsapp`-tagged product the card hides the engine add-to-cart button
+   (pure CSS — no DOM surgery) and the theme portals the enquiry link into the
+   footer in its place. */
+[data-whatsapp='true'] salla-add-product-button {
+  display: none !important;
+}
+
 /* Enquiry button shown on the product card (and product page) for `whatsapp`-tagged
    products, in place of add-to-cart. WhatsApp green so it reads as "contact", full
    width to match the engine's `salla-add-product-button` footprint. */

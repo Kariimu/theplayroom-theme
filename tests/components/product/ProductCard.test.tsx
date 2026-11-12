@@ -164,10 +164,10 @@ describe('ProductCard', () => {
       expect(link).toBeTruthy();
       expect(link!.getAttribute('href')).toContain('https://wa.me/966532603300');
     });
-    // the engine buy button is hidden, not removed
-    expect(
-      getByTestId('footer').querySelector('salla-add-product-button')?.getAttribute('style')
-    ).toContain('display: none');
+    // The buy button is hidden by CSS via `data-whatsapp` on the wrapper (no DOM surgery).
+    expect(getByTestId('engine-card').parentElement?.getAttribute('data-whatsapp')).toBe('true');
+    // The engine node is left in place (hidden by the stylesheet, not removed).
+    expect(getByTestId('footer').querySelector('salla-add-product-button')).toBeTruthy();
   });
 
   it('keeps add-to-cart for a product without the whatsapp tag', async () => {
@@ -175,9 +175,7 @@ describe('ProductCard', () => {
 
     await waitFor(() => expect(getByTestId('footer').querySelector('button')).toBeTruthy());
     expect(getByTestId('footer').querySelector('a.s-product-card-whatsapp-btn')).toBeNull();
-    expect(
-      getByTestId('footer').querySelector('salla-add-product-button')?.getAttribute('style') ?? ''
-    ).not.toContain('display: none');
+    expect(getByTestId('engine-card').parentElement?.hasAttribute('data-whatsapp')).toBe(false);
   });
 
   it('survives the engine unmounting its own conditional wishlist button on a layout change', async () => {
