@@ -24,6 +24,10 @@ vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
 }));
 
+vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
+  useTwilight: () => ({ theme: { settings: {} } }),
+}));
+
 const listMock = vi.fn().mockResolvedValue({
   data: [
     { id: 1, name: 'Full P1', is_out_of_stock: false },
