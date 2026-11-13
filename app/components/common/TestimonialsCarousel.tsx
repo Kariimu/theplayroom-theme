@@ -1,18 +1,30 @@
+import { useState } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { QuoteIcon, StarIcon } from '../icons';
 import { ScrollCarousel } from './ScrollCarousel';
+import { BottomSheet } from './BottomSheet';
 
 export interface TestimonialItem {
   avatar?: string;
   name?: string;
   text?: string;
   stars?: number;
+  /** A customer-submitted photo; shown behind a "view photo" trigger, not inline. */
+  image?: string;
 }
 
 const MAX_STARS = 5;
 const STAR_POSITIONS = Array.from({ length: MAX_STARS }, (_, position) => position + 1);
 
-function TestimonialCard({ item, index }: { item: TestimonialItem; index: number }) {
+function TestimonialCard({
+  item,
+  index,
+  onViewPhoto,
+}: {
+  item: TestimonialItem;
+  index: number;
+  onViewPhoto: () => void;
+}) {
   const { t } = useTranslation();
   const name = item.name?.trim();
   const stars = Math.max(0, Math.min(MAX_STARS, Math.round(Number(item.stars ?? 0))));
@@ -61,6 +73,12 @@ function TestimonialCard({ item, index }: { item: TestimonialItem; index: number
         )}
         <b className="testimonial-card__name">{item.name}</b>
       </figcaption>
+
+      {item.image && (
+        <button type="button" className="testimonial-card__view-photo" onClick={onViewPhoto}>
+          {t('blocks.home.view_review_photo', 'View photo')}
+        </button>
+      )}
     </figure>
   );
 }
@@ -80,8 +98,11 @@ export interface TestimonialsCarouselProps {
  */
 export function TestimonialsCarousel({ items, title, description }: TestimonialsCarouselProps) {
   const { t } = useTranslation();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
 
   if (!items.length) return null;
+
+  const openItem = openIndex != null ? items[openIndex] : null;
 
   return (
     <div className="s-testimonials container">
@@ -99,9 +120,26 @@ export function TestimonialsCarousel({ items, title, description }: Testimonials
           // A static settings list whose items have no id: see
           // .react-doctor/false-positives.md.
           // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-          <TestimonialCard key={`${index}-${item.name ?? ''}`} item={item} index={index} />
+          <TestimonialCard
+            key={`${index}-${item.name ?? ''}`}
+            item={item}
+            index={index}
+            onViewPhoto={() => setOpenIndex(index)}
+          />
         ))}
       </ScrollCarousel>
+
+      <BottomSheet open={openItem != null} onClose={() => setOpenIndex(null)} title={openItem?.name}>
+        {openItem?.image && (
+          <img
+            src={openItem.image}
+            alt={openItem.name ?? ''}
+            loading="lazy"
+            decoding="async"
+            className="testimonial-card__photo"
+          />
+        )}
+      </BottomSheet>
     </div>
   );
 }

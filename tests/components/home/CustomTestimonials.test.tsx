@@ -119,6 +119,26 @@ describe('CustomTestimonials', () => {
     expect(fireEvent.click(scroller)).toBe(true);
   });
 
+  it('offers a "view photo" trigger only for a review with an image, opening it in a sheet', () => {
+    const { container, getByText, queryByText } = render(
+      <CustomTestimonials
+        data={{ items: [...items, { name: 'سارة', text: 'جميل', image: 'photo.jpg' }] }}
+      />
+    );
+    const triggers = container.querySelectorAll('.testimonial-card__view-photo');
+    expect(triggers).toHaveLength(1);
+
+    // BottomSheet portals to document.body, not the render container.
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    fireEvent.click(triggers[0]);
+    expect(getByText('View photo')).toBeTruthy();
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog).toBeTruthy();
+    expect(dialog?.querySelector('img')?.getAttribute('src')).toBe('photo.jpg');
+    // The other three reviews have no image, so no trigger for them.
+    expect(queryByText('ممتاز')).toBeTruthy();
+  });
+
   it('uses the block title/description when provided', () => {
     const { getByText } = render(
       <CustomTestimonials

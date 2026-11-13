@@ -33,7 +33,7 @@ export interface MainLinksProps {
     vertical_links?: boolean;
     grayscale_links?: boolean;
     simplified_links?: boolean;
-    merge_links_with_top_component?: boolean;
+    merge_with_top_component?: boolean;
     title?: string;
     description?: string;
     position?: number;
@@ -50,7 +50,7 @@ export const MainLinks = memo(function MainLinks({ data }: MainLinksProps) {
     show_cats: showCats = false,
     show_controls: showControls = false,
     title,
-    merge_links_with_top_component: mergeWithTop = false,
+    merge_with_top_component: mergeWithTop = false,
   } = data;
 
   const items = showCats ? categories : links;

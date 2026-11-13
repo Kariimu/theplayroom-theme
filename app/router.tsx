@@ -190,7 +190,7 @@ registerHomeComponentConfig({
     placeholder: <SliderSkeleton />,
     // Keeps the engine entry's merge classes; theme config replaces, not merges.
     className: (data) => {
-      const mergeWithTop = data.merge_links_with_top_component;
+      const mergeWithTop = data.merge_with_top_component;
       return [
         's-block',
         's-block--main-links',

@@ -1304,6 +1304,16 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
       @apply inline-flex items-center justify-center font-bold text-primary;
     }
   }
+
+  /* A customer-submitted photo (legacy `items.image`): a text trigger, not
+     shown inline — opens in the shared BottomSheet. */
+  &__view-photo {
+    @apply self-start text-xs text-gray-400 underline transition-colors hover:text-primary;
+  }
+
+  &__photo {
+    @apply aspect-video w-full rounded-2xl bg-gray-100 object-cover;
+  }
 }
 
 /*

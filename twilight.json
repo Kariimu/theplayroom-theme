@@ -2254,6 +2254,17 @@
                             "value": null,
                             "multilanguage": true,
                             "required": false
+                        },
+                        {
+                            "id": "items.image",
+                            "type": "string",
+                            "format": "image",
+                            "label": "صورة",
+                            "description": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
                         }
                     ],
                     "required": false,
