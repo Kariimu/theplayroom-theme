@@ -478,10 +478,12 @@ salla-gifting {
 
   /* Floating action circle, half on the photo / half on the content below —
      add-to-cart (primary), "select options" / view-product link, WhatsApp
-     enquiry, or a disabled out-of-stock state. Icon stays white: the button's
-     own primary/gray background, never body text, carries the color. */
+     enquiry, or a disabled out-of-stock state. `text-primary-reverse` (not a
+     hardcoded white) so the icon stays readable whatever primary color the
+     merchant picks — the button's own background, never body text, carries
+     the color. */
   &__quick-action {
-    @apply absolute bottom-0 z-[1] flex h-11 w-11 translate-y-1/2 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-colors rtl:left-3 ltr:right-3;
+    @apply absolute bottom-0 z-[1] flex h-11 w-11 translate-y-1/2 items-center justify-center rounded-full bg-primary text-primary-reverse shadow-lg transition-colors rtl:left-3 ltr:right-3;
 
     &:hover {
       @apply bg-primary-d;
@@ -489,7 +491,7 @@ salla-gifting {
 
     &:disabled,
     &--disabled {
-      @apply cursor-not-allowed bg-gray-300 text-white;
+      @apply cursor-not-allowed bg-gray-300 text-gray-500;
     }
   }
 
