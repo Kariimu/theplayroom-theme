@@ -43,13 +43,13 @@ export const GallerySection = memo(function GallerySection({ data }: GallerySect
   return (
     <div className="container">
       {(title || description) && (
-        <div className="s-block__title text-center">
-          {title && <h2 className="text-lg font-semibold">{title}</h2>}
-          {description && <p className="text-sm opacity-70">{description}</p>}
+        <div className="s-block__title mb-8 text-center md:mb-12">
+          {title && <h2 className="mb-4 text-3xl font-black text-gray-900 md:text-4xl">{title}</h2>}
+          {description && <p className="text-lg text-gray-500">{description}</p>}
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
         {withImages.map((item, index) => {
           const desktop = item.image;
           const mobile = item.image_mobile || item.image;
@@ -57,7 +57,10 @@ export const GallerySection = memo(function GallerySection({ data }: GallerySect
           return (
             // A static settings list with no id; see .react-doctor/false-positives.md.
             // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-            <picture key={index} className="gallery-section__item block overflow-hidden rounded-lg">
+            <picture
+              key={index}
+              className="gallery-section__item group block aspect-square overflow-hidden rounded-2xl sm:aspect-[2/3]"
+            >
               {mobile && <source media="(max-width: 639px)" srcSet={getCdnImageUrl(mobile, { width: 336 }) ?? mobile} />}
               {desktop && <source media="(min-width: 640px)" srcSet={getCdnImageUrl(desktop, { width: 500 }) ?? desktop} />}
               <img
@@ -65,7 +68,7 @@ export const GallerySection = memo(function GallerySection({ data }: GallerySect
                 alt={item.alt_text || ''}
                 loading="lazy"
                 decoding="async"
-                className="aspect-square sm:aspect-[2/3] w-full h-full object-cover"
+                className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
               />
             </picture>
           );
@@ -73,8 +76,11 @@ export const GallerySection = memo(function GallerySection({ data }: GallerySect
       </div>
 
       {link && buttonText && (
-        <div className="text-center mt-6">
-          <Link to={link} className="btn btn--outline">
+        <div className="mt-8 text-center">
+          <Link
+            to={link}
+            className="inline-block rounded-full bg-primary px-8 py-4 text-lg font-bold text-primary-reverse shadow-lg transition-shadow hover:shadow-xl"
+          >
             {buttonText}
           </Link>
         </div>

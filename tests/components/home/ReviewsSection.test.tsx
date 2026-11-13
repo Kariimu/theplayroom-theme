@@ -33,6 +33,19 @@ describe('ReviewsSection', () => {
     expect(container.textContent).toContain('+3,000 happy customers');
   });
 
+  it('renders 5 stars, filled up to the rounded rating, when rating_count is a number', () => {
+    const { container } = render(<ReviewsSection data={{ rating_count: '4.4', title: 'x' }} />);
+    const stars = container.querySelectorAll('svg');
+    expect(stars).toHaveLength(5);
+    expect(container.querySelectorAll('svg.fill-accent')).toHaveLength(4);
+  });
+
+  it('skips the stars when rating_count does not parse as a number', () => {
+    const { container } = render(<ReviewsSection data={{ rating_count: 'ممتاز', title: 'x' }} />);
+    expect(container.querySelectorAll('svg')).toHaveLength(0);
+    expect(container.textContent).toContain('ممتاز');
+  });
+
   it('renders the CTA only with both a link and button text', () => {
     const { container, rerender } = render(
       <ReviewsSection data={{ title: 'x', button_text: 'See reviews', link: '/reviews' }} />

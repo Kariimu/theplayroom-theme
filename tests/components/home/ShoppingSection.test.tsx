@@ -54,7 +54,8 @@ describe('ShoppingSection', () => {
         data={{ items: [{ title: 'Plain', title_type: true, subtitle: 'Plain sub', subtitle_type: true }] }}
       />
     );
-    expect(container.querySelector('h3')?.className).toContain('font-normal');
-    expect(container.querySelector('p')?.className).toContain('text-xs');
+    const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
+    expect(titleEl.className).toContain('font-normal');
+    expect(subtitleEl.className).toContain('text-xs');
   });
 });

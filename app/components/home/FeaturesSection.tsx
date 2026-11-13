@@ -26,27 +26,37 @@ export const FeaturesSection = memo(function FeaturesSection({ data }: FeaturesS
   if (!features.length) return null;
 
   return (
-    <div className="container">
-      {title && <h2 className="s-block__title text-center text-lg font-semibold mb-4">{title}</h2>}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 sm:gap-8">
-        {features.map((feature, index) => (
-          // A static settings list with no id; see .react-doctor/false-positives.md.
-          // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-          <div key={index} className="flex flex-col items-center text-center gap-2">
-            {feature.image && (
-              <img
-                src={getCdnImageUrl(feature.image, { width: 100 }) ?? feature.image}
-                width="56"
-                height="56"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-14 w-14 object-contain"
-              />
-            )}
-            {feature.title && <p className="text-sm font-medium">{feature.title}</p>}
-          </div>
-        ))}
+    <div className="bg-brand-blue-light py-8 md:py-12">
+      <div className="container">
+        {title && (
+          <h2 className="s-block__title mb-8 text-center text-2xl font-black text-primary md:mb-12 md:text-4xl">
+            {title}
+          </h2>
+        )}
+        <div className="mx-auto grid max-w-4xl grid-cols-2 gap-6 sm:grid-cols-4 md:gap-12">
+          {features.map((feature, index) => (
+            // A static settings list with no id; see .react-doctor/false-positives.md.
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+            <div key={index} className="group flex flex-col items-center gap-3 text-center">
+              {feature.image && (
+                <img
+                  src={getCdnImageUrl(feature.image, { width: 150 }) ?? feature.image}
+                  width="80"
+                  height="80"
+                  alt=""
+                  loading="lazy"
+                  decoding="async"
+                  className="h-16 w-16 object-contain transition-transform duration-300 group-hover:scale-110 md:h-20 md:w-20"
+                />
+              )}
+              {feature.title && (
+                <p className="text-sm font-semibold leading-tight text-gray-900 md:text-base">
+                  {feature.title}
+                </p>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

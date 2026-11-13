@@ -38,47 +38,63 @@ export const ShoppingSection = memo(function ShoppingSection({ data }: ShoppingS
   return (
     <div className="container">
       {(title || subtitle) && (
-        <div className="s-block__title text-center">
-          {title && <h2 className="text-lg font-semibold">{title}</h2>}
-          {subtitle && <p className="text-sm opacity-70">{subtitle}</p>}
+        <div className="s-block__title mb-10 text-center md:mb-16">
+          {title && (
+            <h2 className="mb-4 text-3xl font-black text-gray-900 md:text-5xl">{title}</h2>
+          )}
+          {subtitle && <p className="text-lg font-medium text-gray-500 md:text-xl">{subtitle}</p>}
         </div>
       )}
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5 lg:gap-8">
         {items.map((item, index) => {
           const link = resolveLink(item.url);
           return (
             // A static settings list with no id; see .react-doctor/false-positives.md.
             // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-            <Link key={index} to={link || '#'} className="shopping-item flex flex-col gap-2">
+            <Link
+              key={index}
+              to={link || '#'}
+              className="group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+            >
               {item.image && (
-                <img
-                  src={getCdnImageUrl(item.image, { width: 500 }) ?? item.image}
-                  width="500"
-                  height="375"
-                  alt=""
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full aspect-[4/3] rounded-lg object-cover"
-                />
+                <div className="aspect-[4/3] overflow-hidden">
+                  <img
+                    src={getCdnImageUrl(item.image, { width: 500 }) ?? item.image}
+                    width="500"
+                    height="375"
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                  />
+                </div>
               )}
-              {item.title && (
-                <h3
-                  className={
-                    item.title_type ? 'text-sm font-normal' : 'text-base font-semibold'
-                  }
-                >
-                  {item.title}
-                </h3>
-              )}
-              {item.subtitle && (
-                <p
-                  className={
-                    item.subtitle_type ? 'text-xs' : 'text-sm font-medium opacity-70'
-                  }
-                >
-                  {item.subtitle}
-                </p>
+              {(item.title || item.subtitle) && (
+                <div className="p-4 text-center md:p-6">
+                  {item.title && (
+                    <p
+                      className={
+                        item.title_type
+                          ? 'text-sm font-normal text-gray-900'
+                          : 'text-base font-black text-gray-900 md:text-xl'
+                      }
+                    >
+                      {item.title}
+                    </p>
+                  )}
+                  {item.subtitle && (
+                    <p
+                      className={
+                        item.subtitle_type
+                          ? 'mt-1 text-xs text-gray-500'
+                          : 'mt-1 text-sm font-medium text-gray-500'
+                      }
+                    >
+                      {item.subtitle}
+                    </p>
+                  )}
+                </div>
               )}
             </Link>
           );

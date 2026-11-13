@@ -55,9 +55,9 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
   return (
     <div className="container">
       {(title || description) && (
-        <div className="s-block__title text-center">
-          {title && <h2 className="text-lg font-semibold">{title}</h2>}
-          {description && <p className="text-sm opacity-70">{description}</p>}
+        <div className="s-block__title mb-10 text-center md:mb-16">
+          {title && <h2 className="mb-2 text-3xl font-black text-gray-900 md:text-5xl">{title}</h2>}
+          {description && <p className="text-lg font-medium text-gray-500 md:text-xl">{description}</p>}
         </div>
       )}
 
@@ -76,13 +76,21 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
         </SallaProductsList>
       </Suspense>
 
-      {footerText && <p className="text-sm text-center opacity-70 mt-4">{footerText}</p>}
-
-      {link && buttonText && (
-        <div className="text-center mt-6">
-          <Link to={link} className="btn btn--outline">
-            {buttonText}
-          </Link>
+      {((link && buttonText) || footerText) && (
+        <div className="mt-8 text-center">
+          {link && buttonText && (
+            <Link
+              to={link}
+              className="inline-block rounded-full bg-primary px-8 py-4 text-lg font-bold text-primary-reverse shadow-lg transition-shadow hover:shadow-xl"
+            >
+              {buttonText}
+            </Link>
+          )}
+          {footerText && (
+            <p className="mx-auto mt-6 max-w-2xl text-lg font-medium text-gray-500 md:text-xl">
+              {footerText}
+            </p>
+          )}
         </div>
       )}
     </div>
