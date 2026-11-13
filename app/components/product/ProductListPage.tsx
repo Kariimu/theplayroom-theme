@@ -20,11 +20,14 @@ import {
 import { Testimonials, useReorderButtons } from '@salla.sa/twilight-theme-engine/home';
 import { product, parseNextPageToken } from '@salla.sa/twilight-theme-engine/api/product';
 import type { ProductListLoaderData } from '@salla.sa/twilight-theme-engine/routes/product-listing';
-import type { Product } from '@salla.sa/twilight-theme-engine/types';
+import type { Category, Product } from '@salla.sa/twilight-theme-engine/types';
 import { ProductCard } from './ProductCard';
 import { useAppliedFilters } from '@salla.sa/twilight-theme-engine/routes/product-listing';
 import type { ProductListFilters } from '@salla.sa/twilight-theme-engine/api/product';
 import { BlockHookSlot, BottomSheet } from '../common';
+import { CategoryHero } from '../category/CategoryHero';
+import { TagGroupFilters } from './TagGroupFilters';
+import { buildTagFilterGroups, filterProductsByTags, type TagFilterGroup } from '../../lib/tagGroupFilters';
 import { useAppSafeAreaTop } from '../../hooks/useAppSafeAreaTop';
 import { useProductCardLayout } from '../../hooks/useProductCardLayout';
 import { useScrollDirection } from '../../hooks/useScrollDirection';
@@ -291,6 +294,7 @@ function CatalogToolbar({
 /** The desktop filter column (when visible) + the product grid/list itself. */
 function CatalogGrid({
   filtersVisible,
+  showNativeFilters,
   filters,
   listKey,
   selectedSort,
@@ -303,12 +307,18 @@ function CatalogGrid({
   filterStatus,
   onRetry,
   isBrand,
+  tagFilterGroups,
+  selectedTagFilters,
+  onToggleTagFilter,
+  onClearTagFilters,
 }: {
   /** A `/brands/{id}` page: also renders the Twig `brands:single.items.*` hooks. */
   isBrand: boolean;
   filterStatus: 'idle' | 'loading' | 'ready' | 'error';
   onRetry: () => void;
   filtersVisible: boolean;
+  /** Native `<salla-filters>` itself — separate from `filtersVisible`, which also goes true from tag groups alone. */
+  showNativeFilters: boolean;
   filters: ProductListLoaderData['filters'];
   listKey: string;
   selectedSort: string;
@@ -318,6 +328,11 @@ function CatalogGrid({
   loader: ItemsLoaderFn<Product>;
   listLayoutClass: string;
   wideGridClass: string;
+  /** Merchant "Group-Value" tag filters (06 §6) — native `<salla-filters>` can't express these. */
+  tagFilterGroups: TagFilterGroup[];
+  selectedTagFilters: string[];
+  onToggleTagFilter: (key: string) => void;
+  onClearTagFilters: () => void;
 }) {
   const { t } = useTranslation();
   const location = useLocation();
@@ -325,11 +340,15 @@ function CatalogGrid({
   return (
     <div className={filtersVisible ? 'md:grid md:grid-cols-[288px_1fr] gap-8' : ''}>
       {filtersVisible && (
-        <SallaFilters
-          id="filters-menu"
-          className="hidden md:block lg:sticky lg:top-20"
-          filters={filters as never}
-        />
+        <div className="hidden md:block lg:sticky lg:top-20 lg:self-start">
+          {showNativeFilters && <SallaFilters id="filters-menu" filters={filters as never} />}
+          <TagGroupFilters
+            groups={tagFilterGroups}
+            selected={selectedTagFilters}
+            onToggle={onToggleTagFilter}
+            onClear={onClearTagFilters}
+          />
+        </div>
       )}
 
       <div className="min-w-0">
@@ -378,16 +397,28 @@ function CatalogGrid({
               }
               t={(key, fallback) => t(key, fallback || key)}
             >
-              {(items) =>
-                items.map((prod, idx) => (
+              {(items) => {
+                const visible =
+                  selectedTagFilters.length > 0
+                    ? filterProductsByTags(items, selectedTagFilters)
+                    : items;
+                if (visible.length === 0 && items.length > 0) {
+                  return (
+                    <NoContent
+                      icon="sicon-shopping-bag"
+                      message={t('blocks.catalog.no_match_filters', 'No products match these filters')}
+                    />
+                  );
+                }
+                return visible.map((prod, idx) => (
                   <ProductCard
                     key={prod.id}
                     product={prod}
                     index={idx}
                     layout={view === 'list' ? 'horizontal' : 'vertical'}
                   />
-                ))
-              }
+                ));
+              }}
             </ItemsList>
           )}
         </div>
@@ -434,11 +465,30 @@ export function ProductListPage({
   pagination,
   filters,
 }: ProductListLoaderData) {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const store = useStore();
   const { theme } = useTwilight();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const category = source.type === 'categories' ? (source.entity as Category | undefined) : undefined;
+
+  // Merchant "Group-Value" tag filters (06 §6: age range, color, skills…) — the
+  // one thing native `<salla-filters>` can't do, since these are plain product
+  // tags rather than a configured attribute. Built from the route's own loaded
+  // page, so a store tagging in both scripts only shows the current locale's.
+  const isArabicLocale = locale?.startsWith('ar') ?? true;
+  const tagFilterGroups = useMemo(
+    () => buildTagFilterGroups(products, isArabicLocale),
+    [products, isArabicLocale]
+  );
+  const [selectedTagFilters, setSelectedTagFilters] = useState<string[]>([]);
+  const handleToggleTagFilter = useCallback((key: string) => {
+    setSelectedTagFilters((prev) =>
+      prev.includes(key) ? prev.filter((k) => k !== key) : [...prev, key]
+    );
+  }, []);
+  const handleClearTagFilters = useCallback(() => setSelectedTagFilters([]), []);
 
   const selectedSort = query.sort;
   const [filtersOpen, setFiltersOpen] = useState(false);
@@ -458,7 +508,10 @@ export function ProductListPage({
   );
 
   const showFilters = !!(query.filters && store?.settings?.product?.filters);
-  const filtersVisible = showFilters && filtersHidden === '0';
+  // The tag-group filter stands on its own feet: a store with native filters
+  // disabled (or none configured for this list) should still see it.
+  const showAnyFilters = showFilters || tagFilterGroups.length > 0;
+  const filtersVisible = showAnyFilters && filtersHidden === '0';
 
   // The selection made in `<salla-filters>` — re-queries the list (the route's
   // loader output was fetched without it).
@@ -489,6 +542,19 @@ export function ProductListPage({
     filterStatus === 'idle'
       ? ''
       : `${filterStatus}${filterStatus === 'ready' ? JSON.stringify(appliedFilters) : ''}`;
+
+  // No API response carries a total (cursor pagination has none), so the only
+  // honest count is: the tag filter's own match count once one is selected
+  // (same page the tag filter itself can see), else the category's own static
+  // total while nothing else is filtering — never a number next to an active
+  // native filter, since there is nothing to show it from.
+  const tagFilteredCount =
+    selectedTagFilters.length > 0 ? filterProductsByTags(shownProducts, selectedTagFilters).length : null;
+  const productCount =
+    tagFilteredCount ??
+    (source.type === 'categories' && filterStatus === 'idle' && typeof category?.products_count === 'number'
+      ? category.products_count
+      : null);
 
   const isBrand = source.type === 'brands';
   const isReorder = source.type === 'reorder';
@@ -555,14 +621,22 @@ export function ProductListPage({
         scope={blockScope}
       />
 
+      <CategoryHero category={category} />
+
       <h1 className="font-bold text-xl mb-4" id="page-main-title">
         {isBrand ? t('common.titles.products') : page.title}
       </h1>
 
+      {productCount !== null && (
+        <p className="s-catalog-count text-sm text-gray-500 mb-4">
+          {productCount} {t('blocks.catalog.products_count_label', 'products')}
+        </p>
+      )}
+
       {/* Toolbar — one bar: filter show/hide at the start, options at the end */}
       <MobileStickyToolbar>
         <CatalogToolbar
-          showFilters={showFilters}
+          showFilters={showAnyFilters}
           filtersHidden={filtersHidden}
           onToggleFiltersHidden={() => setFiltersHidden(filtersHidden === '1' ? '0' : '1')}
           onOpenMobileFilters={() => setFiltersOpen(true)}
@@ -577,6 +651,7 @@ export function ProductListPage({
 
       <CatalogGrid
         filtersVisible={filtersVisible}
+        showNativeFilters={showFilters}
         filters={filters}
         listKey={`${listKey}${filteredKey}`}
         filterStatus={filterStatus}
@@ -589,6 +664,10 @@ export function ProductListPage({
         loader={loader}
         listLayoutClass={listLayoutClass}
         wideGridClass={wideGridClass}
+        tagFilterGroups={tagFilterGroups}
+        selectedTagFilters={selectedTagFilters}
+        onToggleTagFilter={handleToggleTagFilter}
+        onClearTagFilters={handleClearTagFilters}
       />
 
       {/* App-block hook `product.index.after_products_group_with_filter` — below the listing */}
@@ -598,13 +677,19 @@ export function ProductListPage({
         scope={blockScope}
       />
 
-      {showFilters && (
+      {showAnyFilters && (
         <BottomSheet
           open={filtersOpen}
           onClose={() => setFiltersOpen(false)}
           title={t('pages.categories.filters', 'Filters')}
         >
-          <SallaFilters id="filters-menu-mobile" filters={filters as never} />
+          {showFilters && <SallaFilters id="filters-menu-mobile" filters={filters as never} />}
+          <TagGroupFilters
+            groups={tagFilterGroups}
+            selected={selectedTagFilters}
+            onToggle={handleToggleTagFilter}
+            onClear={handleClearTagFilters}
+          />
         </BottomSheet>
       )}
 
