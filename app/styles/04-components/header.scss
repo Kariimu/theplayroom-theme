@@ -48,7 +48,7 @@
 }
 
 .site-header__bar {
-  @apply z-40 border-b border-transparent;
+  @apply z-40 border-b border-transparent bg-brand-blue-light;
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -120,7 +120,7 @@
      on mobile to begin with (every other route collapses it above); plain
      `display: none` is fine here, unlike the dropdown below -- nothing about
      this trigger needs to stay reachable off-screen. */
-  .site-header__nav-toggle button{
+  .site-header__nav-toggle .site-header__menu-btn {
     display: none;
   }
 
@@ -205,6 +205,15 @@
    drop the padding so it lines up with the other 40px action icons. */
 .site-header__actions .s-user-menu-trigger {
   @apply p-0 bg-transparent border-none;
+}
+
+/* Language switcher — a pill next to the menu trigger, every breakpoint. */
+.site-header__language-switcher {
+  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 h-10 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-100 hover:text-primary;
+
+  svg {
+    @apply w-5 h-5;
+  }
 }
 
 /* The user menu's hydration wrapper div, as a row: a button an app adds beside the menu stays on the line. */

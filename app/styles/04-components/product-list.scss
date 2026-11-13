@@ -163,6 +163,12 @@
       @apply border-b-0;
     }
   }
+
+  /* Hidden per owner request: the per-group heading ("Price", "Category", …)
+     inside the native filters widget. The checkboxes/options below it stay. */
+  .s-filters-widget-title {
+    display: none;
+  }
 }
 
 /*

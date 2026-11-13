@@ -15,6 +15,7 @@ import { HOME_ROUTE_ID, PRODUCT_ROUTE_ID } from '../../lib/routeIds';
 import { HeaderMainMenu } from './HeaderMainMenu';
 import { HeaderNav } from './HeaderNav';
 import { HeaderTopnav } from './HeaderTopnav';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { PageAdvertisements } from './PageAdvertisements';
 
 /** Opens the Salla search modal (the `<SallaSearch />` at the end of the header). */
@@ -235,7 +236,7 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
               {navHasContent && (
                 <button
                   type="button"
-                  className="header-action"
+                  className="header-action site-header__menu-btn"
                   aria-label={t('blocks.header.main_menu', 'Menu')}
                   aria-expanded={navOpen}
                   onClick={() => setNavOpen(true)}
@@ -249,6 +250,7 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
                   </span>
                 </button>
               )}
+              <LanguageSwitcher />
             </div>
 
             <a className="site-header__brand" href={store?.url || '/'}>
