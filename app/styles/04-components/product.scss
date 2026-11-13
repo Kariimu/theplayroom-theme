@@ -226,8 +226,22 @@
   }
 
   .s-product-card-content-title {
-    @apply mb-1 text-base;
+    @apply mb-1 text-base font-black text-gray-900;
   }
+
+  /* Grid card photo — soft elevated, highly rounded corner, matching the
+     store's bold brand identity. Not applied to the horizontal/list card,
+     whose photo sits flush against the text (`s-product-card-horizontal`,
+     above). */
+  &-vertical .s-product-card-image {
+    @apply overflow-hidden rounded-3xl shadow-xl;
+  }
+}
+
+/* Regular (non-sale) price — bold and brand-colored. The sale price keeps its
+   own red (`.s-product-card-sale-price h4`, below); untouched. */
+.s-product-card-price {
+  @apply font-black text-primary;
 }
 
 /* The placeholder is shown whole, as in Twig, whatever the store's image fit. */

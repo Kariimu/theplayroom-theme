@@ -56,6 +56,9 @@ module.exports = {
         'brand-blue-light': '#e9edf2',
         'brand-orange-light': '#feece5',
         'brand-red-light': '#f9ebeb',
+        // The Playroom accent (star ratings, badges) — not merchant-configurable,
+        // unlike `primary`; a fixed brand color like the tints above.
+        accent: '#f5a623',
       },
       spacing: {
         3.75: '15px',

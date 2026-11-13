@@ -1280,7 +1280,7 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
       @apply h-4 w-4 fill-current text-gray-200 lg:h-[18px] lg:w-[18px];
 
       &.is-on {
-        @apply text-amber-400;
+        @apply text-accent;
       }
     }
   }
