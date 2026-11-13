@@ -419,6 +419,126 @@ salla-gifting {
   @apply bg-red-800 text-white text-[11px] font-semibold leading-none shadow-sm;
 }
 
+/*
+  Custom grid card (`ProductCard.tsx`, `VerticalProductCard`) — replaces the
+  engine's own vertical card markup for `layout="vertical"` (the default:
+  every home-block / category grid). Square photo, a floating wishlist heart
+  and quick-action button over it, bold title/price below.
+*/
+.product-card {
+  @apply relative flex h-full flex-col;
+
+  /* The card's one accessible link (stretched over the whole card, behind
+     everything else — `.product-card__media`'s own `position: relative` and
+     the buttons' `z-[1]` keep them clickable above it). */
+  &__link {
+    @apply absolute inset-0 z-0;
+  }
+
+  &__media {
+    @apply relative aspect-square overflow-hidden rounded-3xl bg-gray-100 shadow-xl;
+  }
+
+  &__image {
+    @apply absolute inset-0 h-full w-full object-cover transition-opacity duration-300;
+
+    &--hover {
+      opacity: 0;
+    }
+  }
+
+  [data-image-placeholder] & &__image {
+    object-fit: contain;
+  }
+
+  &__badge {
+    @apply absolute top-3 z-[1] -rotate-6 rounded-full bg-accent px-3 py-1 text-[11px] font-bold leading-none text-white shadow-sm rtl:right-3 ltr:left-3;
+  }
+
+  /* `WishlistHeartButton` puts the `className` prop on the button itself, not
+     its `.s-button-wrap` wrapper — position that wrapper via `:has()`, and
+     shape the button (a floating circle over the image's inline-end corner)
+     directly through the class it does get. */
+  &__media .s-button-wrap:has(.product-card__wishlist) {
+    @apply absolute top-3 z-[1] m-0 rtl:left-3 ltr:right-3;
+  }
+
+  &__wishlist {
+    @apply flex h-9 w-9 items-center justify-center rounded-full border-0 bg-white p-0 shadow-sm;
+
+    svg,
+    i {
+      @apply text-base;
+    }
+
+    &.s-product-card-wishlist-added i {
+      @apply text-red-500;
+    }
+  }
+
+  /* Floating action circle, half on the photo / half on the content below —
+     add-to-cart (primary), "select options" / view-product link, WhatsApp
+     enquiry, or a disabled out-of-stock state. Icon stays white: the button's
+     own primary/gray background, never body text, carries the color. */
+  &__quick-action {
+    @apply absolute bottom-0 z-[1] flex h-11 w-11 translate-y-1/2 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-colors rtl:left-3 ltr:right-3;
+
+    &:hover {
+      @apply bg-primary-d;
+    }
+
+    &:disabled,
+    &--disabled {
+      @apply cursor-not-allowed bg-gray-300 text-white;
+    }
+  }
+
+  &__body {
+    @apply flex flex-1 flex-col gap-1 pt-6;
+  }
+
+  &__subtitle {
+    @apply text-xs text-gray-500;
+  }
+
+  &__title {
+    @apply line-clamp-2 text-base font-black text-gray-900;
+  }
+
+  &__rating {
+    @apply flex items-center gap-0.5;
+  }
+
+  &__star,
+  &__star--filled {
+    @apply text-gray-200;
+  }
+
+  &__star--filled {
+    @apply fill-accent text-accent;
+  }
+
+  &__rating-count {
+    @apply ms-1 text-xs text-gray-500;
+  }
+
+  &__price {
+    @apply mt-auto flex items-center gap-2 pt-1;
+  }
+
+  &__price-now {
+    @apply text-lg font-black text-primary;
+  }
+
+  &__price-was {
+    @apply text-sm text-gray-400 line-through;
+  }
+
+  &__oos-label {
+    @apply absolute top-3 z-[1] rounded-full bg-gray-800 px-3 py-1 text-[11px] font-bold leading-none text-white rtl:right-3 ltr:left-3;
+  }
+}
+
 /* Add to cart sticky bar */
 @media (max-width: 640px) {
   .is-sticky-product-bar {

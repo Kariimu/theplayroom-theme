@@ -13,11 +13,21 @@ vi.mock('../../../app/hooks/useProductCardLayout', () => ({
   useProductCardLayout: () => cardLayout.value,
 }));
 
-// Only the module under test, not the whole barrel and everything it re-exports.
-vi.mock('../../../app/components/product', async () => ({
-  ProductCard: (await vi.importActual<typeof import('../../../app/components/product/ProductCard')>(
-    '../../../app/components/product/ProductCard'
-  )).ProductCard,
+// `FeaturedProducts` only needs to pass the right products/layout down; it
+// doesn't exercise `ProductCard`'s own rendering (covered by ProductCard.test.tsx),
+// so mock the barrel directly — same convention as FixedProducts.test.tsx etc.
+vi.mock('../../../app/components/product', () => ({
+  ProductCard: ({
+    product,
+    layout,
+  }: {
+    product: { id?: number; name?: string };
+    layout?: string;
+  }) => (
+    <div data-testid="product-card" data-layout={layout ?? 'vertical'}>
+      {product.name}
+    </div>
+  ),
 }));
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
@@ -37,20 +47,6 @@ const listMock = vi.fn().mockResolvedValue({
 
 vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
   product: { list: (...args: unknown[]) => listMock(...args) },
-}));
-
-vi.mock('@salla.sa/twilight-theme-engine/product', () => ({
-  ProductCard: ({
-    product,
-    layout,
-  }: {
-    product: { id?: number; name?: string };
-    layout?: string;
-  }) => (
-    <div data-testid="product-card" data-layout={layout ?? 'vertical'}>
-      {product.name}
-    </div>
-  ),
 }));
 
 // Set by the loading tests at the end to render the real SallaProductsList.
