@@ -14,6 +14,7 @@ import { useHydrated } from '../../hooks/useHydrated';
 import { useMobileViewport } from '../../hooks/useMobileViewport';
 import { youtubeFacades } from '../../lib/descriptionVideos';
 import { ProductMetadata } from './ProductMetadata';
+import { ProductFacts } from './ProductFacts';
 import { WishlistHeartButton } from './WishlistHeartButton';
 
 interface ProductDetailsProps {
@@ -100,6 +101,8 @@ export function ProductDetails({
       <ProductPrice product={product} />
 
       <ProductDescription product={product} />
+
+      <ProductFacts productId={Number(product.id)} hasMetadata={product.has_metadata} />
 
       {/* Metadata / specs — mobile only. On `md`+ it renders under the gallery
           slider instead (`ProductGallery`) — same hydration-gated mounting
