@@ -2,6 +2,8 @@ import { Fragment, useEffect, useMemo, useState } from 'react';
 import { SallaQuickOrder } from '@salla.sa/twilight-components-react/quick-order';
 import { SallaOffer } from '@salla.sa/twilight-components-react/offer';
 import { SallaComments } from '@salla.sa/twilight-components-react/comments';
+import { SallaTrustBadges } from '@salla.sa/twilight-components-react/trust-badges';
+import { SallaPayments } from '@salla.sa/twilight-components-react/payments';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { useProduct } from '@salla.sa/twilight-theme-engine/hooks/useProduct';
@@ -14,6 +16,7 @@ import { ProductGallery } from './ProductGallery';
 import { ProductDetails } from './ProductDetails';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
+import { UniversalFeatures } from './UniversalFeatures';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home';
 import { isWhatsappProduct } from '../../lib/tags';
@@ -66,7 +69,10 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * product cards). The engine's bottom store-wide testimonials block is dropped —
  * `<SallaComments>` already covers product reviews on this page. A
  * `whatsapp`-tagged product (06 §7) gets {@link ProductWhatsAppEnquiry} instead
- * of `<AddToCartForm>` — same convention as the product card.
+ * of `<AddToCartForm>` — same convention as the product card. Also adds what
+ * the engine route doesn't render at all: trust/payment badges beside the
+ * form, and the store-wide {@link UniversalFeatures} between the reviews and
+ * related products (06 §7, §5A rows 72/80).
  *
  * Upgrade notes: `FORKS.md`.
  */
@@ -148,6 +154,11 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
             ) : (
               <AddToCartForm product={product} stickyAddToCart={theme.settings.sticky_add_to_cart} />
             )}
+            {/* Payment/trust badges (06 §7, §5A row 80) */}
+            <div className="mt-5 flex flex-wrap items-center gap-4">
+              <SallaTrustBadges />
+              <SallaPayments />
+            </div>
             <HookSlot name="product:single.form.end" />
             {/* Twig renders this hook and its merchant blocks after the form */}
             <HookSlot name="product:single.description.end" context={{ product }} />
@@ -175,6 +186,9 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
           <SallaComments key={commentsKey} itemId={product.id} type={'product' as never} />
         </RenderWhenVisible>
       )}
+
+      {/* Store-wide features (06 §7.8, §5A row 72) — between the reviews and related */}
+      <UniversalFeatures />
 
       {/* App-block hook `product.single.before_product_recommendations` — between the reviews and related */}
       <BlockHookSlot
