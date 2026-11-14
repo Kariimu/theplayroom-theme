@@ -137,7 +137,7 @@ Measured against the live Store API and the engine 1.0.173 types. The four 5A ve
 | 9 | Custom reviews UI | Use engine reviews data/components | Do not port the hidden `<salla-comments>` scraping (09 #11) |
 | 10 | Cart page layout, free-shipping bar, upsell slider | Fork `CartPage`; upsell = products tagged `cart-upsell` (5A) | |
 | 11 | Add-to-cart toast | Starter's `AddProductToast` | Restyle only |
-| 12 | Side cart drawer | Not live today (09 #4). Owner decides: skip or build fresh | Do not port the dead code |
+| 12 | Side cart drawer | Not live today (09 #4). **D4 resolved 14 Nov 2026: build fresh** — `CartDrawer`, Stage 6 | Did not port the dead `cart-drawer.js`/`.scss` |
 | 13 | 3D model viewer, digital files | Starter has `DigitalFilesSettings`; check engine gallery for 3D support before adding `model-viewer` | Pin any external script |
 | 14 | Design tokens, colours, custom fonts (`dongol`), body background | Port `:root` tokens from `master.twig` and `05-utilities/styles.scss` into `app/styles` | |
 | 15 | Translations (49 keys) | Merge `src/locales/*` into `locales/*`; fix the 4 mismatched keys (09 #8); replace hard-coded ar/en ternaries with keys | |
