@@ -6,6 +6,7 @@
   "pages.cart.added_to_cart": "Added to Cart",
   "pages.cart.view_cart": "View Cart",
   "pages.cart.apply_coupon_btn": "Apply",
+  "pages.cart.upsell_title": "You May Also Like",
   "blocks.product_options.title": "Product options",
   "blocks.product_options.required": "Required",
   "blocks.product_options.added": "Added",

@@ -12,6 +12,7 @@ import { loyalty } from '@salla.sa/twilight-theme-engine/api/loyalty';
 import { cart } from '@salla.sa/twilight-theme-engine/api/cart';
 import type { CartPageProps } from '@salla.sa/twilight-theme-engine/routes/cart';
 import { CartItem } from './CartItem';
+import { CartUpsellSlider } from './CartUpsellSlider';
 
 /** Whether a failed request was answered 404 (the engine's API client throws ky's `HTTPError`). */
 function isNotFound(error: unknown): boolean {
@@ -25,7 +26,9 @@ function isNotFound(error: unknown): boolean {
  * (Products (N) · Quantity · Total) so the flat {@link CartItem} rows read as a
  * table, and an error state with a retry when the cart can't be loaded
  * (upstream keeps its skeleton up for good). A cart the API no longer knows
- * (404) is dropped from the SDK and shown empty. Upgrade notes: `FORKS.md`.
+ * (404) is dropped from the SDK and shown empty. {@link CartUpsellSlider} (06
+ * §8, replaces `products_in_cart`) renders on both the empty and non-empty
+ * states, as in Twig. Upgrade notes: `FORKS.md`.
  */
 function CartPageContent({ page }: CartPageProps) {
   const { store } = useTwilight();
@@ -117,6 +120,8 @@ function CartPageContent({ page }: CartPageProps) {
           actionLabel={t('common.elements.back_home', 'Back to Home')}
           actionUrl="/"
         />
+        {/* Shows on an empty cart too, as in Twig (outside its own item-count check). */}
+        <CartUpsellSlider excludeIds={[]} />
       </div>
     );
   }
@@ -193,6 +198,10 @@ function CartPageContent({ page }: CartPageProps) {
       </div>
 
       <HookSlot name="cart:end" />
+
+      <div className="mt-12 md:mt-16">
+        <CartUpsellSlider excludeIds={cartData.items.map((item) => Number(item.product_id))} />
+      </div>
     </div>
   );
 }
