@@ -13,8 +13,11 @@ import type { ProductPageProps } from '@salla.sa/twilight-theme-engine/routes/pr
 import { ProductGallery } from './ProductGallery';
 import { ProductDetails } from './ProductDetails';
 import { AddToCartForm } from './AddToCartForm';
+import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home';
+import { isWhatsappProduct } from '../../lib/tags';
+import { cleanWhatsappNumber } from '../../lib/whatsapp';
 
 /**
  * "Similar products" slider. A separate component (not inline in
@@ -61,7 +64,9 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * {@link ProductDetails} / {@link AddToCartForm} and the theme's scroll-carousel
  * {@link ProductsSlider} for the "similar products" block (matching the homepage
  * product cards). The engine's bottom store-wide testimonials block is dropped —
- * `<SallaComments>` already covers product reviews on this page.
+ * `<SallaComments>` already covers product reviews on this page. A
+ * `whatsapp`-tagged product (06 §7) gets {@link ProductWhatsAppEnquiry} instead
+ * of `<AddToCartForm>` — same convention as the product card.
  *
  * Upgrade notes: `FORKS.md`.
  */
@@ -71,6 +76,12 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
   const { product } = useProduct(initialProduct);
   const { commentsKey } = useComments();
   const blockScope = useMemo(() => ({ product_id: product.id }), [product.id]);
+
+  // Products tagged `whatsapp` can't be bought online (06 §7): the add-to-cart
+  // form becomes a WhatsApp enquiry block, same convention as the card.
+  const waNumber = (theme?.settings as { whatsapp_number?: string | number } | undefined)
+    ?.whatsapp_number;
+  const isWhatsapp = isWhatsappProduct(product.tags) && !!cleanWhatsappNumber(waNumber);
 
   // The Twig storefront bootstraps `salla.config` with `user.can_comment`; the
   // React SDK init doesn't, so it's `null` and `<salla-comment-form>` (and the
@@ -132,7 +143,11 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
             <HookSlot name="product:details.end" />
 
             <HookSlot name="product:single.form.start" />
-            <AddToCartForm product={product} stickyAddToCart={theme.settings.sticky_add_to_cart} />
+            {isWhatsapp ? (
+              <ProductWhatsAppEnquiry product={product} number={waNumber} />
+            ) : (
+              <AddToCartForm product={product} stickyAddToCart={theme.settings.sticky_add_to_cart} />
+            )}
             <HookSlot name="product:single.form.end" />
             {/* Twig renders this hook and its merchant blocks after the form */}
             <HookSlot name="product:single.description.end" context={{ product }} />
