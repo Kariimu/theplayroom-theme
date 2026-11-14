@@ -9,6 +9,20 @@ Source data: `docs/legacy/data/products.csv`, `products.json`, `categories.csv`,
 `store-wide.json`. Where that extraction has a real gap (see each section), it
 is called out instead of guessed at.
 
+### Dashboard quick reference
+
+Confirmed against Salla's own help center (links in each section below); exact
+labels can shift slightly between dashboard languages/versions — if a label
+doesn't match exactly, it's the nearest tab/button, not a different page.
+
+| Data | Dashboard path |
+|---|---|
+| A. Facts (specs) | **Store settings → Custom fields → Products tab** to create the section once; then open each **product → Custom fields tab** to fill in values |
+| B. Tags | **Products → open a product → Product details → tags field** |
+| C. Category image / description | **Products → Categories & options → Categories → open a category** |
+| D. Header/footer menus | **Store & Channels → Store Design → Customize → Menu Management** |
+| E. Home block screenshots | **Store & Channels → Store Design → Customize** → the live editor (block list + each block's Edit panel); theme-wide settings are its **Design Options** tab |
+
 ---
 
 ## A. Product facts (3 products)
@@ -23,6 +37,16 @@ accordion, not the dedicated UI.
 - Spec group name: **`تفاصيل المنتج`** (or `Product Details` on the English spec set)
 - Field names: **`مناسب لـ`** (`Suitable for`) · **`الخامة`** (`Material`) · **`محتويات الصندوق`** (`Box contents`)
 
+**Where:** these are Salla's "Custom fields" (`product.has_metadata`/specs), not a
+plain text box. One-time setup, then per-product entry:
+1. **Store settings → Custom fields → Products tab → Add new section.** Name it
+   `تفاصيل المنتج`, scope "apply to every product" (or just the 3 categories
+   these belong to), add the 3 fields above as **text** type, and turn on
+   customer visibility so it shows on the storefront.
+2. Open each of the 3 products below → **Custom fields tab** → add that
+   section → fill in its 3 field values → save.
+(Custom fields need the Pro/Special plan — confirm the store is on one.)
+
 | Done | Product (ar) | id | `مناسب لـ` / Suitable for | `الخامة` / Material | `محتويات الصندوق` / Box contents |
 |---|---|---|---|---|---|
 | [ ] | بيت الألعاب | 1246641851 | مناسب لجميع الفئات العمرية | خشب الزان الصلب | هيكل بيت الالعاب؛ حبال سميكة؛ أدوات التجميع؛ دليل التركيب |
@@ -36,6 +60,12 @@ Arabic-only if the dashboard allows it.
 ---
 
 ## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`)
+
+**Where:** open the product → **Product details** tab → the **tags** field →
+type the exact tag text (`whatsapp`, `cart-upsell`, or `set:<name>`, matching
+`app/lib/tags.ts` literally) → **Add**/Enter → **Save product details**. Tags
+need the Plus/Pro plan. To tag several products at once faster, the product
+list's bulk-actions menu can also set tags across a selection.
 
 Convention source: `app/lib/tags.ts`. **Extraction gap:** the old theme drove
 these from three dashboard settings whose *values* (which categories/products
@@ -79,6 +109,13 @@ tag assignments.
 ---
 
 ## C. Category images and descriptions
+
+**Where:** **Products → Categories & options → Categories →** open the
+category → its image, banner (if the field is present) and description sit
+directly on that category's edit form; description doubles as the page's SEO
+description field further down the same form. (Salla's docs note the category
+**image** field is shown on Digital/Raed-based storefronts — this theme is a
+Raed-starter rebuild, so it applies here.)
 
 **Extraction gap:** `banner_image`/`banner_mobile_image`/`banner_title_*`/`banner_desc_*`
 came back empty for every one of the 59 crawled categories — the crawler could
@@ -167,6 +204,12 @@ to the home page on the live site — skip it, nothing to enter.)
 
 ## D. Header and footer menus
 
+**Where:** **Store & Channels → Store Design → Customize (on the active theme)
+→ Menu Management** (side menu inside the editor) — lists every menu, which
+theme version(s) it's assigned to, and lets you edit/add/duplicate/rename
+items (the two built-in "core" menus can't be deleted, only edited). Assign
+whichever menu plays the header/footer role to this theme version here.
+
 No CSV data exists for this — the old side menu (`menu_links` setting) and
 footer (three link columns, `components/footer/footer.twig`) were
 dashboard-managed lists of links, not something the Phase 0b crawl captured.
@@ -181,6 +224,14 @@ the dashboard menu content needs to match:
 ---
 
 ## E. Screenshots (rollback reference)
+
+**Where:** **Store & Channels → Store Design → Customize (on the active theme)**
+opens the live editor. The **Homepage components** area is the block list in
+page order — hover/click each block for its Edit action, which opens that
+block's own settings panel (the per-field values to screenshot). The theme's
+store-wide settings (the ones declared in `twilight.json` — `show_whatsapp`,
+`whatsapp_number`, `footer_logo`, `footer_description`, etc.) are on the
+editor's **Design Options** tab, not inside any one block.
 
 Take these before changing anything else above, so there's a clean "before" record:
 
