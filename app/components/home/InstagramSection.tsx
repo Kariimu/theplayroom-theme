@@ -266,7 +266,11 @@ export function InstagramSection({ data }: InstagramSectionProps) {
         </div>
       )}
 
-      <BottomSheet open={openPost != null} onClose={() => setOpenIndex(null)} title={name}>
+      <BottomSheet
+        open={openPost != null}
+        onClose={() => setOpenIndex(null)}
+        title={name || t('blocks.home.instagram_post', 'Instagram post')}
+      >
         {openPost && (
           <div className="flex flex-col gap-4">
             <div className="aspect-square w-full overflow-hidden rounded-xl bg-black">

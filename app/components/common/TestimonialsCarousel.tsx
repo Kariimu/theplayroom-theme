@@ -107,11 +107,15 @@ export function TestimonialsCarousel({ items }: TestimonialsCarouselProps) {
         ))}
       </ScrollCarousel>
 
-      <BottomSheet open={openItem != null} onClose={() => setOpenIndex(null)} title={openItem?.name}>
+      <BottomSheet
+        open={openItem != null}
+        onClose={() => setOpenIndex(null)}
+        title={openItem?.name || t('blocks.home.view_review_photo', 'View photo')}
+      >
         {openItem?.image && (
           <img
             src={openItem.image}
-            alt={openItem.name ?? ''}
+            alt={openItem.name || t('blocks.home.review_photo_alt', 'Customer photo')}
             loading="lazy"
             decoding="async"
             className="testimonial-card__photo"

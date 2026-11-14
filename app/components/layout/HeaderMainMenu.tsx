@@ -239,6 +239,7 @@ function MenuEntry({ item, root }: { item: MenuItem; root: boolean }) {
       ) : (
         <Link
           to={item.url}
+          {...(hasChildren ? { 'aria-haspopup': 'true' } : {})}
           {...(item.target && item.target !== '_self'
             ? { target: item.target, rel: 'noopener noreferrer' }
             : {})}

@@ -129,6 +129,19 @@ describe('CustomTestimonials', () => {
     expect(queryByText('ممتاز')).toBeTruthy();
   });
 
+  it('still names the photo dialog and the photo itself when the review has no name', () => {
+    const { container, queryByText } = render(
+      <CustomTestimonials data={{ items: [...items, { text: 'جميل', image: 'photo.jpg' }] }} />
+    );
+    const triggers = container.querySelectorAll('.testimonial-card__view-photo');
+    fireEvent.click(triggers[triggers.length - 1]);
+
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog?.getAttribute('aria-label')).toBe('View photo');
+    expect(dialog?.querySelector('img')?.getAttribute('alt')).toBe('Customer photo');
+    expect(queryByText('ممتاز')).toBeTruthy();
+  });
+
   it('ignores a block title/description, matching the old theme (no heading on this slider)', () => {
     const { queryByText } = render(
       <CustomTestimonials

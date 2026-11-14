@@ -306,6 +306,18 @@ describe('HeaderMainMenu', () => {
     expect(container.querySelector('[data-more-menu] > a')).toBeNull();
   });
 
+  it('flags a real link as opening a submenu, like "More" already does', () => {
+    state.items = state.items.map((item, i) =>
+      i === 0 ? { ...item, children: [{ id: 10, title: 'Sub', url: '/sub' }] } : item
+    );
+    const { container } = render(<HeaderMainMenu />);
+    const withChildren = container.querySelector('.s-menu-has-children > a')!;
+    expect(withChildren.getAttribute('aria-haspopup')).toBe('true');
+
+    const withoutChildren = container.querySelectorAll('.s-menu-root-level:not(.s-menu-has-children) > a')[0];
+    expect(withoutChildren.hasAttribute('aria-haspopup')).toBe(false);
+  });
+
   it('leaves out items with no title', () => {
     state.items = [...state.items, { id: 6, title: '', url: '/brands' }];
     const { container } = render(<HeaderMainMenu />);

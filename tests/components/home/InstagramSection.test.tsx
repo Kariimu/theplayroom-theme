@@ -102,6 +102,16 @@ describe('InstagramSection', () => {
     expect(pages[1].children.length).toBe(2);
   });
 
+  it('still names the post dialog when the merchant has not set a profile name', () => {
+    const { container } = render(
+      <InstagramSection data={{ posts: [{ img: 'a.jpg', like_number: '10', comment_number: '2' }] }} />
+    );
+    fireEvent.click(container.querySelector('button') as HTMLButtonElement);
+    expect(document.querySelector('[role="dialog"]')?.getAttribute('aria-label')).toBe(
+      'Instagram post'
+    );
+  });
+
   it('shows the video thumbnail with a play badge when video_first is set', () => {
     const { container } = render(
       <InstagramSection
