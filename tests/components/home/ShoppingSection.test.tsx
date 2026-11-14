@@ -61,4 +61,18 @@ describe('ShoppingSection', () => {
     expect(onTitleEl.className).not.toBe(offTitleEl.className);
     expect(onSubtitleEl.className).not.toBe(offSubtitleEl.className);
   });
+
+  // `title_type`/`subtitle_type` share one dashboard switch label — "العنوان طبيعى"
+  // ("normal title") — so "on" must mean the same thing (the plainer, smaller
+  // style) for both fields, not opposite things.
+  it('aligns title_type and subtitle_type to the same "normal" direction', () => {
+    const { container } = render(
+      <ShoppingSection
+        data={{ items: [{ title: 'Title', title_type: true, subtitle: 'Subtitle', subtitle_type: true }] }}
+      />
+    );
+    const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
+    expect(titleEl.className).toContain('text-sm');
+    expect(subtitleEl.className).toContain('text-sm');
+  });
 });

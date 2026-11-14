@@ -1,16 +1,21 @@
 /* =========================================================================
    Product reviews — restyle of the engine `<salla-comments>` web component
-   (light DOM, `.s-*` classes) to a card layout:
+   (light DOM, `.s-*` classes) to the legacy theme's photo-card grid
+   (`pages/product/single.twig` §7's custom `#reviews-container`):
 
-     · desktop: rating summary in a sticky left rail, review list on the right
-     · summary: big average + brown stars, brown breakdown bars
-     · each review: avatar + name row, a compact star pill at the inline-start,
-       body text, and a footer strip (ghost "helpful" button + date)
+     · summary: a plain block above the grid — big average + brown stars,
+       count, brown breakdown bars (no sticky rail, no two-column split)
+     · reviews: a responsive card grid (2 / 3 / 4 / 6 columns), each card a
+       square avatar "photo" on top, name + timestamp + a compact star row,
+       then the review text, inside a flat (unrounded) bordered tile
 
    Nothing here changes markup — it's all overrides on the classes the
-   component renders. Scoped to `.s-comments-product` so the account-page /
-   blog comment lists keep the engine look. Mounted from
-   `app/components/product/ProductPage.tsx`.
+   component renders. The card's "photo" is the reviewer's avatar (the one
+   image every comment actually has); an attached review photo, if any,
+   still renders inside the card body rather than replacing it — promoting
+   it to the top would need DOM reordering, not just CSS. Scoped to
+   `.s-comments-product` so the account-page / blog comment lists keep the
+   engine look. Mounted from `app/components/product/ProductPage.tsx`.
    ========================================================================= */
 
 .s-comments-product {
@@ -18,7 +23,7 @@
      store's primary colour (same rationale as the cart-count badge). */
   --rev-accent: #fbbf24;
   --rev-accent-d: #d8a116;
-  --rev-line: #f0f0f0;
+  --rev-line: #e5e7eb;
   --rev-muted: #9ca3af;
   --rev-ink: #1f2937;
 
@@ -41,40 +46,13 @@
     @apply mt-3;
   }
 
-  /* ---- two-column layout (desktop) ----------------------------------- */
-  @media (min-width: 1024px) {
-    .s-comments-container {
-      display: grid;
-      /* two equal halves — list track first (inline-start), summary last */
-      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-      column-gap: clamp(2rem, 4vw, 4rem);
-      align-items: start;
-    }
-
-    /* the title, form, list, header and translate toggle all stack in the wide
-       track … */
-    .s-comments-container > * {
-      grid-column: 1;
-      min-width: 0;
-    }
-
-    /* … and the summary is the sticky rail on the inline-end side, spanning the
-       full height alongside them. */
-    .s-comments-container > salla-reviews-summary {
-      grid-column: 2;
-      grid-row: 1 / span 999;
-      position: sticky;
-      top: 5rem;
-    }
-  }
-
-  /* ---- rating summary ------------------------------------------------- */
+  /* ---- rating summary — a plain block above the grid, not a sticky rail */
   .s-reviews-summary-wrapper {
-    @apply block;
+    @apply mb-8 block;
   }
 
   .s-reviews-summary-header {
-    @apply mb-0 flex items-center justify-center gap-5;
+    @apply mb-0 flex flex-wrap items-center justify-start gap-5;
   }
 
   .s-reviews-summary-overall-section {
@@ -93,7 +71,7 @@
       @apply flex flex-col items-start gap-1;
     }
 
-    salla-rating-stars{
+    salla-rating-stars {
       @apply leading-none;
     }
   }
@@ -130,7 +108,8 @@
 
   /* star-breakdown bars: "★ N" (inline-end) · bar · "NN%" (inline-start) */
   .s-reviews-summary-rows {
-    @apply mt-5 flex flex-col gap-2.5 w-full;
+    @apply mt-5 flex flex-col gap-2.5;
+    max-width: 24rem;
   }
 
   .s-reviews-summary-row {
@@ -191,7 +170,7 @@
 
   /* ---- list header ("N تعليقات" + sort) ----------------------------- */
   .s-comments-header {
-    @apply mb-4 flex items-center justify-between border-b pb-3;
+    @apply mb-5 flex items-center justify-between border-b pb-3;
     border-color: var(--rev-line);
 
     &.has-total {
@@ -221,34 +200,49 @@
     @apply mb-3 text-xs;
   }
 
-  /* ---- one review --------------------------------------------------- */
-  .s-comments-item {
-    @apply block mb-6 pb-6;
+  /* ---- the review grid ------------------------------------------------
+     The items wrapper is an unclassed `<div>` the component populates
+     imperatively (its own `ref`, no stable class) — select it structurally,
+     as the element right after the header row; it's the only thing there. */
+  .s-comments-header + div {
+    @apply grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
+  }
 
-    &:not(:last-child) {
-      border-bottom: 1px solid var(--rev-line);
+  /* ---- one review, as a flat photo card ------------------------------ */
+  .s-comments-item {
+    @apply block overflow-hidden rounded-none border bg-slate-100 transition-shadow duration-200;
+    border-color: var(--rev-line);
+
+    &:hover {
+      @apply shadow-lg;
     }
   }
 
   .s-comments-item-wrapper {
-    @apply relative;
-    /* bottom strip holds the absolutely-placed footer: date (left) and the
-       ghost "helpful" button (right). */
+    @apply flex h-full flex-col;
   }
 
   .s-comments-item-inner {
-    @apply flex items-start gap-3;
+    @apply flex flex-1 flex-col items-stretch gap-0;
+  }
+
+  /* the avatar stands in for the card's "photo" — square, full width, on top */
+  .s-comments-item-inner > .s-comments-item-avatar {
+    @apply block w-full shrink-0 overflow-hidden;
+    aspect-ratio: 1 / 1;
   }
 
   .s-comments-item-avatar-img {
-    @apply h-11 w-11 rounded-full object-cover;
+    @apply h-full w-full rounded-none object-cover;
   }
 
-  /* name over verified-buyer line, stacked and hugging the avatar side.
-     `padding-inline-end` reserves room for the star pill on the far side so a
-     long name can't slide under it. */
+  /* the padded text column under the photo */
+  .s-comments-item-inner > .s-comments-flex-1 {
+    @apply flex flex-1 flex-col p-3 text-start;
+  }
+
   .s-comments-item-user-wrapper {
-    @apply flex justify-start items-start gap-2.5 mb-0;
+    @apply mb-1 flex flex-col items-start gap-0.5;
   }
 
   .s-comments-item-user-info {
@@ -257,12 +251,12 @@
 
   .s-comments-item-user-info-name-with-margin,
   .s-comments-item-user-info-name {
-    @apply m-0 text-[0.95rem] font-bold leading-tight;
+    @apply m-0 text-sm font-bold leading-tight;
     color: var(--rev-ink);
   }
 
   .s-comments-item-user-info .s-comments-flex {
-    @apply mt-1 inline-flex items-center gap-1 text-xs;
+    @apply mt-0.5 inline-flex items-center gap-1 text-xs;
     color: var(--rev-muted);
   }
 
@@ -278,18 +272,11 @@
     color: var(--rev-muted);
   }
 
-  /* compact star pill, pinned to the card's far side on the name row.
-     `flex flex-row gap-4 mt-2 mb-4` is the engine's own utility-class wrapper
-     around <salla-rating-stars> — the only bare flex-row child of the inner
-     column. `inset-inline-end` (physical left in this RTL block) puts it
-     opposite the avatar. No numeric value is exposed in the DOM, so it stays a
-     5-star pill rather than "★ 5.0". */
+  /* compact star row, back in normal flow under the name (not pinned/absolute
+     — the card is narrow, so a floating pill would overlap the text). The
+     engine's own utility-class wrapper around <salla-rating-stars>. */
   .s-comments-item-inner > .s-comments-flex-1 > div[class~='flex-row'] {
-    @apply absolute m-0 items-center rounded-full px-2 py-1;
-    inset-block-start: 1.25rem;
-    inset-inline-end: 0;
-    gap: 0.3rem;
-    background: #f4f4f5;
+    @apply mb-2 items-center gap-1;
   }
 
   .s-comments-item salla-rating-stars {
@@ -317,9 +304,10 @@
   }
 
   /* body text — a rating-only review renders an empty <p>, drop it so it
-     doesn't reserve a blank line */
+     doesn't reserve a blank line. Clamped so cards in the same row stay a
+     comparable height. */
   .s-comments-item-content-container p {
-    @apply mb-0 text-sm leading-7;
+    @apply mb-0 line-clamp-5 text-sm leading-6;
     color: #4b5563;
 
     &:empty {
@@ -331,8 +319,13 @@
     @apply mt-2.5 empty:hidden;
   }
 
-  /* footer strip: date pinned to the left, ghost "helpful" button to the right
-     (physical props — the date carries `.s-ltr`, so logical ones would flip) */
+  /* text + the ghost "helpful" button, pushed to the card's bottom edge
+     regardless of how short the review text is (the date sits up by the name,
+     not here — see `.s-comments-item-user-wrapper` above). */
+  .s-comments-item-content {
+    @apply mt-auto flex flex-col gap-1.5 pt-1;
+  }
+
   .s-comments-item-like-btn.s-button-wrap {
     @apply inline-flex;
   }
@@ -382,6 +375,7 @@
 
 @media (prefers-reduced-motion: reduce) {
   .s-comments-product .s-comments-item {
+    transition: none !important;
     animation: none !important;
   }
 }

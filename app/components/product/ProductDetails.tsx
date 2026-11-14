@@ -100,8 +100,6 @@ export function ProductDetails({
 
       <ProductPrice product={product} />
 
-      <ProductDescription product={product} />
-
       <ProductFacts productId={Number(product.id)} hasMetadata={product.has_metadata} />
 
       {/* Metadata / specs — mobile only. On `md`+ it renders under the gallery
@@ -111,6 +109,9 @@ export function ProductDetails({
       {product.has_metadata && (!hydrated || isMobile) && (
         <ProductMetadata className="mb-3 md:hidden" />
       )}
+
+      {/* Description reads after the facts/specs, not before them. */}
+      <ProductDescription product={product} />
 
       {!!product.tags?.length && showTags && (
         <div className="mb-3">

@@ -46,11 +46,15 @@ function ShoppingCard({ item, className = '' }: { item: ShoppingItem; className?
       {(item.title || item.subtitle) && (
         <div className="p-6 text-center">
           {item.title && (
+            // `title_type` is the dashboard's "العنوان طبيعى" ("normal title") switch —
+            // on (true) must read as the plainer, smaller variant, same direction as
+            // `subtitle_type` below. (Previously inverted: `true` rendered the bigger
+            // "styled" look instead — flagged in TASK.md Stage 5.)
             <p
               className={
                 item.title_type
-                  ? 'text-lg font-black text-gray-900 md:text-xl'
-                  : 'mb-2 text-sm font-bold text-primary md:text-base'
+                  ? 'mb-2 text-sm font-bold text-primary md:text-base'
+                  : 'text-lg font-black text-gray-900 md:text-xl'
               }
             >
               {item.title}
