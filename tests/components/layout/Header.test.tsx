@@ -73,8 +73,15 @@ vi.mock('@salla.sa/twilight-components-react/user-menu', () => ({
   SallaUserMenu: () => <salla-user-menu />,
 }));
 vi.mock('@salla.sa/twilight-components-react/cart-summary', () => ({
+  // The real component's light DOM: a host custom element wrapping an <a>
+  // straight to /cart (`salla-cart-summary.js`) — matched so the click
+  // interception test exercises the same bubble-up-through-an-anchor path.
   SallaCartSummary: ({ children }: { children?: React.ReactNode }) => (
-    <salla-cart-summary>{children}</salla-cart-summary>
+    <salla-cart-summary>
+      <a href="/cart" className="s-cart-summary-wrapper">
+        {children}
+      </a>
+    </salla-cart-summary>
   ),
 }));
 
@@ -286,6 +293,31 @@ describe('Header', () => {
     const { getByLabelText } = render(<Header />);
     fireEvent.click(getByLabelText('Search'));
     expect(dispatch).toHaveBeenCalledWith('search::open');
+  });
+
+  describe('cart icon', () => {
+    it('opens the cart drawer instead of following the link, on a plain click', () => {
+      const dispatch = vi.fn();
+      (window as unknown as { salla: unknown }).salla = { event: { dispatch } };
+      const { container } = render(<Header />);
+      const link = container.querySelector('.s-cart-summary-wrapper') as HTMLAnchorElement;
+
+      const event = fireEvent.click(link, { button: 0 });
+      expect(dispatch).toHaveBeenCalledWith('theme::cart-drawer.open');
+      // jsdom's fireEvent returns false when preventDefault() was called.
+      expect(event).toBe(false);
+    });
+
+    it('lets a modified click (new tab / middle click) through untouched', () => {
+      const dispatch = vi.fn();
+      (window as unknown as { salla: unknown }).salla = { event: { dispatch } };
+      const { container } = render(<Header />);
+      const link = container.querySelector('.s-cart-summary-wrapper') as HTMLAnchorElement;
+
+      const event = fireEvent.click(link, { button: 0, ctrlKey: true });
+      expect(dispatch).not.toHaveBeenCalledWith('theme::cart-drawer.open');
+      expect(event).toBe(true);
+    });
   });
 
   it('pins the bar on scroll by default (header_is_sticky unset)', () => {

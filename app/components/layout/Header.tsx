@@ -23,6 +23,15 @@ const openSearch = () => window.salla?.event?.dispatch('search::open');
 
 const openScopes = () => window.salla?.event?.dispatch('scopes::open');
 
+/**
+ * Opens the side cart drawer (`<CartDrawer />`, mounted at `body:end`), D4 —
+ * same `window.salla.event` convention as `search::open`/`scopes::open`, kept
+ * as a literal (not a shared import) so the header doesn't pull in the cart
+ * component tree just for an event name; `CartDrawer.tsx` listens for the
+ * same string.
+ */
+const openCartDrawer = () => window.salla?.event?.dispatch('theme::cart-drawer.open');
+
 // What the component will render: <salla-social> skips WhatsApp.
 const hasSocialLinks = (social?: object) =>
   Object.entries(social ?? {}).some(([key, value]) => Boolean(value) && key !== 'whatsapp');
@@ -56,6 +65,35 @@ function ScopeButton({ label }: { label: string }) {
     >
       <MapPinIcon aria-hidden="true" />
     </button>
+  );
+}
+
+/**
+ * Wraps `<SallaCartSummary>` to open the cart drawer instead of following its
+ * link straight to `/cart` — on a plain left-click only, so ctrl/cmd/middle
+ * click and "open in new tab" still work normally. Delegated on a wrapping
+ * `<div>` rather than passed as `onClick` to the web-component wrapper itself:
+ * the component renders its own light-DOM `<a>` ({@link SallaCartSummary}'s
+ * source), and a native click on it bubbles through this div either way, so
+ * this doesn't depend on whether that generated wrapper forwards arbitrary
+ * DOM props.
+ */
+function CartSummaryTrigger() {
+  const handleClick = (event: React.MouseEvent) => {
+    if (!(event.target as HTMLElement).closest('a')) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    openCartDrawer();
+  };
+
+  return (
+    <div className="header-action site-header__cart-trigger" onClick={handleClick}>
+      <SallaCartSummary>
+        <ShoppingBagIcon slot="icon" aria-hidden="true" />
+      </SallaCartSummary>
+    </div>
   );
 }
 
@@ -280,9 +318,7 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
               {store?.scope && (
                 <ScopeButton label={store.scope.name || t('blocks.header.branches', 'Branches')} />
               )}
-              <SallaCartSummary className="header-action">
-                <ShoppingBagIcon slot="icon" aria-hidden="true" />
-              </SallaCartSummary>
+              <CartSummaryTrigger />
               <SearchButton label={searchLabel} />
             </div>
           </div>

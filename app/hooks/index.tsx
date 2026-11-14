@@ -1,6 +1,6 @@
 import { hookRegistry, HookName, type HookContext } from '@salla.sa/twilight-theme-engine/hooks';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
-import { AddProductToast } from '../components/cart';
+import { AddProductToast, CartDrawer } from '../components/cart';
 import { DigitalFilesSettings } from '../components/product';
 import { FloatingWhatsApp } from '../components/layout/FloatingWhatsApp';
 
@@ -16,6 +16,10 @@ export function registerThemeHooks() {
     },
     50
   );
+
+  // Side cart drawer (D4) — always mounted, opens on the header cart icon's
+  // `theme::cart-drawer.open` event.
+  hookRegistry.register(HookName.BODY_END, () => <CartDrawer />, 45);
 
   // Floating WhatsApp button after the footer, when `show_whatsapp` is on
   // (old theme's `.wa-float-btn`). Number from the `whatsapp_number` setting.

@@ -128,7 +128,7 @@
      user-menu mounted (its bottom sheet still opens from the Account tab) but
      take it out of the visible bar. No `opacity`/`display:none` — either would
      also kill the position:fixed dropdown. */
-  .site-header--home .site-header__actions salla-cart-summary {
+  .site-header--home .site-header__actions .site-header__cart-trigger {
     display: none;
   }
 
