@@ -3,10 +3,8 @@ import {
   matchesName,
   findSection,
   extractFacts,
-  extractFaq,
   sectionsFromMetadataValues,
   FACTS_SECTION_NAMES,
-  FAQ_SECTION_NAMES,
 } from '../../app/lib/specs';
 
 describe('matchesName', () => {
@@ -66,24 +64,6 @@ describe('extractFacts', () => {
   });
 });
 
-describe('extractFaq', () => {
-  it('reads each field as a question/answer row', () => {
-    const faq = extractFaq({
-      name: 'الأسئلة الشائعة',
-      fields: [
-        { name: 'هل يوجد توصيل؟', value: 'نعم، نوصل لجميع المناطق.' },
-        { name: '  ', value: 'orphaned answer' },
-        { name: 'ما هي مدة الضمان؟', value: '' },
-      ],
-    });
-    expect(faq).toEqual([{ question: 'هل يوجد توصيل؟', answer: 'نعم، نوصل لجميع المناطق.' }]);
-  });
-
-  it('is empty for an absent section', () => {
-    expect(extractFaq(undefined)).toEqual([]);
-  });
-});
-
 describe('sectionsFromMetadataValues', () => {
   const sections = [{ name: 'Product Details', fields: [{ name: 'Material', value: 'Wood' }] }];
 
@@ -108,12 +88,5 @@ describe('sectionsFromMetadataValues', () => {
     expect(sectionsFromMetadataValues(null, 101)).toEqual([]);
     expect(sectionsFromMetadataValues({}, 101)).toEqual([]);
     expect(sectionsFromMetadataValues([{ id: 1, sections }], 101)).toEqual([]);
-  });
-});
-
-// Exercised indirectly above, but pin the exact canonical strings §5A row 67 names.
-describe('FAQ_SECTION_NAMES', () => {
-  it('includes the Arabic name the plan specifies', () => {
-    expect(FAQ_SECTION_NAMES).toContain('الأسئلة الشائعة');
   });
 });

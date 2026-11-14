@@ -3,11 +3,10 @@
  * Product specs (`product.has_metadata`) are client-only (docs/MIGRATION-PLAN.md
  * §5B) and section/field names are free text the merchant types in the
  * dashboard. The generic accordion (`ProductMetadata`) renders whichever
- * groups exist, whatever they're named. These two groups get a *second*,
+ * groups exist, whatever they're named. This one group gets a *second*,
  * purpose-built rendering on top of that — the "facts" row (`ProductFacts`)
- * and the per-product FAQ — so Stage 7 data entry must use these names
- * verbatim; anything else still shows in the generic accordion, just not in
- * the dedicated UI.
+ * — so Stage 7 data entry must use these names verbatim; anything else
+ * still shows in the generic accordion, just not in the dedicated UI.
  */
 
 export interface SpecField {
@@ -23,9 +22,6 @@ export interface SpecSection {
 
 /** §5A row 65: "one group (e.g. 'تفاصيل المنتج') with three fields". */
 export const FACTS_SECTION_NAMES = ['تفاصيل المنتج', 'Product Details'] as const;
-
-/** §5A row 67: "Product specs group 'الأسئلة الشائعة'". */
-export const FAQ_SECTION_NAMES = ['الأسئلة الشائعة', 'FAQ'] as const;
 
 /** `for_who` / `material` / `inner_box` (§5A row 65), by their canonical field label. */
 export const FACTS_FIELD_NAMES = {
@@ -64,18 +60,6 @@ export function extractFacts(section: SpecSection | undefined): Partial<Record<F
     }
   }
   return facts;
-}
-
-export interface SpecFaqItem {
-  question: string;
-  answer: string;
-}
-
-/** `{ field: question, value: answer }` rows (§5A row 67) from the FAQ section. */
-export function extractFaq(section: SpecSection | undefined): SpecFaqItem[] {
-  return (section?.fields ?? [])
-    .filter((field) => field.name?.trim() && field.value?.trim())
-    .map((field) => ({ question: field.name!.trim(), answer: field.value!.trim() }));
 }
 
 /**
