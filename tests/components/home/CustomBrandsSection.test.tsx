@@ -31,6 +31,18 @@ describe('CustomBrandsSection', () => {
     expect(container.querySelectorAll('img').length).toBe(2);
   });
 
+  it('fixes 3 columns on mobile, matching the reference grid', () => {
+    const { container } = render(
+      <CustomBrandsSection
+        data={{
+          display_as_grid: true,
+          brands: Array.from({ length: 6 }, (_, i) => ({ image: `${i}.jpg` })),
+        }}
+      />
+    );
+    expect(container.querySelector('.grid')?.className).toContain('grid-cols-3');
+  });
+
   it('wraps a brand logo in a link when it has a url', () => {
     const { container } = render(
       <CustomBrandsSection

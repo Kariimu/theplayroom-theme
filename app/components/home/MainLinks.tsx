@@ -2,6 +2,7 @@ import { memo } from 'react';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
 import { getCdnImageUrl } from '@salla.sa/twilight-theme-engine/utils/cdn-image';
 import { SallaSlider } from '@salla.sa/twilight-components-react/slider';
+import { resolveLink } from '../../lib/resolveLink';
 
 interface LinkItem {
   url?: string;
@@ -75,39 +76,49 @@ export const MainLinks = memo(function MainLinks({ data }: MainLinksProps) {
                 : (item as LinkItem).title || (item as LinkItem).link_title;
               const itemIcon = showCats ? (item as Category).icon : (item as LinkItem).icon;
               const itemImage = showCats ? (item as Category).image : (item as LinkItem).image;
-              const itemUrl = item.url || '#';
+              const itemUrl = resolveLink(item.url);
 
               if (!itemTitle && !showCats) return null;
+
+              const media = (
+                <span className="slide--cat-entry__media">
+                  {itemImage ? (
+                    <img
+                      // The CDN's 128px copy (sharp at 64px on 2x screens), not the original upload.
+                      src={getCdnImageUrl(itemImage, { width: 128 }) ?? itemImage}
+                      width="64"
+                      height="64"
+                      // The title right after it names the link; an alt would say it twice.
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ) : itemIcon ? (
+                    <i className={itemIcon} />
+                  ) : null}
+                </span>
+              );
 
               return (
                 <div
                   // A static settings list with no id; the url is used where one
                   // exists: see .react-doctor/false-positives.md.
                   // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-                  key={itemUrl === '#' ? index : itemUrl}
+                  key={itemUrl ?? index}
                   className="swiper-slide slide--one-eighth"
                 >
-                  <Link to={itemUrl} className="slide--cat-entry">
-                    {/* The item's image when it has one, filling the circle; its icon
-                        otherwise. */}
-                    <span className="slide--cat-entry__media">
-                      {itemImage ? (
-                        <img
-                          // The CDN's 128px copy (sharp at 64px on 2x screens), not the original upload.
-                          src={getCdnImageUrl(itemImage, { width: 128 }) ?? itemImage}
-                          width="64"
-                          height="64"
-                          // The title right after it names the link; an alt would say it twice.
-                          alt=""
-                          loading="lazy"
-                          decoding="async"
-                        />
-                      ) : itemIcon ? (
-                        <i className={itemIcon} />
-                      ) : null}
-                    </span>
-                    <h2>{itemTitle}</h2>
-                  </Link>
+                  {/* No real destination: a plain tile (no dead `#` link), still carrying its text. */}
+                  {itemUrl ? (
+                    <Link to={itemUrl} className="slide--cat-entry">
+                      {media}
+                      <h2>{itemTitle}</h2>
+                    </Link>
+                  ) : (
+                    <div className="slide--cat-entry">
+                      {media}
+                      <h2>{itemTitle}</h2>
+                    </div>
+                  )}
                 </div>
               );
             })}

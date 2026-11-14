@@ -1,20 +1,29 @@
-import { describe, it, expect, vi } from 'vitest';
-import { render } from '@testing-library/react';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
+import { render, waitFor } from '@testing-library/react';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ProductsSection } from '../../../app/components/home/ProductsSection';
 
-vi.mock('../../../app/hooks/useProductCardLayout', () => ({
-  useProductCardLayout: () => 'vertical' as const,
+const listMock = vi.fn();
+
+vi.mock('../../../app/components/common', async () => ({
+  ScrollCarousel: (await vi.importActual<typeof import('../../../app/components/common/ScrollCarousel')>(
+    '../../../app/components/common/ScrollCarousel'
+  )).ScrollCarousel,
 }));
 
-vi.mock('../../../app/components/product', () => ({
-  ProductCard: ({ product }: { product: { id?: number; name?: string } }) => (
-    <div data-testid="product-card">{product.name}</div>
-  ),
+vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
+  useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
 }));
 
-const listMock = vi.fn().mockResolvedValue({ data: [] });
 vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
-  product: { list: (...args: unknown[]) => listMock(...args) },
+  product: {
+    queries: {
+      list: (params: { source: string; sourceValue?: unknown }) => ({
+        queryKey: ['products', 'list', params],
+        queryFn: () => listMock(params),
+      }),
+    },
+  },
 }));
 
 vi.mock('@salla.sa/twilight-theme-engine/common', () => ({
@@ -27,40 +36,49 @@ vi.mock('@salla.sa/twilight-theme-engine/common', () => ({
 
 vi.mock('@salla.sa/twilight-components-react', () => ({
   ProductsListSkeleton: () => <div data-testid="list-skeleton" />,
-  ProductCardSkeleton: () => <div data-testid="card-skeleton" />,
-  SallaProductsList: (props: {
-    loader: () => unknown;
-    children: (items: unknown[]) => unknown;
-    itemsClassName?: string;
-  }) => {
-    const { loader, children, itemsClassName } = props;
-    loader();
-    return (
-      <div data-testid="salla-products-list" className={itemsClassName}>
-        {children([
-          { id: 1, name: 'Product 1' },
-          { id: 2, name: 'Product 2' },
-        ]) as never}
-      </div>
-    );
-  },
 }));
+
+vi.mock('../../../app/components/product', () => ({
+  ProductCard: ({
+    product,
+    layout,
+  }: {
+    product: { id?: number; name?: string };
+    layout?: string;
+  }) => (
+    <div data-testid="product-card" data-layout={layout}>
+      {product.name}
+    </div>
+  ),
+}));
+
+// `useQuery` needs a QueryClient in context.
+function renderWithClient(ui: React.ReactElement) {
+  const client = new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } });
+  return render(<QueryClientProvider client={client}>{ui}</QueryClientProvider>);
+}
+
+beforeEach(() => {
+  listMock.mockReset();
+  listMock.mockResolvedValue({ items: [{ id: 1, name: 'Product 1' }, { id: 2, name: 'Product 2' }] });
+  Element.prototype.scrollBy = vi.fn();
+});
 
 describe('ProductsSection', () => {
   it('renders nothing with no products selected', () => {
-    const { container } = render(<ProductsSection data={{ products: [] }} />);
+    const { container } = renderWithClient(<ProductsSection data={{ products: [] }} />);
     expect(container.firstChild).toBeNull();
   });
 
   it('loads the selected products by id', () => {
-    render(<ProductsSection data={{ products: [{ id: 1 }, { id: 2 }] }} />);
+    renderWithClient(<ProductsSection data={{ products: [{ id: 1 }, { id: 2 }] }} />);
     expect(listMock).toHaveBeenCalledWith(
       expect.objectContaining({ source: 'selected', sourceValue: [1, 2] })
     );
   });
 
   it('renders the header title and description', () => {
-    const { container } = render(
+    const { container } = renderWithClient(
       <ProductsSection
         data={{ products: [{ id: 1 }], title_section: 'Bestsellers', desc_section: 'Top picks' }}
       />
@@ -70,7 +88,7 @@ describe('ProductsSection', () => {
   });
 
   it('renders the footer blurb', () => {
-    const { container } = render(
+    const { container } = renderWithClient(
       <ProductsSection data={{ products: [{ id: 1 }], desc2_section: 'More to explore' }} />
     );
     expect(container.textContent).toContain('More to explore');
@@ -78,16 +96,28 @@ describe('ProductsSection', () => {
 
   it('renders the view-all button only with both a link and button text', () => {
     const { container, rerender } = render(
-      <ProductsSection data={{ products: [{ id: 1 }], btn_text: 'View all', button_url: '/products' }} />
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })}>
+        <ProductsSection data={{ products: [{ id: 1 }], btn_text: 'View all', button_url: '/products' }} />
+      </QueryClientProvider>
     );
     expect(container.querySelector('a[href="/products"]')?.textContent).toBe('View all');
 
-    rerender(<ProductsSection data={{ products: [{ id: 1 }], btn_text: 'View all', button_url: [] }} />);
+    rerender(
+      <QueryClientProvider client={new QueryClient({ defaultOptions: { queries: { retry: false, gcTime: 0 } } })}>
+        <ProductsSection data={{ products: [{ id: 1 }], btn_text: 'View all', button_url: [] }} />
+      </QueryClientProvider>
+    );
     expect(container.querySelector('a')).toBeNull();
   });
 
-  it('renders the selected products', () => {
-    const { container } = render(<ProductsSection data={{ products: [{ id: 1 }, { id: 2 }] }} />);
-    expect(container.querySelectorAll('[data-testid="product-card"]').length).toBe(2);
+  it('renders the selected products as vertical-card slides, a slider at every breakpoint', async () => {
+    const { container, getAllByTestId } = renderWithClient(
+      <ProductsSection data={{ products: [{ id: 1 }, { id: 2 }] }} />
+    );
+    await waitFor(() => expect(getAllByTestId('product-card').length).toBe(2));
+    for (const card of getAllByTestId('product-card')) {
+      expect(card.getAttribute('data-layout')).toBe('vertical');
+    }
+    expect(container.querySelectorAll('.s-products-carousel__slide').length).toBe(2);
   });
 });

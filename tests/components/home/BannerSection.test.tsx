@@ -40,6 +40,27 @@ describe('BannerSection', () => {
     expect(container.querySelector('img')?.getAttribute('alt')).toBe('Mobile alt');
   });
 
+  it('loads eagerly, at high priority, only when the engine marks it the first block', () => {
+    const { container, rerender } = render(
+      <BannerSection data={{ image_desktop: 'd.jpg' }} />
+    );
+    const lazyImg = container.querySelector('img')!;
+    expect(lazyImg.getAttribute('loading')).toBe('lazy');
+    expect(lazyImg.getAttribute('fetchpriority')).toBeNull();
+
+    rerender(<BannerSection data={{ image_desktop: 'd.jpg', priority: true }} />);
+    const eagerImg = container.querySelector('img')!;
+    expect(eagerImg.getAttribute('loading')).toBe('eager');
+    expect(eagerImg.getAttribute('fetchpriority')).toBe('high');
+  });
+
+  it('carries 12:5 width/height attributes, matching the reference hero (no CLS, no breakpoint-specific crop)', () => {
+    const { container } = render(<BannerSection data={{ image_desktop: 'd.jpg' }} />);
+    const img = container.querySelector('img')!;
+    expect(img.getAttribute('width')).toBe('1200');
+    expect(img.getAttribute('height')).toBe('500');
+  });
+
   it('adds top margin only when top_margin is set', () => {
     const { container, rerender } = render(
       <BannerSection data={{ image_desktop: 'd.jpg', top_margin: true }} />

@@ -5,6 +5,7 @@ import { ScrollCarousel } from '../common';
 import { parseSlideVideo } from '../../lib/slideVideo';
 import { useMotionAllowed } from '../../hooks/useMotionAllowed';
 import { SlideVideo, useSlideVideos, type SliderBanner } from './EnhancedSlider';
+import { resolveLink } from '../../lib/resolveLink';
 
 export interface PhotosSliderWithTextProps {
   data: {
@@ -27,6 +28,7 @@ function SlideCard({
   motionAllowed: boolean;
 }) {
   const button = slide.btnname?.trim();
+  const url = resolveLink(slide.url);
   const content = (
     <>
       <Image
@@ -44,8 +46,9 @@ function SlideCard({
         {slide.description && (
           <p className="s-text-photos-slider__description">{slide.description}</p>
         )}
-        {button && (
-          <Link to={slide.url || '#'} className="home-slider__cta">
+        {/* No real destination: skip the button rather than render a dead `#` link. */}
+        {button && url && (
+          <Link to={url} className="home-slider__cta">
             {button}
           </Link>
         )}
@@ -54,9 +57,9 @@ function SlideCard({
   );
 
   // Without a button, a link makes the whole card clickable (no link inside a link).
-  if (!button && slide.url) {
+  if (!button && url) {
     return (
-      <Link to={slide.url} className="s-text-photos-slider__slide">
+      <Link to={url} className="s-text-photos-slider__slide">
         {content}
       </Link>
     );

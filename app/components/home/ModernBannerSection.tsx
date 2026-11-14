@@ -158,8 +158,8 @@ export function ModernBannerSection({ data }: ModernBannerSectionProps) {
               {textIcon}
             </span>
           )}
-          {title && <h2 className="text-2xl md:text-4xl font-black mb-2">{title}</h2>}
-          {description && <p className="opacity-70 max-w-2xl mx-auto">{description}</p>}
+          {title && <h2 className="text-3xl font-black mb-2">{title}</h2>}
+          {description && <p className="text-lg opacity-70 max-w-2xl mx-auto">{description}</p>}
         </div>
       )}
 

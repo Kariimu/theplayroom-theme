@@ -62,7 +62,9 @@ describe('one-line main menu (enable_more_menu)', () => {
   it('keeps each root item at its natural width, on one line', async () => {
     const root = await compileHeader();
     const item = '.s-menu-root-level';
-    for (const selector of [`${scope} ${item}`, `${scope} ${item} > a`]) {
+    // "More" (HeaderMainMenu.tsx) is a `<button>`, not an `<a>`, since it opens a panel
+    // rather than navigating — the rule matches both via `:is(a, button)`.
+    for (const selector of [`${scope} ${item}`, `${scope} ${item} > :is(a, button)`]) {
       const rule = ruleFor(root, selector);
       expect(decl(rule, 'flex-shrink'), selector).toBe('0');
       expect(decl(rule, 'white-space'), selector).toBe('nowrap');

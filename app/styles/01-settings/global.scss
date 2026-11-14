@@ -23,6 +23,16 @@ $main-text-color: var(--main-text-color);
   --brand-blue-light: #e9edf2;
   --brand-orange-light: #feece5;
   --brand-red-light: #f9ebeb;
+  --brand-navy: #2d3e50;
+
+  /* Playroom request: every button's text is white, not the merchant's dashboard
+     "reverse text" color (Theme Colors → text on primary). The engine sets
+     `--color-primary-reverse` as an inline style on `<html>` once the store's
+     theme settings load client-side (`applyTheme`, `twilight-theme-engine`), so
+     only an `!important` stylesheet rule — not a later `:root` declaration —
+     outranks it. Every `.btn--primary`/`text-primary-reverse` use (and native
+     `salla-*` components reading the same token) follows this. */
+  --color-primary-reverse: #ffffff !important;
 
   --infinte-color: #c9c9c9;
   --main-text-color: #231f1e;

@@ -1,7 +1,7 @@
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { getCdnImageUrl } from '@salla.sa/twilight-theme-engine/utils/cdn-image';
-import { BottomSheet } from '../common';
+import { BottomSheet, ScrollCarousel } from '../common';
 import { resolveLink } from '../../lib/resolveLink';
 
 interface InstagramPost {
@@ -153,6 +153,13 @@ export function InstagramSection({ data }: InstagramSectionProps) {
   const showingHref = resolveLink(showingBtn) || handleUrl;
 
   const withMedia = posts.filter((post) => post.img || post.video);
+  // Mobile pages through 2x2 groups (matches the reference site's own swiper of
+  // 4-post pages); desktop drops the paging for one flat 5-column row.
+  const pages = useMemo(() => {
+    const groups: InstagramPost[][] = [];
+    for (let i = 0; i < withMedia.length; i += 4) groups.push(withMedia.slice(i, i + 4));
+    return groups;
+  }, [withMedia]);
   if (!avatar && !name && !withMedia.length) return null;
 
   const openPost = openIndex != null ? withMedia[openIndex] : null;
@@ -209,13 +216,40 @@ export function InstagramSection({ data }: InstagramSectionProps) {
       </div>
 
       {withMedia.length > 0 && (
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-1">
-          {withMedia.map((post, index) => (
-            // A static settings list with no id; see .react-doctor/false-positives.md.
-            // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-            <PostTile key={index} post={post} onOpen={() => setOpenIndex(index)} />
-          ))}
-        </div>
+        <>
+          {/* Mobile: a swipeable row of 2x2 pages (4 posts each) with prev/next
+              arrows — matches the reference site's own mobile post slider
+              (`s-slider-prev`/`s-slider-next`): arrows stay visible here, unlike
+              every other `ScrollCarousel` row, which drops them for dots below `md`. */}
+          <div className="instagram-section__pager md:hidden">
+            <ScrollCarousel
+              prevLabel={t('blocks.home.reviews_prev', 'Previous')}
+              nextLabel={t('blocks.home.reviews_next', 'Next')}
+            >
+              {pages.map((page, pageIndex) => (
+                // A static settings list with no id; see .react-doctor/false-positives.md.
+                // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+                <div key={pageIndex} className="grid w-full flex-shrink-0 grid-cols-2 gap-1">
+                  {page.map((post, index) => (
+                    // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+                    <PostTile
+                      key={index}
+                      post={post}
+                      onOpen={() => setOpenIndex(pageIndex * 4 + index)}
+                    />
+                  ))}
+                </div>
+              ))}
+            </ScrollCarousel>
+          </div>
+          {/* Desktop: one flat row, no paging. */}
+          <div className="hidden gap-1 md:grid md:grid-cols-5">
+            {withMedia.map((post, index) => (
+              // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+              <PostTile key={index} post={post} onOpen={() => setOpenIndex(index)} />
+            ))}
+          </div>
+        </>
       )}
 
       {showingHref && (

@@ -121,7 +121,9 @@ afterEach(() => {
 const rootTitles = (container: HTMLElement) =>
   Array.from(
     container.querySelectorAll('.main-menu:not(.site-header__more-probe) > .s-menu-root-level'),
-    (li) => li.querySelector(':scope > a')?.textContent
+    // "More" is a `<button>` (it opens a panel, not a navigation target); every
+    // other root item is an `<a>`.
+    (li) => li.querySelector(':scope > :is(a, button)')?.textContent
   );
 
 describe('HeaderMainMenu', () => {
@@ -295,13 +297,13 @@ describe('HeaderMainMenu', () => {
     });
   });
 
-  it('keeps the "More" link from navigating', () => {
+  it('"More" only opens its dropdown — a button, not a placeholder link', () => {
     state.available = 350;
     const { container } = render(<HeaderMainMenu />);
-    const link = container.querySelector('[data-more-menu] > a')!;
-    const event = new MouseEvent('click', { bubbles: true, cancelable: true });
-    fireEvent(link, event);
-    expect(event.defaultPrevented).toBe(true);
+    const more = container.querySelector('[data-more-menu] > button')!;
+    expect(more).toBeTruthy();
+    expect(more.hasAttribute('href')).toBe(false);
+    expect(container.querySelector('[data-more-menu] > a')).toBeNull();
   });
 
   it('leaves out items with no title', () => {

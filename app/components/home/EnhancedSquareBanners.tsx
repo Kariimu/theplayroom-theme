@@ -1,6 +1,7 @@
 import { memo } from 'react';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
+import { resolveLink } from '../../lib/resolveLink';
 
 interface BannerItem {
   image?: string;
@@ -30,21 +31,27 @@ const isComplete = (banner: BannerItem) =>
   Boolean(banner.title && banner.description && banner.url);
 
 function MosaicBanner({ banner, ctaLabel }: { banner: BannerItem; ctaLabel: string }) {
-  return (
-    <Link
-      to={banner.url || '#'}
-      aria-label={bannerLabel(banner, ctaLabel)}
-      className={`enhanced-square-banner bg-no-repeat bg-cover bg-center ${isComplete(banner) ? '' : 'enhanced-square-banner--overlay'}`}
-      style={{ backgroundImage: `url(${banner.image})` }}
-    >
-      <span className="enhanced-square-banner__content">
-        {banner.title && <h3 className="enhanced-square-banner__title">{banner.title}</h3>}
-        {banner.description && (
-          <p className="enhanced-square-banner__description">{banner.description}</p>
-        )}
-        {banner.url && <span className="enhanced-square-banner__cta">{ctaLabel}</span>}
-      </span>
+  const url = resolveLink(banner.url);
+  const className = `enhanced-square-banner bg-no-repeat bg-cover bg-center ${isComplete(banner) ? '' : 'enhanced-square-banner--overlay'}`;
+  const style = { backgroundImage: `url(${banner.image})` };
+  const content = (
+    <span className="enhanced-square-banner__content">
+      {banner.title && <h3 className="enhanced-square-banner__title">{banner.title}</h3>}
+      {banner.description && (
+        <p className="enhanced-square-banner__description">{banner.description}</p>
+      )}
+      {url && <span className="enhanced-square-banner__cta">{ctaLabel}</span>}
+    </span>
+  );
+  // No real destination: a plain tile (no dead `#` link), still carrying its text.
+  return url ? (
+    <Link to={url} aria-label={bannerLabel(banner, ctaLabel)} className={className} style={style}>
+      {content}
     </Link>
+  ) : (
+    <div aria-label={bannerLabel(banner, ctaLabel)} className={className} style={style}>
+      {content}
+    </div>
   );
 }
 
@@ -79,20 +86,27 @@ export const EnhancedSquareBanners = memo(function EnhancedSquareBanners({
 
   return (
     <div className={`grid ${gridCols} grid-flow-row gap-3 sm:gap-8`}>
-      {banners.map((banner, index) => (
-        <Link
-          key={index}
-          to={banner.url || '#'}
-          aria-label={bannerLabel(banner, ctaLabel)}
-          className={`banner-entry bg-no-repeat bg-cover bg-center ${banner.title && !isComplete(banner) ? 'has-overlay' : ''} ${hasTwoRows ? 'h-banner' : 'h-lg-banner'}`}
-          style={{ backgroundImage: `url(${banner.image})` }}
-        >
+      {banners.map((banner, index) => {
+        const url = resolveLink(banner.url);
+        const className = `banner-entry bg-no-repeat bg-cover bg-center ${banner.title && !isComplete(banner) ? 'has-overlay' : ''} ${hasTwoRows ? 'h-banner' : 'h-lg-banner'}`;
+        const style = { backgroundImage: `url(${banner.image})` };
+        const content = (
           <article className="banner-entry__text text-with-border">
             <h3 className="banner__title font-bold mb-1 leading-6">{banner.title}</h3>
             <p className="banner__description">{banner.description}</p>
           </article>
-        </Link>
-      ))}
+        );
+        // No real destination: a plain tile (no dead `#` link), still carrying its text.
+        return url ? (
+          <Link key={index} to={url} aria-label={bannerLabel(banner, ctaLabel)} className={className} style={style}>
+            {content}
+          </Link>
+        ) : (
+          <div key={index} aria-label={bannerLabel(banner, ctaLabel)} className={className} style={style}>
+            {content}
+          </div>
+        );
+      })}
     </div>
   );
 });

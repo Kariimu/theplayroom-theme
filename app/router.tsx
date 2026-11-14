@@ -114,7 +114,6 @@ registerHomeComponents({
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
 // the literal `styleN` values; this covers the semantic `view_style`s too.
-// `custom-testimonials` gets `s-block--full-bg` so the gray band runs edge-to-edge.
 registerHomeComponentConfig({
   'featured-products': featuredProductsConfig,
   'featured-products-special-offer': featuredProductsConfig,
@@ -171,8 +170,12 @@ registerHomeComponentConfig({
     height: '480px',
     placeholder: <SliderSkeleton />,
   },
+  // Boxed, no background band, no vertical padding of its own — matches the
+  // reference demo's native reviews container exactly (`s-reviews-container`:
+  // transparent, 0 padding, just `max-w-4xl mx-auto` and the generic block
+  // top-margin everything else gets).
   'custom-testimonials': {
-    className: 's-block s-block--custom-testimonials s-block--full-bg',
+    className: 's-block s-block--custom-testimonials',
   },
   // Lazy placements (blocks 4+): reserve the loaded blocks' height and show the
   // same SliderSkeleton the SSR path shows (sized in home-blocks.scss), not the

@@ -19,7 +19,7 @@ export interface CustomBrandsSectionProps {
   };
 }
 
-function BrandLogo({ brand }: { brand: BrandImageItem }) {
+function BrandLogo({ brand, grid }: { brand: BrandImageItem; grid?: boolean }) {
   const img = brand.image && (
     <img
       src={getCdnImageUrl(brand.image, { width: 400 }) ?? brand.image}
@@ -28,16 +28,23 @@ function BrandLogo({ brand }: { brand: BrandImageItem }) {
       alt={brand.alt_text || ''}
       loading="lazy"
       decoding="async"
-      className="h-full max-h-20 w-auto object-contain"
+      className={
+        grid
+          ? 'max-h-14 w-auto max-w-[140px] object-contain opacity-75 transition-all duration-300 group-hover:scale-105 group-hover:opacity-100'
+          : 'h-full max-h-20 w-auto object-contain'
+      }
     />
   );
   const link = resolveLink(brand.url);
+  const className = grid
+    ? 'custom-brands__logo group flex items-center justify-center rounded-2xl p-3 transition-all duration-300'
+    : 'custom-brands__logo flex items-center justify-center';
   return link ? (
-    <Link to={link} className="custom-brands__logo flex items-center justify-center">
+    <Link to={link} className={className}>
       {img}
     </Link>
   ) : (
-    <span className="custom-brands__logo flex items-center justify-center">{img}</span>
+    <span className={className}>{img}</span>
   );
 }
 
@@ -58,12 +65,14 @@ export const CustomBrandsSection = memo(function CustomBrandsSection({
 
   if (asGrid) {
     return (
-      <div className="container">
-        <div className="grid grid-cols-3 sm:grid-cols-5 gap-4 items-center">
+      <div className="container mx-auto px-4">
+        {/* A real grid, not flex-wrap: a logo's own width no longer decides how many
+            land in a row — reliably 3 on mobile, matching the reference site. */}
+        <div className="grid grid-cols-3 place-items-center gap-4 sm:grid-cols-4 sm:gap-6 md:grid-cols-5 lg:grid-cols-6 lg:gap-8">
           {withImages.map((brand, index) => (
             // A static settings list with no id; see .react-doctor/false-positives.md.
             // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-            <BrandLogo key={index} brand={brand} />
+            <BrandLogo key={index} brand={brand} grid />
           ))}
         </div>
       </div>

@@ -295,11 +295,4 @@ describe('ProductCard (default/vertical layout, custom card)', () => {
     rerender(<ProductCard product={withoutHover} />);
     expect(container.querySelector('.product-card__image--hover')).toBeNull();
   });
-
-  it('toggles the wishlist heart for the right product id', () => {
-    const p = { ...product, id: 55 } as never;
-    const { getByLabelText } = render(<ProductCard product={p} />);
-    fireEvent.click(getByLabelText('Add or remove to wishlist'));
-    expect(wishlistState.ids).toContain(55);
-  });
 });

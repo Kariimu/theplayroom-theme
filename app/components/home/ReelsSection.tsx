@@ -194,8 +194,8 @@ export function ReelsSection({ data }: ReelsSectionProps) {
     <div className="container">
       {(title || description) && (
         <div className="mb-8 text-center">
-          {title && <h2 className="text-2xl md:text-4xl font-black">{title}</h2>}
-          {description && <p className="opacity-70">{description}</p>}
+          {title && <h2 className="text-3xl font-black">{title}</h2>}
+          {description && <p className="text-lg opacity-70">{description}</p>}
         </div>
       )}
 

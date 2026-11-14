@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
-import { QuoteIcon, StarIcon } from '../icons';
+import { CheckCircleIcon, QuoteIcon, StarIcon } from '../icons';
 import { ScrollCarousel } from './ScrollCarousel';
 import { BottomSheet } from './BottomSheet';
 
@@ -18,11 +18,9 @@ const STAR_POSITIONS = Array.from({ length: MAX_STARS }, (_, position) => positi
 
 function TestimonialCard({
   item,
-  index,
   onViewPhoto,
 }: {
   item: TestimonialItem;
-  index: number;
   onViewPhoto: () => void;
 }) {
   const { t } = useTranslation();
@@ -31,8 +29,11 @@ function TestimonialCard({
 
   return (
     <figure className="testimonial-card">
-      <div className="testimonial-card__head">
+      <div className="testimonial-card__inner">
         <QuoteIcon className="testimonial-card__quote" aria-hidden="true" />
+
+        <blockquote className="testimonial-card__text">{item.text}</blockquote>
+
         {stars > 0 && (
           <span
             className="testimonial-card__stars"
@@ -48,55 +49,37 @@ function TestimonialCard({
             ))}
           </span>
         )}
-      </div>
 
-      <blockquote className="testimonial-card__text">{item.text}</blockquote>
-
-      <figcaption className="testimonial-card__person">
-        {item.avatar ? (
-          <img
-            className="testimonial-card__avatar"
-            src={item.avatar}
-            alt={name ?? `testimonial-${index}`}
-            width={44}
-            height={44}
-            loading="lazy"
-            decoding="async"
-            draggable={false}
-          />
-        ) : (
-          name && (
-            <span className="testimonial-card__avatar is-initial" aria-hidden="true">
-              {name.charAt(0)}
-            </span>
-          )
+        {name && (
+          <figcaption className="testimonial-card__person">
+            <b className="testimonial-card__name">{name}</b>
+            <CheckCircleIcon className="testimonial-card__verified" aria-hidden="true" />
+          </figcaption>
         )}
-        <b className="testimonial-card__name">{item.name}</b>
-      </figcaption>
 
-      {item.image && (
-        <button type="button" className="testimonial-card__view-photo" onClick={onViewPhoto}>
-          {t('blocks.home.view_review_photo', 'View photo')}
-        </button>
-      )}
+        {item.image && (
+          <button type="button" className="testimonial-card__view-photo" onClick={onViewPhoto}>
+            {t('blocks.home.view_review_photo', 'View photo')}
+          </button>
+        )}
+      </div>
     </figure>
   );
 }
 
 export interface TestimonialsCarouselProps {
   items: TestimonialItem[];
-  title: string;
-  description?: string;
 }
 
 /**
- * Customer reviews as whole cards in the shared {@link ScrollCarousel}: three in
- * the container on desktop, with the arrows beside the title and none at all when
- * every review fits. Used by the `custom-testimonials` home block
- * ({@link CustomTestimonials}). Styling: `04-components/home-blocks.scss`
- * (`.s-testimonials` / `.testimonial-card`).
+ * Customer reviews as full-width slides (one at a time, centered) in the
+ * shared {@link ScrollCarousel} — matches the old theme's one-up fading
+ * testimonial slider, which has no heading of its own (just the slide, its
+ * prev/next arrows and pagination dots below). Used by the
+ * `custom-testimonials` home block ({@link CustomTestimonials}). Styling:
+ * `04-components/home-blocks.scss` (`.s-testimonials` / `.testimonial-card`).
  */
-export function TestimonialsCarousel({ items, title, description }: TestimonialsCarouselProps) {
+export function TestimonialsCarousel({ items }: TestimonialsCarouselProps) {
   const { t } = useTranslation();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
 
@@ -105,14 +88,10 @@ export function TestimonialsCarousel({ items, title, description }: Testimonials
   const openItem = openIndex != null ? items[openIndex] : null;
 
   return (
-    <div className="s-testimonials container">
+    // `max-w-4xl mx-auto`: matches the reference demo's native reviews
+    // container width exactly (`s-reviews-container > salla-slider.max-w-4xl`).
+    <div className="s-testimonials container max-w-4xl mx-auto">
       <ScrollCarousel
-        heading={
-          <>
-            <h2 className="s-testimonials__title">{title}</h2>
-            {description && <p className="s-testimonials__desc">{description}</p>}
-          </>
-        }
         prevLabel={t('blocks.home.reviews_prev', 'Previous')}
         nextLabel={t('blocks.home.reviews_next', 'Next')}
       >
@@ -123,7 +102,6 @@ export function TestimonialsCarousel({ items, title, description }: Testimonials
           <TestimonialCard
             key={`${index}-${item.name ?? ''}`}
             item={item}
-            index={index}
             onViewPhoto={() => setOpenIndex(index)}
           />
         ))}

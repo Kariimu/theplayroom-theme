@@ -52,13 +52,11 @@ function VerticalProductCard(props: ProductCardProps) {
   const { t } = useTranslation();
   const { theme } = useTwilight();
   const { format } = useMoney();
-  const wishlist = useWishlist();
   const [isHovered, setIsHovered] = useState(false);
   const [isAdding, setIsAdding] = useState(false);
 
   const { product, isPlaceholder } = useMemo(() => withImageFallback(props.product), [props.product]);
   const productId = Number(product.id);
-  const inWishlist = wishlist.has(productId);
 
   const waNumber = (theme?.settings as { whatsapp_number?: string | number } | undefined)
     ?.whatsapp_number;
@@ -90,7 +88,7 @@ function VerticalProductCard(props: ProductCardProps) {
 
   return (
     <div
-      className="product-card"
+      className="product-card group"
       data-image-placeholder={isPlaceholder ? 'true' : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
@@ -98,7 +96,7 @@ function VerticalProductCard(props: ProductCardProps) {
       {/* Stretched link: the card's one accessible link to the product page.
           Title/price below are plain text, not a second nested link — a
           `<button>`/`<a>` inside an `<a>` is invalid HTML, so the quick-action
-          and wishlist buttons stay siblings, stacked above this with `z-[1]`. */}
+          button stays a sibling, stacked above this with `z-[1]`. */}
       <Link to={product.url} className="product-card__link" aria-label={product.name} />
 
       <div className="product-card__media">
@@ -125,14 +123,6 @@ function VerticalProductCard(props: ProductCardProps) {
         {!product.is_out_of_stock && !!product.promotion_title && (
           <span className="product-card__badge">{product.promotion_title}</span>
         )}
-
-        <WishlistHeartButton
-          productId={productId}
-          ariaLabel={t('pages.wishlist.toggle', 'Add or remove to wishlist')}
-          pressed={inWishlist}
-          className={`product-card__wishlist ${inWishlist ? 's-product-card-wishlist-added' : ''}`}
-          onClick={() => wishlist.toggle(productId)}
-        />
 
         {isWhatsapp ? (
           waHref && (
@@ -183,8 +173,8 @@ function VerticalProductCard(props: ProductCardProps) {
             {Array.from({ length: 5 }, (_, i) => (
               <StarIcon
                 key={i}
-                width={14}
-                height={14}
+                width={16}
+                height={16}
                 className={i < Math.round(product.rating!.stars) ? 'product-card__star--filled' : 'product-card__star'}
               />
             ))}

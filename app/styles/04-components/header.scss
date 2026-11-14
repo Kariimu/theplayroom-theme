@@ -48,7 +48,7 @@
 }
 
 .site-header__bar {
-  @apply z-40 border-b border-transparent bg-brand-blue-light;
+  @apply z-40 border-b border-transparent bg-transparent;
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -925,8 +925,10 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
       @apply relative my-0 items-center;
     }
 
-    .s-menu-root-level > a {
-      @apply inline-flex items-center gap-1 whitespace-nowrap rounded px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary;
+    /* `:is(a, button)`: every root item is a link except "More" (HeaderMainMenu.tsx),
+       a `<button>` since it opens a panel rather than navigating. */
+    .s-menu-root-level > :is(a, button) {
+      @apply inline-flex items-center gap-1 whitespace-nowrap rounded border-0 bg-transparent px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary;
     }
 
     /* rows inside a panel — stacked */
@@ -1084,7 +1086,7 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
          no-wrap row squeezes them instead (their text breaks onto 2-3 lines),
          so they measure as fitting and nothing ever moves into "More". */
       .s-menu-root-level,
-      .s-menu-root-level > a {
+      .s-menu-root-level > :is(a, button) {
         flex-shrink: 0;
         white-space: nowrap;
       }
@@ -1108,7 +1110,7 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
     }
 
     /* caret — sallaicons chevron, flips on an open top-level item */
-    .s-menu-has-children > a::after {
+    .s-menu-has-children > :is(a, button)::after {
       font-family: 'sallaicons';
       content: '\e970';
       @apply ms-1 inline-block text-base leading-none opacity-50 transition-transform;
@@ -1116,15 +1118,15 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
 
     /* `\e970` points left, the way a nested panel flies out in Arabic; in LTR
        it flies out to the right, so the caret does too. */
-    .s-menu-non-root-level.s-menu-has-children > a:where([dir='ltr'] *)::after {
+    .s-menu-non-root-level.s-menu-has-children > :is(a, button):where([dir='ltr'] *)::after {
       transform: scaleX(-1);
     }
 
-    .s-menu-root-level.s-menu-has-children > a::after {
+    .s-menu-root-level.s-menu-has-children > :is(a, button)::after {
       content: '\e96e';
     }
 
-    .s-menu-root-level.s-menu-has-children:hover > a::after {
+    .s-menu-root-level.s-menu-has-children:hover > :is(a, button)::after {
       @apply opacity-100;
       transform: scaleY(-1);
     }

@@ -24,6 +24,63 @@ export interface ShoppingSectionProps {
   };
 }
 
+function ShoppingCard({ item, className = '' }: { item: ShoppingItem; className?: string }) {
+  const link = resolveLink(item.url);
+  const alt = item.title || item.subtitle || '';
+  const cardClassName = `group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl ${className}`;
+  const content = (
+    <>
+      {item.image && (
+        <div className="aspect-[4/3] overflow-hidden">
+          <img
+            src={getCdnImageUrl(item.image, { width: 500 }) ?? item.image}
+            width="500"
+            height="375"
+            alt={alt}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+          />
+        </div>
+      )}
+      {(item.title || item.subtitle) && (
+        <div className="p-6 text-center">
+          {item.title && (
+            <p
+              className={
+                item.title_type
+                  ? 'text-lg font-black text-gray-900 md:text-xl'
+                  : 'mb-2 text-sm font-bold text-primary md:text-base'
+              }
+            >
+              {item.title}
+            </p>
+          )}
+          {item.subtitle && (
+            <p
+              className={
+                item.subtitle_type
+                  ? 'mt-1 text-sm text-gray-500'
+                  : 'text-lg font-black text-gray-900 md:text-xl'
+              }
+            >
+              {item.subtitle}
+            </p>
+          )}
+        </div>
+      )}
+    </>
+  );
+  // No real destination: a plain tile (no dead `#` link), still carrying its text/image.
+  return link ? (
+    <Link to={link} className={cardClassName}>
+      {content}
+    </Link>
+  ) : (
+    <div className={cardClassName}>{content}</div>
+  );
+}
+
 /**
  * `shopping1-section` home block — "Shop by type": a card grid of image +
  * title + subtitle tiles, each linking to a category or custom page. Up to
@@ -38,67 +95,28 @@ export const ShoppingSection = memo(function ShoppingSection({ data }: ShoppingS
   return (
     <div className="container">
       {(title || subtitle) && (
-        <div className="s-block__title mb-10 text-center md:mb-16">
+        <div className="mb-10 text-center md:mb-16">
           {title && (
-            <h2 className="mb-4 text-3xl font-black text-gray-900 md:text-5xl">{title}</h2>
+            <h2 className="mb-4 text-3xl font-black text-brand-navy">{title}</h2>
           )}
-          {subtitle && <p className="text-lg font-medium text-gray-500 md:text-xl">{subtitle}</p>}
+          {subtitle && <p className="text-lg font-medium text-gray-500">{subtitle}</p>}
         </div>
       )}
 
-      <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:gap-6 lg:grid-cols-5 lg:gap-8">
-        {items.map((item, index) => {
-          const link = resolveLink(item.url);
-          return (
-            // A static settings list with no id; see .react-doctor/false-positives.md.
-            // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-            <Link
-              key={index}
-              to={link || '#'}
-              className="group overflow-hidden rounded-2xl bg-white shadow-lg transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
-            >
-              {item.image && (
-                <div className="aspect-[4/3] overflow-hidden">
-                  <img
-                    src={getCdnImageUrl(item.image, { width: 500 }) ?? item.image}
-                    width="500"
-                    height="375"
-                    alt=""
-                    loading="lazy"
-                    decoding="async"
-                    className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                </div>
-              )}
-              {(item.title || item.subtitle) && (
-                <div className="p-4 text-center md:p-6">
-                  {item.title && (
-                    <p
-                      className={
-                        item.title_type
-                          ? 'text-sm font-normal text-gray-900'
-                          : 'text-base font-black text-gray-900 md:text-xl'
-                      }
-                    >
-                      {item.title}
-                    </p>
-                  )}
-                  {item.subtitle && (
-                    <p
-                      className={
-                        item.subtitle_type
-                          ? 'mt-1 text-xs text-gray-500'
-                          : 'mt-1 text-sm font-medium text-gray-500'
-                      }
-                    >
-                      {item.subtitle}
-                    </p>
-                  )}
-                </div>
-              )}
-            </Link>
-          );
-        })}
+      {/* Mobile: horizontal scroll row. Desktop: fixed 3-column grid (the
+          block is always authored with 3 items; a responsive column count
+          would leave empty tracks instead of filling the row). */}
+      <div className="-mx-4 overflow-x-auto px-4 pb-4 scrollbar-hide md:hidden">
+        <div className="flex gap-4" style={{ width: 'max-content' }}>
+          {items.map((item, index) => (
+            <ShoppingCard key={index} item={item} className="w-[80vw] flex-shrink-0" />
+          ))}
+        </div>
+      </div>
+      <div className="hidden md:grid md:grid-cols-3 md:gap-6 lg:gap-8">
+        {items.map((item, index) => (
+          <ShoppingCard key={index} item={item} />
+        ))}
       </div>
     </div>
   );

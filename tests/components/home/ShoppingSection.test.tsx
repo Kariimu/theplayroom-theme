@@ -43,19 +43,22 @@ describe('ShoppingSection', () => {
     expect(container.querySelector('img')).toBeTruthy();
   });
 
-  it('links to # when an item has no url', () => {
+  it('renders a plain tile, not a dead `#` link, when an item has no url', () => {
     const { container } = render(<ShoppingSection data={{ items: [{ title: 'No link' }] }} />);
-    expect(container.querySelector('a')?.getAttribute('href')).toBe('#');
+    expect(container.querySelector('a')).toBeNull();
+    expect(container.querySelector('.group')?.textContent).toContain('No link');
   });
 
   it('switches title/subtitle styling with their *_type toggles', () => {
-    const { container } = render(
+    const off = render(<ShoppingSection data={{ items: [{ title: 'Plain', subtitle: 'Plain sub' }] }} />);
+    const on = render(
       <ShoppingSection
         data={{ items: [{ title: 'Plain', title_type: true, subtitle: 'Plain sub', subtitle_type: true }] }}
       />
     );
-    const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
-    expect(titleEl.className).toContain('font-normal');
-    expect(subtitleEl.className).toContain('text-xs');
+    const [offTitleEl, offSubtitleEl] = off.container.querySelectorAll('.group p');
+    const [onTitleEl, onSubtitleEl] = on.container.querySelectorAll('.group p');
+    expect(onTitleEl.className).not.toBe(offTitleEl.className);
+    expect(onSubtitleEl.className).not.toBe(offSubtitleEl.className);
   });
 });

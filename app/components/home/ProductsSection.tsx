@@ -1,14 +1,12 @@
-import { Suspense, memo, useCallback, useMemo } from 'react';
+import { memo, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { product } from '@salla.sa/twilight-theme-engine/api/product';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
-import {
-  SallaProductsList,
-  ProductsListSkeleton,
-  ProductCardSkeleton,
-} from '@salla.sa/twilight-components-react';
+import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
+import { ProductsListSkeleton } from '@salla.sa/twilight-components-react';
 import { ProductCard } from '../product';
-import { useProductCardLayout } from '../../hooks/useProductCardLayout';
+import { ScrollCarousel } from '../common';
 import { toIds } from '../../lib/pickerValue';
 import { resolveLink } from '../../lib/resolveLink';
 
@@ -26,12 +24,16 @@ export interface ProductsSectionProps {
 }
 
 /**
- * `products-section` home block — a plain grid of merchant-chosen products
- * (up to 24, no tabs), with an optional header, a footer blurb and a "view
- * all" button. Simpler than `featured-products`: one fixed selection, no
- * category/tag/latest sources.
+ * `products-section` home block — a row of merchant-chosen products (up to 24,
+ * no tabs) in the shared {@link ScrollCarousel}, with an optional header, a
+ * footer blurb and a "view all" button. Matches the reference site's own
+ * version of this block, which is a slider on every breakpoint, not a grid —
+ * same convention as {@link ProductsSlider}: cards are always vertical, the
+ * store's `product_card_layout` applies to grids and lists only. Simpler than
+ * `featured-products`: one fixed selection, no category/tag/latest sources.
  */
 export const ProductsSection = memo(function ProductsSection({ data }: ProductsSectionProps) {
+  const { t } = useTranslation();
   const {
     title_section: title,
     desc_section: description,
@@ -42,39 +44,39 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
   } = data;
 
   const ids = useMemo(() => toIds(productsField), [productsField]);
-  const cardLayout = useProductCardLayout();
   const link = resolveLink(buttonUrl);
 
-  const loader = useCallback(
-    () => product.list({ source: 'selected', sourceValue: ids, perPage: ids.length }),
-    [ids]
-  );
+  const { data: result, isSuccess } = useQuery({
+    ...product.queries.list({ source: 'selected', sourceValue: ids, perPage: ids.length }),
+    enabled: ids.length > 0,
+  });
+  const items = result?.items as Product[] | undefined;
 
   if (!ids.length) return null;
 
   return (
     <div className="container">
       {(title || description) && (
-        <div className="s-block__title mb-10 text-center md:mb-16">
-          {title && <h2 className="mb-2 text-3xl font-black text-gray-900 md:text-5xl">{title}</h2>}
-          {description && <p className="text-lg font-medium text-gray-500 md:text-xl">{description}</p>}
+        <div className="mb-10 md:mb-16">
+          {title && <h2 className="mb-2 text-3xl font-black text-brand-navy">{title}</h2>}
+          {description && <p className="text-lg font-medium text-gray-500">{description}</p>}
         </div>
       )}
 
-      <Suspense fallback={<ProductsListSkeleton />}>
-        <SallaProductsList
-          loader={loader}
-          mode="once"
-          itemsClassName={`s-products-list-${cardLayout}-cards`}
-          skeleton={<ProductCardSkeleton />}
-          skeletonType="item"
-          skeletonCount={Math.min(ids.length, 10)}
+      {!isSuccess ? (
+        <ProductsListSkeleton />
+      ) : (
+        <ScrollCarousel
+          prevLabel={t('blocks.home.reviews_prev', 'Previous')}
+          nextLabel={t('blocks.home.reviews_next', 'Next')}
         >
-          {(items: Product[]) =>
-            items.map((item) => <ProductCard key={item.id} product={item} layout={cardLayout} />)
-          }
-        </SallaProductsList>
-      </Suspense>
+          {(items ?? []).map((item) => (
+            <div key={item.id} className="s-products-carousel__slide">
+              <ProductCard product={item} layout="vertical" />
+            </div>
+          ))}
+        </ScrollCarousel>
+      )}
 
       {((link && buttonText) || footerText) && (
         <div className="mt-8 text-center">

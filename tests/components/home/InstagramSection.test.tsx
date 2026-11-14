@@ -1,4 +1,4 @@
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent } from '@testing-library/react';
 import { InstagramSection } from '../../../app/components/home/InstagramSection';
 
@@ -6,15 +6,22 @@ vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
 }));
 
-// Only the real BottomSheet, not the whole barrel — it also re-exports
-// BlockHookSlot, which imports `@salla.sa/twilight-theme-engine/home` and
-// pulls in a chunk graph the test setup's narrow component-library mock
+// Only the real BottomSheet and ScrollCarousel, not the whole barrel — it also
+// re-exports BlockHookSlot, which imports `@salla.sa/twilight-theme-engine/home`
+// and pulls in a chunk graph the test setup's narrow component-library mock
 // doesn't cover (see MobileAccountSheet.test.tsx for the same pattern).
 vi.mock('../../../app/components/common', async () => ({
   BottomSheet: (await vi.importActual<typeof import('../../../app/components/common/BottomSheet')>(
     '../../../app/components/common/BottomSheet'
   )).BottomSheet,
+  ScrollCarousel: (await vi.importActual<typeof import('../../../app/components/common/ScrollCarousel')>(
+    '../../../app/components/common/ScrollCarousel'
+  )).ScrollCarousel,
 }));
+
+beforeEach(() => {
+  Element.prototype.scrollBy = vi.fn();
+});
 
 describe('InstagramSection', () => {
   it('renders nothing with no avatar, name or posts', () => {
@@ -65,7 +72,10 @@ describe('InstagramSection', () => {
         }}
       />
     );
-    expect(container.querySelectorAll('button img, button video').length).toBe(1);
+    // Posts render twice — a mobile paged row and a desktop flat grid (CSS picks
+    // one per breakpoint) — so count within the unambiguous desktop grid only.
+    const desktopGrid = container.querySelector('.md\\:grid')!;
+    expect(desktopGrid.querySelectorAll('button img, button video').length).toBe(1);
   });
 
   it('opens the bottom sheet with the post detail on tile click', () => {
@@ -81,6 +91,15 @@ describe('InstagramSection', () => {
     fireEvent.click(container.querySelector('button') as HTMLButtonElement);
     expect(getByText('A climbing frame in the wild')).toBeTruthy();
     expect(document.querySelector('[role="dialog"]')).toBeTruthy();
+  });
+
+  it('pages the mobile grid into groups of 4, matching the reference site', () => {
+    const posts = Array.from({ length: 6 }, (_, i) => ({ img: `${i}.jpg` }));
+    const { container } = render(<InstagramSection data={{ posts }} />);
+    const pages = container.querySelectorAll('.instagram-section__pager .scroll-carousel__track > .grid');
+    expect(pages.length).toBe(2); // 6 posts → a page of 4, a page of 2
+    expect(pages[0].children.length).toBe(4);
+    expect(pages[1].children.length).toBe(2);
   });
 
   it('shows the video thumbnail with a play badge when video_first is set', () => {

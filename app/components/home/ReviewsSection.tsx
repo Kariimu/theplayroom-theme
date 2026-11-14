@@ -35,15 +35,15 @@ export const ReviewsSection = memo(function ReviewsSection({ data }: ReviewsSect
   if (!title && !description && !rating && !total) return null;
 
   return (
-    <div className="bg-brand-blue-light py-8 md:py-12">
+    <div className="py-8 md:py-12">
       <div className="container max-w-4xl text-center">
         {title && (
-          <h2 className="s-block__title mb-4 text-2xl font-black leading-tight text-primary md:text-4xl">
+          <h2 className="mb-4 text-3xl font-black leading-tight text-primary">
             {title}
           </h2>
         )}
         {description && (
-          <p className="mb-8 text-lg leading-relaxed text-gray-500 md:text-xl">{description}</p>
+          <p className="mb-8 text-lg leading-relaxed text-gray-500">{description}</p>
         )}
 
         {link && buttonText && (

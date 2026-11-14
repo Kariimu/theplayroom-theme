@@ -1,5 +1,13 @@
 /*
   Block Title
+
+  `shopping1-section`, `gallery-section` and `products-section` style their own
+  big centered/start-aligned `<h2>` + `<p>` directly (matching the reference
+  demo's large section headers) and so deliberately don't carry this class on
+  their title wrapper: `.s-block__title h2`/`p` below are descendant selectors
+  and would out-specificity any single utility class those components set,
+  silently shrinking their headers back to this generic size regardless of
+  source order.
 */
 .s-block {
   &__title {
@@ -82,7 +90,7 @@
 
 .s-block--enhanced-slider .s-skeleton-slider-image {
   height: auto !important;
-  aspect-ratio: 4 / 3; /* EnhancedSlider's slide ratio, below */
+  aspect-ratio: 16 / 9; /* EnhancedSlider's slide ratio, below */
 
   @media (min-width: 640px) {
     aspect-ratio: 12 / 5;
@@ -361,9 +369,10 @@
     }
   }
 
-  /* Tabs only: five in a row on desktop, three on tablets. */
+  /* Tabs only: four in a row on desktop (matches the engine's native
+     products-list default), three on tablets. */
   .s-products-list-wrapper.s-products-list-vertical-cards {
-    @apply md:grid-cols-3 lg:grid-cols-5 lg:gap-6;
+    @apply md:grid-cols-3 lg:grid-cols-4 lg:gap-6;
   }
 
   /* Special offer: the title at the start and compact tabs at the end of one
@@ -985,10 +994,11 @@
 }
 
 /*
-  Fixed Products Grid
+  Fixed Products Grid — four columns, matching the engine's native
+  `<salla-products-list>` default (the old theme never overrides this).
 */
 .s-products-list-wrapper.s-products-list-vertical-cards {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 
   @media (max-width: 767px) {
@@ -1121,9 +1131,15 @@
   }
 
   /* Slides (and the SSR poster): 12:5 is too short on a phone for the title,
-     the description and the arrows, so phones get 4:3. */
+     the description and the arrows, so phones get a taller box — but the
+     merchant's hero art is shot at 12:5 (confirmed against the reference
+     site: the live hero image's own natural ratio matches its container to
+     a fraction of a percent, i.e. no `object-fit: cover` cropping at all).
+     4:3 was too tall a jump from that: `object-cover` was cropping away
+     nearly half the image's width, reading as "zoomed in". 16:9 keeps most
+     of the width while still giving noticeably more height than 12:5. */
   .swiper-slide {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
 
     @media (min-width: 640px) {
       aspect-ratio: 12 / 5;
@@ -1225,11 +1241,12 @@
 }
 
 /*
-  Custom testimonials — full-width gray band around a row of whole cards.
-  Markup: app/components/home/CustomTestimonials.tsx
+  Custom testimonials — boxed, transparent, no padding of its own: matches the
+  reference demo's native reviews container (`s-reviews-container`) exactly,
+  not a gray band. Markup: app/components/home/CustomTestimonials.tsx
 */
 .s-block--custom-testimonials {
-  @apply bg-gray-50 py-10 lg:py-16 overflow-hidden;
+  @apply overflow-hidden;
 }
 
 /*
@@ -1241,36 +1258,45 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   display: none;
 }
 
+/* No heading of its own (the old theme never renders one here) — just the
+   slide and, below it, its arrows + dots. The "x of y" count is part of
+   every other `ScrollCarousel` consumer's nav, but this one has no title row
+   to put it beside, so it's dropped here specifically. The dots are also
+   `md:hidden` by default (phones swap them in for the arrows); the old
+   theme's slider always shows both, centered under the slide. */
 .s-testimonials {
-  &__title {
-    @apply text-xl font-bold text-gray-900 lg:text-2xl;
+  .scroll-carousel__count {
+    display: none;
   }
 
-  &__desc {
-    @apply mt-1 text-sm text-gray-500;
+  .scroll-carousel__foot {
+    @apply justify-center;
+  }
+
+  .carousel-dots {
+    @apply mt-3 flex;
   }
 }
 
-/* Three whole cards on desktop, and any fewer share the row between them. */
+/* One full-width slide at a time, centered — matches the old theme's single
+   fading testimonial (`custom-testimonials.twig`, `slides-per-view="1"`).
+   The slide itself (`.testimonial-card`) stays the flex item's full 100%
+   width; `__inner` carries the actual centered/max-width content so a
+   narrower max-width doesn't shrink the slide and let a second one share
+   the row. */
 .testimonial-card {
-  @apply m-0 flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-5 lg:p-7;
-  flex: 1 0 calc(100% - 2.5rem);
+  @apply m-0 p-0;
+  flex: 0 0 100%;
   scroll-snap-align: start;
 
-  @media (min-width: 640px) {
-    flex-basis: calc((100% - 1rem) / 2);
-  }
-
-  @media (min-width: 1024px) {
-    flex-basis: calc((100% - 3rem) / 3);
-  }
-
-  &__head {
-    @apply flex items-center justify-between gap-3;
+  &__inner {
+    @apply mx-auto flex max-w-3xl flex-col items-center gap-4 text-center;
   }
 
   &__quote {
-    @apply h-5 w-auto shrink-0 text-primary lg:h-6;
+    /* The old theme's dusty blue-gray, not the merchant's primary color —
+       a deliberately neutral "quote" mark. */
+    @apply h-10 w-auto text-[#8fa7c3] lg:h-[60px];
   }
 
   &__stars {
@@ -1286,29 +1312,25 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   }
 
   &__text {
-    @apply m-0 flex-1 text-base leading-7 text-gray-800 line-clamp-5;
+    @apply m-0 text-xl font-medium leading-relaxed text-[#4a6b8a] lg:text-2xl;
   }
 
   &__person {
-    @apply flex items-center gap-3 rtl:text-right ltr:text-left;
+    @apply flex items-center justify-center gap-1.5;
   }
 
   &__name {
-    @apply min-w-0 truncate text-sm font-bold text-gray-900;
+    @apply text-lg font-bold text-[#4a6b8a];
   }
 
-  &__avatar {
-    @apply h-11 w-11 shrink-0 rounded-full bg-gray-100 object-cover;
-
-    &.is-initial {
-      @apply inline-flex items-center justify-center font-bold text-primary;
-    }
+  &__verified {
+    @apply h-4 w-4 shrink-0 text-green-600;
   }
 
   /* A customer-submitted photo (legacy `items.image`): a text trigger, not
      shown inline — opens in the shared BottomSheet. */
   &__view-photo {
-    @apply self-start text-xs text-gray-400 underline transition-colors hover:text-primary;
+    @apply text-xs text-gray-400 underline transition-colors hover:text-primary;
   }
 
   &__photo {
@@ -1420,6 +1442,22 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
 @media (max-width: 767px) {
   .scroll-carousel__nav,
   .scroll-carousel__foot {
+    display: none;
+  }
+}
+
+/*
+  Instagram section — the post pager (app/components/home/InstagramSection.tsx)
+  keeps its prev/next arrows on phones instead of swapping to dots like every
+  other `ScrollCarousel` row: the reference site's own mobile post slider shows
+  arrows (`s-slider-prev`/`s-slider-next`), not dots.
+*/
+@media (max-width: 767px) {
+  .instagram-section__pager .scroll-carousel__foot {
+    display: flex;
+  }
+
+  .instagram-section__pager .carousel-dots {
     display: none;
   }
 }

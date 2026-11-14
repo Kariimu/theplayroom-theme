@@ -32,7 +32,7 @@ export const CommonQuestionsSection = memo(function CommonQuestionsSection({
   return (
     <div className="container">
       {title && (
-        <h2 className="s-block__title mb-8 text-2xl font-black text-gray-900 md:mb-10 md:text-3xl">
+        <h2 className="s-block__title mb-8 text-3xl font-black text-gray-900 md:mb-10">
           {title}
         </h2>
       )}

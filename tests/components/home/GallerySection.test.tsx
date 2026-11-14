@@ -44,6 +44,29 @@ describe('GallerySection', () => {
     expect(container.querySelectorAll('source').length).toBe(4);
   });
 
+  it('widens the last tile on mobile only when the count is odd, matching the reference grid', () => {
+    const odd = render(
+      <GallerySection
+        data={{
+          gallery: Array.from({ length: 5 }, (_, i) => ({ image: `${i}.jpg` })),
+        }}
+      />
+    );
+    const oddTiles = odd.container.querySelectorAll('.gallery-section__item');
+    expect(oddTiles[4].className).toContain('col-span-2');
+    expect(oddTiles[0].className).not.toContain('col-span-2');
+
+    const even = render(
+      <GallerySection
+        data={{
+          gallery: Array.from({ length: 4 }, (_, i) => ({ image: `${i}.jpg` })),
+        }}
+      />
+    );
+    const evenTiles = even.container.querySelectorAll('.gallery-section__item');
+    for (const tile of evenTiles) expect(tile.className).not.toContain('col-span-2');
+  });
+
   it('renders the view-all button only with both a link and button text', () => {
     const { container, rerender } = render(
       <GallerySection

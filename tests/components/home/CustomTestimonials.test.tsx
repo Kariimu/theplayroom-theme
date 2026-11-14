@@ -37,11 +37,12 @@ describe('CustomTestimonials', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders the heading and one card per item', () => {
-    const { container, getByText } = render(<CustomTestimonials data={{ items }} />);
-    expect(getByText('Customer reviews')).toBeTruthy();
+  it('renders one card per item, with no heading of its own', () => {
+    const { container, queryByText } = render(<CustomTestimonials data={{ items }} />);
     expect(container.querySelectorAll('.testimonial-card')).toHaveLength(3);
     expect(container.querySelector('.scroll-carousel__track')).toBeTruthy();
+    expect(container.querySelector('.scroll-carousel__head')).toBeNull();
+    expect(queryByText('Customer reviews')).toBeNull();
   });
 
   it('renders the rating as a row of stars, read out as a number', () => {
@@ -59,30 +60,19 @@ describe('CustomTestimonials', () => {
     expect(container.querySelector('.testimonial-card__stars')).toBeNull();
   });
 
-  it('shows the initial when a review has no avatar', () => {
-    const { container } = render(
-      <CustomTestimonials data={{ items: [{ name: 'ندى', text: 'رائع', stars: 5 }] }} />
-    );
-    const initial = container.querySelector('.testimonial-card__avatar.is-initial');
-    expect(initial?.textContent).toBe('ن');
-    expect(initial?.getAttribute('aria-hidden')).toBe('true');
-  });
-
-  it('renders name, text and avatar for each card', () => {
+  it('renders name and text for each card (no avatar — the old slider has none)', () => {
     const { container, getByText } = render(<CustomTestimonials data={{ items }} />);
     expect(getByText('ندى الحسيني')).toBeTruthy();
     expect(getByText('رائحة رائعة')).toBeTruthy();
-    expect(container.querySelector('.testimonial-card__avatar')?.getAttribute('src')).toBe(
-      'a1.jpg'
-    );
+    expect(container.querySelector('.testimonial-card__avatar')).toBeNull();
   });
 
-  it('renders prev / next controls on the title line', () => {
-    const { container, getByLabelText, getByText } = render(<CustomTestimonials data={{ items }} />);
+  it('renders prev / next controls below the row, since there is no heading to sit beside', () => {
+    const { container, getByLabelText } = render(<CustomTestimonials data={{ items }} />);
     expect(getByLabelText('Previous')).toBeTruthy();
     expect(getByLabelText('Next')).toBeTruthy();
     expect(
-      container.querySelector('.scroll-carousel__head')?.contains(getByText('Customer reviews'))
+      container.querySelector('.scroll-carousel__foot')?.contains(getByLabelText('Next'))
     ).toBe(true);
   });
 
@@ -139,13 +129,13 @@ describe('CustomTestimonials', () => {
     expect(queryByText('ممتاز')).toBeTruthy();
   });
 
-  it('uses the block title/description when provided', () => {
-    const { getByText } = render(
+  it('ignores a block title/description, matching the old theme (no heading on this slider)', () => {
+    const { queryByText } = render(
       <CustomTestimonials
         data={{ items, title: 'آراء العملاء', description: 'اكتشف تجارب عملائنا' }}
       />
     );
-    expect(getByText('آراء العملاء')).toBeTruthy();
-    expect(getByText('اكتشف تجارب عملائنا')).toBeTruthy();
+    expect(queryByText('آراء العملاء')).toBeNull();
+    expect(queryByText('اكتشف تجارب عملائنا')).toBeNull();
   });
 });
