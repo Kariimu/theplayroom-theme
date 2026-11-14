@@ -20,10 +20,6 @@ vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
   },
 }));
 
-vi.mock('@salla.sa/twilight-components-react', () => ({
-  ProductsListSkeleton: () => <div data-testid="list-skeleton" />,
-}));
-
 vi.mock('../../../app/components/common', async () => ({
   ScrollCarousel: (
     await vi.importActual<typeof import('../../../app/components/common/ScrollCarousel')>(
@@ -75,9 +71,9 @@ describe('CartUpsellSlider', () => {
     await waitFor(() => expect(container.firstChild).toBeNull());
   });
 
-  it('shows the skeleton until the list resolves', () => {
+  it('renders nothing while the list is loading', () => {
     listMock.mockReturnValue(new Promise(() => {}));
-    const { getByTestId } = renderWithClient(<CartUpsellSlider excludeIds={[]} />);
-    expect(getByTestId('list-skeleton')).toBeTruthy();
+    const { container } = renderWithClient(<CartUpsellSlider excludeIds={[]} />);
+    expect(container.firstChild).toBeNull();
   });
 });

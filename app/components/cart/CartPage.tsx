@@ -199,9 +199,7 @@ function CartPageContent({ page }: CartPageProps) {
 
       <HookSlot name="cart:end" />
 
-      <div className="mt-12 md:mt-16">
-        <CartUpsellSlider excludeIds={cartData.items.map((item) => Number(item.product_id))} />
-      </div>
+      <CartUpsellSlider excludeIds={cartData.items.map((item) => Number(item.product_id))} />
     </div>
   );
 }

@@ -13,7 +13,15 @@ import { Delete01Icon } from '../icons';
 /** Dispatched by the header's cart icon (`Header.tsx`) instead of following its link. */
 export const CART_DRAWER_OPEN_EVENT = 'theme::cart-drawer.open';
 
-function DrawerItem({ item, onMutated }: { item: CartItemType; onMutated: () => void }) {
+function DrawerItem({
+  item,
+  onMutated,
+  onNavigate,
+}: {
+  item: CartItemType;
+  onMutated: () => void;
+  onNavigate: () => void;
+}) {
   const { t } = useTranslation();
   const { format } = useMoney();
   const [busy, setBusy] = useState(false);
@@ -39,12 +47,12 @@ function DrawerItem({ item, onMutated }: { item: CartItemType; onMutated: () => 
 
   return (
     <div className="cart-drawer-item">
-      <Link to={item.url} className="cart-drawer-item__image">
+      <Link to={item.url} className="cart-drawer-item__image" onClick={onNavigate}>
         <Image src={item.product_image} alt={item.product_name} aspectRatio="1/1" />
       </Link>
 
       <div className="cart-drawer-item__body">
-        <Link to={item.url} className="cart-drawer-item__name">
+        <Link to={item.url} className="cart-drawer-item__name" onClick={onNavigate}>
           {item.product_name}
         </Link>
         <div className="cart-drawer-item__row">
@@ -134,6 +142,10 @@ export function CartDrawer() {
 
   const close = () => setOpen(false);
   const items = cartData?.items ?? [];
+  // While the first fetch is in flight there's no data yet, so `items` reads
+  // as empty — without this check the "cart is empty" message would flash
+  // before the real rows (or real empty state) land.
+  const loading = hasOpened && cartData === undefined && (cartIdQuery.isPending || cartQuery.isPending);
 
   return (
     <BottomSheet
@@ -142,13 +154,19 @@ export function CartDrawer() {
       className="cart-drawer"
       title={t('common.titles.cart', 'Cart')}
     >
-      {items.length === 0 ? (
+      {loading ? (
+        <div className="cart-drawer__skeleton" aria-hidden="true">
+          <div className="cart-drawer-item cart-drawer-item--skeleton" />
+          <div className="cart-drawer-item cart-drawer-item--skeleton" />
+          <div className="cart-drawer-item cart-drawer-item--skeleton" />
+        </div>
+      ) : items.length === 0 ? (
         <p className="cart-drawer__empty">{t('pages.cart.empty_cart', 'Your cart is empty')}</p>
       ) : (
         <>
           <div className="cart-drawer__items">
             {items.map((item) => (
-              <DrawerItem key={item.id} item={item} onMutated={refetchCart} />
+              <DrawerItem key={item.id} item={item} onMutated={refetchCart} onNavigate={close} />
             ))}
           </div>
 

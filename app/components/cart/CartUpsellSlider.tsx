@@ -1,7 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { product } from '@salla.sa/twilight-theme-engine/api/product';
-import { ProductsListSkeleton } from '@salla.sa/twilight-components-react';
 import { ScrollCarousel } from '../common';
 import { ProductCard } from '../product';
 import { isCartUpsellProduct } from '../../lib/tags';
@@ -37,15 +36,11 @@ export function CartUpsellSlider({ excludeIds }: CartUpsellSliderProps) {
     product.queries.list({ source: 'latest', perPage: CANDIDATE_PAGE_SIZE })
   );
 
-  if (isError) return null;
-
-  if (!isSuccess) {
-    return (
-      <div className="s-products-carousel s-products-carousel--vertical">
-        <ProductsListSkeleton />
-      </div>
-    );
-  }
+  // Null while loading, not a skeleton: most products carry no `cart-upsell`
+  // tag yet (Phase 0b), so on today's store this flashes and vanishes on
+  // every cart visit. It's an optional below-fold block — staying invisible
+  // until there's something to show is quieter than that.
+  if (isError || !isSuccess) return null;
 
   const excluded = new Set(excludeIds);
   const items = data.items
@@ -55,7 +50,7 @@ export function CartUpsellSlider({ excludeIds }: CartUpsellSliderProps) {
   if (items.length === 0) return null;
 
   return (
-    <div className="s-products-carousel s-products-carousel--vertical">
+    <div className="s-products-carousel s-products-carousel--vertical mt-12 md:mt-16">
       <ScrollCarousel
         heading={
           <div className="s-products-carousel__head">

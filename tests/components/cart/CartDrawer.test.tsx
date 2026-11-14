@@ -136,6 +136,14 @@ describe('CartDrawer', () => {
     await waitFor(() => expect(deleteItem).toHaveBeenCalledWith(1));
   });
 
+  it('closes when a cart item link is clicked', async () => {
+    const { getByText, container } = renderDrawer();
+    openDrawer();
+    const nameLink = await waitFor(() => getByText('Wooden Train'));
+    fireEvent.click(nameLink);
+    await waitFor(() => expect(container.querySelector('.bottom-sheet-root.is-open')).toBeNull());
+  });
+
   it('submits the cart and closes on "Complete Order"', async () => {
     const { getByText, container } = renderDrawer();
     openDrawer();

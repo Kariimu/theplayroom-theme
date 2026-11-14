@@ -50,6 +50,14 @@
   @apply flex-1 overflow-y-auto overscroll-contain;
 }
 
+.cart-drawer__skeleton {
+  @apply flex-1 space-y-4 py-1;
+}
+
+.cart-drawer-item--skeleton {
+  @apply h-16 animate-pulse rounded bg-gray-100;
+}
+
 .cart-drawer-item {
   @apply flex gap-3 border-b border-gray-100 py-4 first:pt-0 last:border-none;
 }
