@@ -17,6 +17,7 @@ import { ProductDetails } from './ProductDetails';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { UniversalFeatures } from './UniversalFeatures';
+import { ProductFaq } from './ProductFaq';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home';
 import { isWhatsappProduct } from '../../lib/tags';
@@ -71,8 +72,8 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * `whatsapp`-tagged product (06 §7) gets {@link ProductWhatsAppEnquiry} instead
  * of `<AddToCartForm>` — same convention as the product card. Also adds what
  * the engine route doesn't render at all: trust/payment badges beside the
- * form, and the store-wide {@link UniversalFeatures} between the reviews and
- * related products (06 §7, §5A rows 72/80).
+ * form, and the store-wide {@link UniversalFeatures} / {@link ProductFaq}
+ * between the reviews and related products (06 §7, §5A rows 72/80, D2).
  *
  * Upgrade notes: `FORKS.md`.
  */
@@ -189,6 +190,10 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
 
       {/* Store-wide features (06 §7.8, §5A row 72) — between the reviews and related */}
       <UniversalFeatures />
+
+      {/* Store-wide FAQ, same content as the home block (06 §7.8, D2) — between
+          the features and related */}
+      <ProductFaq />
 
       {/* App-block hook `product.single.before_product_recommendations` — between the reviews and related */}
       <BlockHookSlot
