@@ -18,6 +18,7 @@ import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { UniversalFeatures } from './UniversalFeatures';
 import { ProductFaq } from './ProductFaq';
+import { SuggestedGames } from './SuggestedGames';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home';
 import { isWhatsappProduct } from '../../lib/tags';
@@ -72,8 +73,10 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * `whatsapp`-tagged product (06 §7) gets {@link ProductWhatsAppEnquiry} instead
  * of `<AddToCartForm>` — same convention as the product card. Also adds what
  * the engine route doesn't render at all: trust/payment badges beside the
- * form, and the store-wide {@link UniversalFeatures} / {@link ProductFaq}
- * between the reviews and related products (06 §7, §5A rows 72/80, D2).
+ * form, {@link SuggestedGames} (a `set:` tag companion list) between the info
+ * and the reviews, and the store-wide {@link UniversalFeatures} / {@link
+ * ProductFaq} between the reviews and related products (06 §7, §5A rows
+ * 71/72/80, D2).
  *
  * Upgrade notes: `FORKS.md`.
  */
@@ -171,6 +174,9 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
 
         <SallaOffer />
       </div>
+
+      {/* "Suggested games" (06 §7.5, §5A row 71) — between the info and the reviews */}
+      <SuggestedGames productId={product.id} tags={product.tags} />
 
       {/* App-block hook `product.single.before_customer_reviews` — between the info and the reviews */}
       <BlockHookSlot
