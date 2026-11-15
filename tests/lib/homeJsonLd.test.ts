@@ -12,6 +12,7 @@ function makeCtx(overrides: Record<string, unknown> = {}) {
         description: 'Store description',
         meta: { title: 'Meta title', description: 'Meta description' },
         social: { instagram: 'https://instagram.com/theplayroom', twitter: '' },
+        contacts: { phone: '+966500000000', email: 'hello@theplayroom.sa' },
         ...((overrides.store as Record<string, unknown>) ?? {}),
       },
     },
@@ -48,6 +49,40 @@ describe('buildHomeJsonLd', () => {
     expect(page.url).toBe('https://theplayroom.sa/ar');
     expect(page.isPartOf).toEqual({ '@id': 'https://theplayroom.sa/#website' });
     expect(page.about).toEqual({ '@id': 'https://theplayroom.sa/#organization' });
+  });
+
+  it('adds a ContactPoint from the store contacts (GEO audit #3)', () => {
+    const ctx = makeCtx();
+    const jsonLd = buildHomeJsonLd(ctx, { locale: 'ar', components: [], page: { slug: '' } }, undefined);
+    const org = jsonLd.find((n) => n['@type'] === 'Organization')!;
+    expect(org.contactPoint).toEqual({
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: '+966500000000',
+      email: 'hello@theplayroom.sa',
+    });
+  });
+
+  it('prefers phone over mobile, and omits ContactPoint when the store set neither', () => {
+    const withMobileOnly = buildHomeJsonLd(
+      makeCtx({ store: { contacts: { mobile: '+966511111111' } } }),
+      { locale: 'ar', components: [], page: { slug: '' } },
+      undefined
+    );
+    const orgWithMobile = withMobileOnly.find((n) => n['@type'] === 'Organization')!;
+    expect(orgWithMobile.contactPoint).toEqual({
+      '@type': 'ContactPoint',
+      contactType: 'customer service',
+      telephone: '+966511111111',
+    });
+
+    const withNoContacts = buildHomeJsonLd(
+      makeCtx({ store: { contacts: {} } }),
+      { locale: 'ar', components: [], page: { slug: '' } },
+      undefined
+    );
+    const orgWithNoContacts = withNoContacts.find((n) => n['@type'] === 'Organization')!;
+    expect(orgWithNoContacts.contactPoint).toBeUndefined();
   });
 
   it('adds FAQPage only when the common-questions-section block has real Q&A', () => {

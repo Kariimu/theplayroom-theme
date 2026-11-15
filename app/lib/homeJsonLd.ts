@@ -30,6 +30,18 @@ export function buildHomeJsonLd(
     (value): value is string => typeof value === 'string' && value.trim() !== ''
   );
 
+  // GEO audit #3: a contact point alongside name/logo/sameAs, from the same contacts the
+  // merchant already set in the dashboard (`store.contacts`) — not asked for anywhere else.
+  const telephone = store.contacts?.phone || store.contacts?.mobile;
+  const contactPoint = telephone || store.contacts?.email
+    ? {
+        '@type': 'ContactPoint',
+        contactType: 'customer service',
+        ...(telephone ? { telephone } : {}),
+        ...(store.contacts?.email ? { email: store.contacts.email } : {}),
+      }
+    : undefined;
+
   const jsonLd: Record<string, unknown>[] = [
     {
       '@context': 'https://schema.org',
@@ -40,6 +52,7 @@ export function buildHomeJsonLd(
       url: store.url,
       logo: store.logo,
       ...(sameAs.length ? { sameAs } : {}),
+      ...(contactPoint ? { contactPoint } : {}),
     },
     {
       '@context': 'https://schema.org',
