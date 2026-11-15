@@ -11,7 +11,7 @@ vi.mock('@salla.sa/twilight-theme-engine/common', () => ({
 }));
 
 const sliderProps = vi.fn();
-vi.mock('../../../app/components/home', () => ({
+vi.mock('../../../app/components/home/ProductsSlider', () => ({
   ProductsSlider: (props: unknown) => {
     sliderProps(props);
     return <div data-testid="products-slider" />;

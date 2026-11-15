@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { RenderWhenVisible } from '@salla.sa/twilight-theme-engine/common';
 import type { ProductTag } from '@salla.sa/twilight-theme-engine/types';
-import { ProductsSlider } from '../home';
+import { ProductsSlider } from '../home/ProductsSlider';
 import { TAG_PREFIX, tagIdFromUrl } from '../../lib/tags';
 
 export interface SuggestedGamesProps {

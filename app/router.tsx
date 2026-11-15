@@ -8,43 +8,115 @@ import {
 } from '@salla.sa/twilight-theme-engine/routes/home';
 import { ProductsListSkeleton, SliderSkeleton } from '@salla.sa/twilight-components-react';
 import { routeTree } from './routeTree.gen';
-import {
-  BannerSection,
-  Brands,
-  CommonQuestionsSection,
-  CustomBrandsSection,
-  CustomTestimonials,
-  EnhancedSlider,
-  FeaturedProducts,
-  featuredProductsConfig,
-  Features2Section,
-  FeaturesSection,
-  GallerySection,
-  FixedProducts,
-  InstagramSection,
-  LatestProducts,
-  MainLinks,
-  ModernBannerSection,
-  PhotosSlider,
-  ProductsSection,
-  ProductsSlider,
-  ReelsSection,
-  ReviewsSection,
-  ShoppingSection,
-  SliderProductsWithHeader,
-  EnhancedSquareBanners,
-} from './components/home';
-import { Blog } from './components/home/Blog';
-import {
-  FeaturedProductsSpecialOffer,
-  FeaturedProductsWithSpecialProduct,
-} from './components/home/FeaturedProducts';
-import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
+// `ProductsSlider` is reused directly by the product page (`ProductPage.tsx`,
+// `SuggestedGames.tsx`), so lazy-loading it here wouldn't save anything there
+// — every other home block below is registry-only and gets `lazyHomeBlock`.
+// Imported from their own files, not the `./components/home` barrel: importing
+// through the barrel pulls every sibling export's module graph in too.
+import { ProductsSlider } from './components/home/ProductsSlider';
+import { featuredProductsConfig } from './components/home/FeaturedProducts';
+import { lazyHomeBlock } from './components/home/lazyHomeBlock';
 import { registerThemeHooks } from './hooks';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
 
 const ProductListPage = lazy(() =>
   import('./components/product/ProductListPage').then((m) => ({ default: m.ProductListPage }))
+);
+
+// Stage 11 performance audit: these were static imports from the `./components/home`
+// barrel, which every route paid for through `router.tsx` — confirmed as a ~580KB
+// "shared" chunk loaded on the product/cart/account pages too, none of which render a
+// home block. Each import below targets its own file (not the barrel), so Vite splits
+// it into its own chunk, fetched only when that block is actually registered on a page.
+const BannerSection = lazyHomeBlock(() =>
+  import('./components/home/BannerSection').then((m) => ({ default: m.BannerSection }))
+);
+const Brands = lazyHomeBlock(() =>
+  import('./components/home/Brands').then((m) => ({ default: m.Brands }))
+);
+const CommonQuestionsSection = lazyHomeBlock(() =>
+  import('./components/home/CommonQuestionsSection').then((m) => ({
+    default: m.CommonQuestionsSection,
+  }))
+);
+const CustomBrandsSection = lazyHomeBlock(() =>
+  import('./components/home/CustomBrandsSection').then((m) => ({ default: m.CustomBrandsSection }))
+);
+const CustomTestimonials = lazyHomeBlock(() =>
+  import('./components/home/CustomTestimonials').then((m) => ({ default: m.CustomTestimonials }))
+);
+const EnhancedSlider = lazyHomeBlock(() =>
+  import('./components/home/EnhancedSlider').then((m) => ({ default: m.EnhancedSlider }))
+);
+const EnhancedSquareBanners = lazyHomeBlock(() =>
+  import('./components/home/EnhancedSquareBanners').then((m) => ({
+    default: m.EnhancedSquareBanners,
+  }))
+);
+const FeaturedProducts = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({ default: m.FeaturedProducts }))
+);
+const FeaturedProductsSpecialOffer = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({
+    default: m.FeaturedProductsSpecialOffer,
+  }))
+);
+const FeaturedProductsWithSpecialProduct = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({
+    default: m.FeaturedProductsWithSpecialProduct,
+  }))
+);
+const Features2Section = lazyHomeBlock(() =>
+  import('./components/home/Features2Section').then((m) => ({ default: m.Features2Section }))
+);
+const FeaturesSection = lazyHomeBlock(() =>
+  import('./components/home/FeaturesSection').then((m) => ({ default: m.FeaturesSection }))
+);
+const FixedProducts = lazyHomeBlock(() =>
+  import('./components/home/FixedProducts').then((m) => ({ default: m.FixedProducts }))
+);
+const GallerySection = lazyHomeBlock(() =>
+  import('./components/home/GallerySection').then((m) => ({ default: m.GallerySection }))
+);
+const InstagramSection = lazyHomeBlock(() =>
+  import('./components/home/InstagramSection').then((m) => ({ default: m.InstagramSection }))
+);
+const LatestProducts = lazyHomeBlock(() =>
+  import('./components/home/LatestProducts').then((m) => ({ default: m.LatestProducts }))
+);
+const MainLinks = lazyHomeBlock(() =>
+  import('./components/home/MainLinks').then((m) => ({ default: m.MainLinks }))
+);
+const ModernBannerSection = lazyHomeBlock(() =>
+  import('./components/home/ModernBannerSection').then((m) => ({ default: m.ModernBannerSection }))
+);
+const PhotosSlider = lazyHomeBlock(() =>
+  import('./components/home/PhotosSlider').then((m) => ({ default: m.PhotosSlider }))
+);
+const PhotosSliderWithText = lazyHomeBlock(() =>
+  import('./components/home/PhotosSliderWithText').then((m) => ({
+    default: m.PhotosSliderWithText,
+  }))
+);
+const ProductsSection = lazyHomeBlock(() =>
+  import('./components/home/ProductsSection').then((m) => ({ default: m.ProductsSection }))
+);
+const ReelsSection = lazyHomeBlock(() =>
+  import('./components/home/ReelsSection').then((m) => ({ default: m.ReelsSection }))
+);
+const ReviewsSection = lazyHomeBlock(() =>
+  import('./components/home/ReviewsSection').then((m) => ({ default: m.ReviewsSection }))
+);
+const ShoppingSection = lazyHomeBlock(() =>
+  import('./components/home/ShoppingSection').then((m) => ({ default: m.ShoppingSection }))
+);
+const SliderProductsWithHeader = lazyHomeBlock(() =>
+  import('./components/home/SliderProductsWithHeader').then((m) => ({
+    default: m.SliderProductsWithHeader,
+  }))
+);
+const Blog = lazyHomeBlock(() =>
+  import('./components/home/Blog').then((m) => ({ default: m.Blog }))
 );
 
 // Register theme-level hooks (AddProductToast, DigitalFilesSettings, etc.)

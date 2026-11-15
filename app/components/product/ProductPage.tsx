@@ -21,7 +21,7 @@ import { UniversalFeatures } from './UniversalFeatures';
 import { ProductFaq } from './ProductFaq';
 import { SuggestedGames } from './SuggestedGames';
 import { BlockHookSlot } from '../common';
-import { ProductsSlider } from '../home';
+import { ProductsSlider } from '../home/ProductsSlider';
 import { isWhatsappProduct } from '../../lib/tags';
 import { cleanWhatsappNumber } from '../../lib/whatsapp';
 
