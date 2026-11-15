@@ -1,14 +1,9 @@
 import type { TwilightContext } from '@salla.sa/twilight-theme-engine/tanstack';
 import type { HomeLoaderData } from '@salla.sa/twilight-theme-engine/routes/home';
-import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
+import { buildFaqJsonLd } from './faqJsonLd';
 
 /** The store's own English name (`store.name` is the Arabic one the merchant typed). */
 const ALTERNATE_NAME = 'The Playroom';
-
-interface QuestionItem {
-  title?: string;
-  desc?: string;
-}
 
 /**
  * Organization, WebSite, WebPage and (when the FAQ block is actually on the page) FAQPage
@@ -71,37 +66,4 @@ export function buildHomeJsonLd(
   if (faq) jsonLd.push(faq);
 
   return jsonLd;
-}
-
-/**
- * FAQPage schema from the actual `common-questions-section` block data — not the
- * audit's hard-coded Arabic questions, so the schema always matches what is visible
- * on the page (ticket #12's "only where visible" rule enforced structurally: no block
- * on the page, or an empty one, means no FAQPage schema).
- */
-function buildFaqJsonLd(
-  components: HomeComponentData[] | undefined,
-  locale: string,
-  pageUrl: string
-): Record<string, unknown> | undefined {
-  const block = components?.find((c) => c.path === 'common-questions-section');
-  const questions = (block?.component?.questions as QuestionItem[] | undefined) ?? [];
-  const mainEntity = questions
-    .filter((q): q is Required<QuestionItem> => Boolean(q.title?.trim() && q.desc?.trim()))
-    .map((q) => ({
-      '@type': 'Question',
-      name: q.title.trim(),
-      acceptedAnswer: { '@type': 'Answer', text: q.desc.trim() },
-    }));
-
-  if (!mainEntity.length) return undefined;
-
-  return {
-    '@context': 'https://schema.org',
-    '@type': 'FAQPage',
-    '@id': `${pageUrl}#faq`,
-    url: pageUrl,
-    inLanguage: locale,
-    mainEntity,
-  };
 }

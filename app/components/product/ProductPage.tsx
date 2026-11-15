@@ -12,6 +12,7 @@ import { Breadcrumb, RenderWhenVisible } from '@salla.sa/twilight-theme-engine/c
 import { PageBlocks } from '@salla.sa/twilight-theme-engine/home';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import type { ProductPageProps } from '@salla.sa/twilight-theme-engine/routes/product';
+import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
 import { ProductGallery } from './ProductGallery';
 import { ProductDetails } from './ProductDetails';
 import { AddToCartForm } from './AddToCartForm';
@@ -80,7 +81,13 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  *
  * Upgrade notes: `FORKS.md`.
  */
-export function ProductPage({ product: initialProduct, page }: ProductPageProps) {
+export type ProductPageWithFaq = ProductPageProps & { faqComponents?: HomeComponentData[] };
+
+export function ProductPage({
+  product: initialProduct,
+  page,
+  faqComponents,
+}: ProductPageWithFaq) {
   const { theme, store } = useTwilight();
   const { t } = useTranslation();
   const { product } = useProduct(initialProduct);
@@ -199,7 +206,7 @@ export function ProductPage({ product: initialProduct, page }: ProductPageProps)
 
       {/* Store-wide FAQ, same content as the home block (06 §7.8, D2) — between
           the features and related */}
-      <ProductFaq />
+      <ProductFaq components={faqComponents} />
 
       {/* App-block hook `product.single.before_product_recommendations` — between the reviews and related */}
       <BlockHookSlot
