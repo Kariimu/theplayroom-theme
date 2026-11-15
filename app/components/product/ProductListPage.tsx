@@ -133,7 +133,7 @@ function BrandHeader({ source }: { source: ProductListLoaderData['source'] }) {
           aspectRatio="5/3"
         />
         <div className="px-5 pt-3 rtl:text-right">
-          <h1 className="text-2xl font-bold mb-1">{brand.name}</h1>
+          <h2 className="text-2xl font-bold mb-1">{brand.name}</h2>
           {brand.description && (
             <p
               className="text-base text-gray-500 font-medium"
@@ -623,9 +623,12 @@ export function ProductListPage({
 
       <CategoryHero category={category} />
 
-      <h1 className="font-bold text-xl mb-4" id="page-main-title">
+      {/* h2: MobilePageTitleBar already renders this page's one real <h1> with
+          the same title, always in the HTML — not just below `md` (SEO audit #2).
+          On a brand page this sits under BrandHeader's own (now h2) heading. */}
+      <h2 className="font-bold text-xl mb-4" id="page-main-title">
         {isBrand ? t('common.titles.products') : page.title}
-      </h1>
+      </h2>
 
       {productCount !== null && (
         <p className="s-catalog-count text-sm text-gray-500 mb-4">

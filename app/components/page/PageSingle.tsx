@@ -52,7 +52,10 @@ export function PageSingle({ page }: PageSingleProps) {
 
       <div className="flex justify-center">
         <div className="content content--single-page w-full lg:w-10/12 bg-white rounded p-6 lg:p-8 mt-4 lg:mt-12">
-          <h1 className="font-bold text-2xl mb-6">{page.title}</h1>
+          {/* h2, not h1: `MobilePageTitleBar` (mounted for every non-home/product
+              route) already renders the page's one real `<h1>` with this same
+              title — always in the HTML, not just below `md` (SEO audit #2). */}
+          <h2 className="font-bold text-2xl mb-6">{page.title}</h2>
           {cleanContent && (
             <div className="content-entry" dangerouslySetInnerHTML={{ __html: cleanContent }} />
           )}

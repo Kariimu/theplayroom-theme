@@ -132,7 +132,8 @@ function CartPageContent({ page }: CartPageProps) {
       <SeoCartWidget cart={cartData} />
 
       <Breadcrumb page={page} />
-      <h1 className="sr-only">{t('common.titles.cart', 'Cart')}</h1>
+      {/* h2: MobilePageTitleBar already renders this page's one real <h1> (SEO audit #2) */}
+      <h2 className="sr-only">{t('common.titles.cart', 'Cart')}</h2>
       <SallaConditionalOffer />
 
       <HookSlot name="cart:start" />

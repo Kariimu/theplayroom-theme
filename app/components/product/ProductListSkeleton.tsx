@@ -31,9 +31,9 @@ export function ProductListSkeleton({ hideFilters = false }: { hideFilters?: boo
         </ol>
       </nav>
 
-      <h1 className="font-bold text-xl mb-4">
+      <h2 className="font-bold text-xl mb-4">
         <Pulse className="h-5 w-56" />
-      </h1>
+      </h2>
 
       <div className="s-catalog-toolbar" aria-hidden="true" />
 
