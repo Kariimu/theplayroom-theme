@@ -6,14 +6,11 @@ docs index — before writing anything, per Stage 9's own instruction ("add only
 missing; never duplicate a tag or schema the engine outputs"). Then fixed the real gaps
 found, and fetched the live Twig site for a before/after comparison.
 
-**Dev server**: not running during this session (checked `localhost:3000/5173/4321/8080/1337`
-— all refused). Everything below the engine already does was confirmed by reading its
-compiled output; everything this stage *changed* was confirmed by `pnpm build` +
-`pnpm typecheck` + `pnpm test` (846 passed / 10 pre-existing failures, same
-`PageAdvertisements`/`ProductDetails`/`ProductGallery` wishlist-heart cases every prior
-stage documented) + `pnpm check:manifest`. **Owner action**: run `salla theme dev --store
-<id>`, open the three URLs in the comparison table below at `/ar` and `/en`, and View
-Source (not DevTools) to confirm the "after" column against what's written here.
+**Dev server**: not running when this audit was first written (checked several common ports
+— all refused); confirmed up during Stage 10, on `localhost:5173`, path-prefixed
+(`/theplayroom.sa/ar/...`). Everything below was re-verified by `curl`-ing that server, not
+just by reading the engine's compiled output — see the "Verified live" addendum at the
+bottom, including one real bug the static read missed.
 
 ## What the engine already does by default (no code needed)
 
@@ -230,6 +227,27 @@ the owner. `pnpm build`, `pnpm typecheck`, `pnpm check:manifest` all green; `pnp
 failed / 846 passed — the same pre-existing `PageAdvertisements`/`ProductDetails`/
 `ProductGallery` failures every prior stage documented, confirmed unchanged; 6 net new tests
 this stage (`tests/lib/faqJsonLd.test.ts` ×2, `ProductFaq.test.tsx` +1, `PageSingle.test.tsx`
-unchanged count after its 3 assertions were updated to `h2`). **Owner action needed:** run
-`salla theme dev --store <id>` and View Source the three URLs above at `/ar` and `/en` to
-confirm the "after" column; then D6.
+unchanged count after its 3 assertions were updated to `h2`). D6 stays with the owner.
+
+## Verified live (Stage 10, once the dev server came up)
+
+`curl`-ed `localhost:5173` directly (home, a product, a category — the same three page
+types as the table above) instead of relying only on the engine-bundle read:
+
+- **Home: found a real bug the static read missed.** Two `<h1>`s, not one —
+  `Header.tsx`'s `BrandName`/`HeaderIntro` had their own pre-existing (Stage 2) logic making
+  the store name an `<h1>` on home whenever no page-level one was accounted for, which this
+  file's own "home... already correct" line (above) didn't catch since it spans two
+  components from different stages. Fixed on `stage-10-geo`: both are now always a non-
+  heading tag (`span`/`p`); the page's own `<h1>` (`app/routes/index.tsx`) is the only one.
+  Re-curled after the fix — confirmed exactly one `<h1>` on home.
+- Product (`/ar/خدمة-التركيب/p1385822926`): one `<h1>`, canonical correct, Product +
+  AggregateRating + Review + BreadcrumbList JSON-LD all present, description text present —
+  everything this file claimed, confirmed.
+- Category (`/ar/بيت-التسلق/c964705694`): one `<h1>`, and real `<a href>` product links in
+  the raw HTML (not client-fetched) — confirmed the `ProductListPage` SSR claim above with
+  live data, not just code reading.
+- Images: CDN-resized URLs (`cdn-cgi/image/fit=scale-down,...`) and correct
+  `loading`/`fetchPriority` on every `<img>` checked.
+
+D6 is still the only open item.

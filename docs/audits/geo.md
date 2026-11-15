@@ -157,6 +157,15 @@ individual review text, D5, D6) — each named specifically rather than glossed 
 `pnpm build`, `pnpm typecheck`, `pnpm check:manifest` all green. `pnpm test`: 10 failed / 850
 passed — the same pre-existing `PageAdvertisements`/`ProductDetails`/`ProductGallery`
 failures every prior stage documented, confirmed unchanged; 2 new tests this stage
-(`ProductDetails rating summary`) plus 2 new homeJsonLd tests (`ContactPoint`). Next: owner
-action on D5/D6 and the content suggestions in §5; re-check `llms.txt` and the
-`/{slug}/p{id}` View Source items once Stage 14's staging URL exists.
+(`ProductDetails rating summary`) plus 2 new homeJsonLd tests (`ContactPoint`).
+
+**Verified live** once the dev server came up (`localhost:5173`): the rating sr-only summary
+renders real interpolated text ("5 من 5، 16 تقييم") next to the deferred-hydration stars
+widget on a real product; `/llms.txt` resolves with HTTP 200 and the expected content on
+this server (still not proof of Salla's production edge, but no longer untested anywhere);
+`ContactPoint` appears correctly in the home page's Organization JSON-LD. FAQ's SSR
+mechanism is also confirmed wired correctly end to end (loader → prop → conditional render)
+— it renders nothing on both the home and product pages checked, because the
+`common-questions-section` block's `questions` array is still empty in this preview data,
+exactly the gap Stage 7 already flagged, not a bug in this stage's fix. Next: owner action on
+D5/D6 and the content suggestions in §5.
