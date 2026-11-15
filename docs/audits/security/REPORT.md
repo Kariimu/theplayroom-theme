@@ -28,4 +28,15 @@ Both `confirmed` findings were validated by a **fresh, non-fork verifier agent**
 
 ## Fix status
 
-See the project's `docs/audits/security/` for the fix commits applied in response to this report (Stage 12 checklist item 5: every confirmed medium-or-above finding gets its own commit with a regression test; the one `low` finding is fixed alongside it since the fix is free and strictly beneficial regardless of severity). The `needs_validation` record is carried forward to this project's Stage 14 staging pass, per its own validation plan.
+Both `confirmed` findings are fixed, each in its own commit with a regression check, on branch `stage-12-security-audit`:
+
+| Finding | Commit | Verification |
+|---|---|---|
+| `seroval-transitive-dependency-cve-ghsa-f86p-9wx9` | `d607fc0` | `pnpm update seroval` resolved the single deduped install to 1.8.1 (>=1.6.11, already within `@tanstack/router-core`'s declared `^1.6.7` range — no override needed). Re-ran `pnpm audit --json`: both advisories (GHSA-f86p-h4j2-7qgj, GHSA-9wx9-5pv9-3349) no longer appear for `seroval`. |
+| `public-headers-missing-baseline-security-headers` | `11f5775` | Added a `/*` catch-all rule with the five baseline headers to `public/_headers`; added `tests/lib/securityHeaders.test.ts` asserting the exact header values (3 new passing tests). Confirmed the built `dist/client/_headers` carries the new rule unchanged. |
+
+After both fixes: `pnpm build`, `pnpm typecheck`, `pnpm check:manifest` all green; `pnpm test`: 10 failed / 865 passed — the same pre-existing `PageAdvertisements`/`ProductDetails`/`ProductGallery` wishlist-heart failures every prior project stage documented as unrelated (confirmed unchanged by this audit), +3 net new tests (`securityHeaders.test.ts`).
+
+The one `needs_validation` record (`resolvelink-engine-picker-scheme-constraint-unverified`) carries no severity and needed no fix decision — it is a merchant-self-impact-only scenario even in the worst case, and is carried forward to this project's Stage 14 staging pass per its own validation plan in `NEEDS-VALIDATION.md`.
+
+`pnpm audit` still reports 1 low / 17 moderate / 10 high advisories after the seroval fix — all re-confirmed, by the same `pnpm why` dependency-chain tracing this run already did, to be devDependency-only or Cloudflare-Workers-local-dev-tooling-only (`vite`, `vitest`, `postcss-selector-parser` via Tailwind, and `undici`/`follow-redirects`/`glob`/`minimatch` via `wrangler`+`miniflare`+`@cloudflare/vite-plugin`+`@sentry/cloudflare`), never reaching this theme's actual production SSR request-serving path. These are accepted as-is for this run, not escalated to findings, with the reason stated here rather than silently dropped.
