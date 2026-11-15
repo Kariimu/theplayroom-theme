@@ -13,6 +13,7 @@
   "blocks.product_options.required": "مطلوب",
   "blocks.product_options.added": "تمت الإضافة",
   "blocks.product_options.more": "عرض كل الخيارات",
+  "pages.products.rating_summary": ":stars من 5، :count تقييم",
   "pages.products.faq_title": "الأسئلة الشائعة",
   "pages.products.suggested_games": "ألعاب مقترحة",
   "pages.products.facts.for_who": "مناسب لـ",

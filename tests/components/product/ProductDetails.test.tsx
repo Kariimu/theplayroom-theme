@@ -273,6 +273,22 @@ describe('ProductDetails price', () => {
   });
 });
 
+describe('ProductDetails rating summary (GEO audit #5)', () => {
+  it('renders a real sr-only text summary next to the deferred-hydration stars widget', () => {
+    const { container } = render(
+      <ProductDetails product={makeProduct({ rating: { stars: 4.5, count: 23 } as never })} />
+    );
+    const row = container.querySelector('.product-details__rating');
+    expect(row).not.toBeNull();
+    expect(row?.querySelector('.sr-only')).not.toBeNull();
+  });
+
+  it('renders nothing when the product has no rating', () => {
+    const { container } = render(<ProductDetails product={makeProduct()} />);
+    expect(container.querySelector('.product-details__rating')).toBeNull();
+  });
+});
+
 describe('ProductDetails remaining quantity', () => {
   it('shows the remaining count for an out of stock product, as Twig does', async () => {
     const { container } = render(

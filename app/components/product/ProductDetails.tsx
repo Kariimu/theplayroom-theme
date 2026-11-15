@@ -90,6 +90,15 @@ export function ProductDetails({
 
       {product.rating && (
         <div className="product-details__rating">
+          {/* `SallaRatingStars` is a Stencil web component that defers hydration past
+              first paint, so its stars/count never reach the SSR HTML (GEO audit #5) —
+              the same numbers are already in the Product JSON-LD, but only as schema, not
+              as text a crawler reads directly. This repeats them as real text. */}
+          <span className="sr-only">
+            {t('pages.products.rating_summary', ':stars out of 5, :count reviews')
+              .replace(':stars', String(product.rating.stars))
+              .replace(':count', String(product.rating.count))}
+          </span>
           <SallaRatingStars value={product.rating.stars} reviews={product.rating.count} />
         </div>
       )}
