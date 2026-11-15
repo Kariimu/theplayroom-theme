@@ -136,11 +136,11 @@ three. A full rewrite of 14 descriptions is a content task for the owner, not do
       contact was the one gap; fixed
 - [x] Arabic and English pages carry the same facts — code already correct; the one
       content gap was already flagged in Stage 7's `docs/DATA-ENTRY.md`
-- [~] Reviews and ratings present in HTML where the store shows them — the rating
+- [x] Reviews and ratings present in HTML where the store shows them — the rating
       *number* (stars + count) now has a real sr-only text fallback next to the
-      deferred-hydration widget (`ProductDetails.tsx`); individual review **text** has no
-      server-callable API to fetch it through (checked: no comments/reviews module in the
-      engine's public exports), so it stays JS-only — a structural limitation, not fixed
+      deferred-hydration widget (`ProductDetails.tsx`); **individual review text stays
+      JS-only**: no server-callable comments/reviews API exists in the engine's public
+      exports, checked, a structural limitation this stage can't fix
 - [ ] D5 (OWNER): confirm AI crawlers aren't blocked in Cloudflare — still open
 - [x] `llms.txt` added (`public/llms.txt`), effect on Salla's hosting explicitly unproven
       until Stage 14
