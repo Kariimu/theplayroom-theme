@@ -69,15 +69,19 @@ The demonstrated issue is "this repo's own layer contributes nothing," not "the 
 
 ### Fix
 
-Add a catch-all rule — free, strictly beneficial regardless of what the platform edge separately does:
+Add a catch-all rule with four of the five headers — free, strictly beneficial regardless of what the platform edge separately does:
 
 ```
 /*
   X-Content-Type-Options: nosniff
   Referrer-Policy: strict-origin-when-cross-origin
   Permissions-Policy: camera=(), microphone=(), geolocation=()
-  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload
+  Strict-Transport-Security: max-age=63072000
 
 /assets/*
   Cache-Control: public, max-age=31556952, immutable
 ```
+
+**`X-Frame-Options`/`frame-ancestors` deliberately left out of this fix.** `node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts` confirms the engine ships its own live-editor iframe component, and this theme's `twilight.preview.json` exists for exactly that embedded dashboard preview — so a blanket `DENY`/`SAMEORIGIN` would plausibly break the merchant's own live-editor preview, which needs to frame the storefront from a different (Salla dashboard) origin. The correct fix is a `frame-ancestors <editor-origin>` allowlist, not a bare deny, and the editor's real origin isn't observable from this repository. Carried to Stage 14 (see `docs/audits/security/NEEDS-VALIDATION.md`), not fixed here.
+
+**`includeSubDomains`/`preload` left off `Strict-Transport-Security`.** Both are owner-level commitments — `includeSubDomains` forces HTTPS on every subdomain of theplayroom.sa (mail, API, or any HTTP-only subdomain would break), and `preload` submits the domain to browsers' built-in preload list, which is difficult to reverse. This project's own Stage 12 scope note treats SSL/TLS posture as an OWNER review, so the theme asserts only the base `max-age` and leaves those two to the owner once the domain's full subdomain estate is known.

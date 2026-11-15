@@ -34,9 +34,10 @@ describe('public/_headers security baseline (security audit Stage 12)', () => {
     expect(headers['X-Content-Type-Options']).toBe('nosniff');
     expect(headers['Referrer-Policy']).toBe('strict-origin-when-cross-origin');
     expect(headers['Permissions-Policy']).toBe('camera=(), microphone=(), geolocation=()');
-    expect(headers['Strict-Transport-Security']).toBe(
-      'max-age=63072000; includeSubDomains; preload'
-    );
+    // `includeSubDomains`/`preload` are an owner-level commitment (every subdomain
+    // forced to HTTPS forever) -- left for the owner to add deliberately once the
+    // subdomain estate is known, not asserted by this theme on their behalf.
+    expect(headers['Strict-Transport-Security']).toBe('max-age=63072000');
   });
 
   it('keeps the existing /assets/* long-lived cache rule untouched', () => {

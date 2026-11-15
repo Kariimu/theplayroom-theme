@@ -175,6 +175,48 @@
   },
   {
     "verdict": "needs_validation",
+    "fingerprint": "public-headers-frame-ancestors-editor-origin-unverified",
+    "title": "public/_headers has no frame-ancestors/X-Frame-Options, and the correct value isn't source-visible",
+    "description": "Of the five baseline headers identified in finding public-headers-missing-baseline-security-headers, four were added to public/_headers directly. X-Frame-Options/Content-Security-Policy: frame-ancestors was deliberately left out of that fix rather than applied as a blanket DENY/SAMEORIGIN.",
+    "claimed_root_cause": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts confirms the engine ships its own live-editor iframe component, and this theme's own twilight.preview.json exists for exactly that embedded dashboard preview workflow. A blanket frame-deny header would plausibly break the merchant's own live-editor preview, which needs to frame the storefront from the Salla dashboard's origin. The correct fix is a frame-ancestors <editor-origin> allowlist naming that specific origin, not a bare deny -- and the editor's real origin is not observable from this repository's source.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "public/_headers",
+        "line": 1,
+        "scope": "theme-owned static headers file",
+        "description": "The /* catch-all rule added by the companion fix carries no frame-ancestors/X-Frame-Options directive."
+      },
+      {
+        "kind": "sink",
+        "file": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts",
+        "line": 1,
+        "scope": "engine live-editor iframe component",
+        "description": "Confirms the engine embeds the storefront in an iframe for its own live-editor preview workflow, the reason a blanket frame-deny header was not applied."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "public/_headers",
+        "line": 1,
+        "description": "/* rule contains X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Strict-Transport-Security, but no frame-ancestors/X-Frame-Options."
+      },
+      {
+        "file": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts",
+        "line": 1,
+        "description": "Type declaration file for the engine's own live-editor iframe component, confirming the storefront is embedded cross-origin by Salla's own dashboard tooling."
+      }
+    ],
+    "blockers": [
+      "The Salla live-editor's actual iframe origin is a platform detail not present in this repository's source, so the correct frame-ancestors allowlist value cannot be determined from here."
+    ],
+    "validation_plan": {
+      "local": "Not resolvable locally -- the live-editor's origin is a Salla platform detail, not present in this repository.",
+      "deployment": "Once the Stage 14 staging URL exists, open the Salla dashboard's live editor against it and record the origin the preview iframe actually loads from (browser network panel or the iframe's src). Add Content-Security-Policy: frame-ancestors 'self' <that-origin> (or the equivalent X-Frame-Options value) to public/_headers's /* rule. If the editor uses postMessage-based embedding rather than a same-tab iframe, or Salla's edge already sets a working frame-ancestors independently, this may resolve rejected instead."
+    }
+  },
+  {
+    "verdict": "needs_validation",
     "fingerprint": "resolvelink-engine-picker-scheme-constraint-unverified",
     "title": "resolveLink.ts passes the engine-resolved CTA target string into an href with no scheme check of its own",
     "description": "app/lib/resolveLink.ts returns a home-block CTA link-target string unchanged (trimmed, with '#' and empty treated as absent) for direct use as an href across several home blocks. The string originates from the Salla dashboard's own link-target picker field, resolved server-side by the engine before this theme's code ever sees it. Whether that dashboard picker UI constrains the merchant to http(s)/relative targets, or would accept and resolve freehand text containing a javascript: scheme, is not visible from this repository's source.",
