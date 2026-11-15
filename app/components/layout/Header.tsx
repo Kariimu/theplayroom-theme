@@ -99,18 +99,16 @@ function CartSummaryTrigger() {
 
 /** Store name, description and social links, under the main bar. The store's
  *  phone and email are in the footer, under its description. */
-function HeaderIntro({ isHomePage }: { isHomePage: boolean }) {
+function HeaderIntro() {
   const { store } = useTwilight();
-  // The page's `<h1>` on home. `isHomePage` is the route match, which the server
-  // and the client agree on (unlike `useIsHome()`, e.g. on a 404), so the `<h1>`
-  // is in the SSR HTML without a hydration mismatch.
-  const Title = isHomePage ? 'h1' : 'p';
   const hasSocial = hasSocialLinks(store?.social);
 
   return (
     <div className="site-header__intro">
       <div className="container site-header__intro-inner">
-        <Title className="site-header__intro-title">{store?.name}</Title>
+        {/* Not the page's `<h1>`: the home page always has its own real one now
+            (`app/routes/index.tsx`, SEO audit #2). */}
+        <p className="site-header__intro-title">{store?.name}</p>
         {store?.description && (
           <div
             className="site-header__intro-text"
@@ -190,7 +188,9 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
     !isDefaultLayout &&
     introSettings?.header_show_store_info === true &&
     (introSettings?.header_store_info_home_only === false || isHomePage);
-  const BrandName = isHomePage && !showIntro ? 'h1' : 'span';
+  // Not `isHomePage`-conditional: the home page always has its own real `<h1>`
+  // now (`app/routes/index.tsx`, SEO audit #2), so this is never the page's h1.
+  const BrandName = 'span';
   // Marker in the flow, right where the main bar sits. The bar pins once this
   // scrolls out the top of the viewport (see below).
   const stickySentinelRef = useRef<HTMLDivElement>(null);
@@ -325,7 +325,7 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
         </div>
       </div>
 
-      {showIntro && <HeaderIntro isHomePage={isHomePage} />}
+      {showIntro && <HeaderIntro />}
 
       <HeaderNav open={navOpen} onClose={() => setNavOpen(false)} />
 
