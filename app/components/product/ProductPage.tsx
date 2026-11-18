@@ -154,7 +154,7 @@ export function ProductPage({
         <div className="flex flex-col items-start md:flex-row" id={`product-${product.id}`}>
           <ProductGallery product={product} />
 
-          <div className="main-content md:sticky md:overflow-hidden md:top-24 w-full md:w-2/4 md:pb-16 text-lg">
+          <div className="main-content w-full md:w-2/4 md:pb-16 text-lg">
             {/* Base text size for this column: the product's normal/body text
                 (labels, SKU/weight rows, descriptions) was 14–15px (`text-sm`
                 or the unset body default); 18px now, set once here rather than
