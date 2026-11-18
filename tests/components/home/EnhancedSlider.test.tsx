@@ -154,7 +154,7 @@ describe('EnhancedSlider', () => {
     expect(container.querySelector('.home-slider__cta')?.getAttribute('href')).toBe('/new');
   });
 
-  it('falls back to the legacy link, then to #, when the slide has no url', () => {
+  it('falls back to the legacy link, then skips the button, when the slide has no url', () => {
     const { container } = render(
       <EnhancedSlider
         data={{
@@ -167,7 +167,8 @@ describe('EnhancedSlider', () => {
     );
     const ctas = container.querySelectorAll('salla-slider .home-slider__cta');
     expect(ctas[0]?.getAttribute('href')).toBe('/old');
-    expect(ctas[1]?.getAttribute('href')).toBe('#');
+    // No real destination: no dead `#` button, rather than one that goes nowhere.
+    expect(ctas).toHaveLength(1);
   });
 
   it('renders slides with overlay background', () => {

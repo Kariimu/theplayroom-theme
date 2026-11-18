@@ -1,4 +1,82 @@
 /*
+  Category hero — the category's own image/description banner plus a
+  sub-category card row, above the toolbar. Markup: app/components/category/CategoryHero.tsx
+*/
+.category-hero {
+  @apply container mb-6 flex flex-col gap-4;
+
+  &__banner {
+    @apply w-full rounded-lg bg-gray-100;
+  }
+
+  &__description {
+    @apply text-sm text-gray-500;
+  }
+
+  &__subcats {
+    @apply flex gap-4 overflow-x-auto pb-1;
+  }
+
+  &__subcat {
+    @apply flex shrink-0 flex-col items-center gap-2 text-center;
+    width: 4.5rem;
+
+    &-image {
+      @apply h-16 w-16 rounded-full bg-gray-100;
+    }
+
+    &-initial {
+      @apply flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-gray-500;
+    }
+
+    &-name {
+      @apply line-clamp-2 text-xs font-medium text-gray-700;
+    }
+  }
+}
+
+/*
+  Merchant "Group-Value" tag filters (age range, color, skills…) — alongside
+  native `<salla-filters>` in the same sidebar/bottom sheet. Markup:
+  app/components/product/TagGroupFilters.tsx
+*/
+.tag-group-filters {
+  @apply mt-6 border-t border-gray-100 pt-6;
+
+  &__head {
+    @apply mb-3 flex items-center justify-between;
+  }
+
+  &__title {
+    @apply font-bold text-gray-900;
+  }
+
+  &__clear {
+    @apply text-xs font-bold text-primary hover:underline;
+  }
+
+  &__group {
+    @apply mb-5 border-b border-gray-100 pb-5 last:mb-0 last:border-b-0 last:pb-0;
+  }
+
+  &__group-title {
+    @apply mb-3 text-sm font-bold text-gray-900;
+  }
+
+  &__options {
+    @apply flex flex-col gap-3;
+  }
+
+  &__option {
+    @apply flex cursor-pointer items-center gap-3 text-sm text-gray-700;
+
+    input {
+      @apply size-4 rounded border-2;
+    }
+  }
+}
+
+/*
   Product listing (category) toolbar — a single rounded bar: filter show/hide at
   the start, product count · grid/list switch · styled sort at the end.
   Markup: app/components/product/ProductListPage.tsx
@@ -84,6 +162,12 @@
     &:last-child {
       @apply border-b-0;
     }
+  }
+
+  /* Hidden per owner request: the per-group heading ("Price", "Category", …)
+     inside the native filters widget. The checkboxes/options below it stay. */
+  .s-filters-widget-title {
+    display: none;
   }
 }
 

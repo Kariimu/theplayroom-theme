@@ -13,29 +13,10 @@ vi.mock('../../../app/hooks/useProductCardLayout', () => ({
   useProductCardLayout: () => cardLayout.value,
 }));
 
-// Only the module under test, not the whole barrel and everything it re-exports.
-vi.mock('../../../app/components/product', async () => ({
-  ProductCard: (await vi.importActual<typeof import('../../../app/components/product/ProductCard')>(
-    '../../../app/components/product/ProductCard'
-  )).ProductCard,
-}));
-
-vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
-  useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
-}));
-
-const listMock = vi.fn().mockResolvedValue({
-  data: [
-    { id: 1, name: 'Full P1', is_out_of_stock: false },
-    { id: 2, name: 'Full P2', is_out_of_stock: false },
-  ],
-});
-
-vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
-  product: { list: (...args: unknown[]) => listMock(...args) },
-}));
-
-vi.mock('@salla.sa/twilight-theme-engine/product', () => ({
+// `FeaturedProducts` only needs to pass the right products/layout down; it
+// doesn't exercise `ProductCard`'s own rendering (covered by ProductCard.test.tsx),
+// so mock the barrel directly — same convention as FixedProducts.test.tsx etc.
+vi.mock('../../../app/components/product', () => ({
   ProductCard: ({
     product,
     layout,
@@ -47,6 +28,25 @@ vi.mock('@salla.sa/twilight-theme-engine/product', () => ({
       {product.name}
     </div>
   ),
+}));
+
+vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
+  useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
+}));
+
+vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
+  useTwilight: () => ({ theme: { settings: {} } }),
+}));
+
+const listMock = vi.fn().mockResolvedValue({
+  data: [
+    { id: 1, name: 'Full P1', is_out_of_stock: false },
+    { id: 2, name: 'Full P2', is_out_of_stock: false },
+  ],
+});
+
+vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
+  product: { list: (...args: unknown[]) => listMock(...args) },
 }));
 
 // Set by the loading tests at the end to render the real SallaProductsList.

@@ -216,13 +216,15 @@
   }
 }
 
-/* The sheet's footer is always light, whatever `footer_is_dark` says: its
-   cards sit in the light sheet next to the settings/contacts cards. With the
-   setting on, `Footer` paints `.store-footer__inner` dark (the band around
-   the cards), sets `color: white` on `.store-footer`, and adds `text-white`
-   to the tax / SBC labels; footer.scss turns the menu links white. All of it
-   is put back to the light footer's colours here. */
-body.footer-is-dark .store-footer--sheet {
+/* The sheet's footer is always light, regardless of `footer_is_dark` or
+   `Footer`'s own default: its cards sit in the light sheet next to the
+   settings/contacts cards. `Footer` always paints `.store-footer__inner` as a
+   saturated color band now (the legacy slate blue by default, near-black with
+   the setting on), sets `color: white` on `.store-footer`, and adds
+   `text-white` to the tax / SBC labels; footer.scss turns the menu links and
+   social icons white. All of it is put back to the light footer's colours
+   here, unconditionally — not just when the dark-mode body class is set. */
+.store-footer--sheet {
   @apply text-gray-600;
 
   .store-footer__inner {
@@ -251,6 +253,10 @@ body.footer-is-dark .store-footer--sheet {
 
   .store-footer__menu--inline .s-menu-footer-item {
     @apply border-gray-300 text-gray-600;
+  }
+
+  .social-link {
+    @apply border-gray-200 text-gray-600;
   }
 
   .copyright-text {

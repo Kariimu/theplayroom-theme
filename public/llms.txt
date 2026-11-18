@@ -1,0 +1,8 @@
+# The Playroom (غرفة الألعاب)
+
+> An Arabic-first online store in Saudi Arabia selling wooden, educational toys for
+> children: climbing sets, balance boards, swings, sensory play tables, and storage.
+
+- [Store (Arabic)](https://theplayroom.sa/ar)
+- [Store (English)](https://theplayroom.sa/en)
+- [Sitemap](https://theplayroom.sa/sitemap.xml)

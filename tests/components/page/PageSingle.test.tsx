@@ -86,7 +86,7 @@ describe('PageSingle', () => {
 
       expect(container.querySelector('.block-hook-slot')).toBeNull();
       expect(container.querySelector('.breadcrumb')?.textContent).toBe('About Us');
-      expect(container.querySelector('h1')?.textContent).toBe('About Us');
+      expect(container.querySelector('h2')?.textContent).toBe('About Us');
 
       const content = container.querySelector('.content-entry');
       expect(content?.innerHTML).toBe('<p>Hello world</p>');
@@ -108,7 +108,7 @@ describe('PageSingle', () => {
     it('treats any non-customised type the same as the default layout', () => {
       const { container } = render(<PageSingle page={makePage({ type: 'faq' })} />);
       expect(container.querySelector('.block-hook-slot')).toBeNull();
-      expect(container.querySelector('h1')?.textContent).toBe('About Us');
+      expect(container.querySelector('h2')?.textContent).toBe('About Us');
     });
 
     it("loads the next page's comments when the router moves between two pages", () => {

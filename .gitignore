@@ -10,3 +10,6 @@ coverage/
 tsconfig.tsbuildinfo
 .tanstack/
 app/routeTree.gen.ts
+
+# Salla dev-preview local upload assets (regenerated per session)
+twilight-preview-assets/

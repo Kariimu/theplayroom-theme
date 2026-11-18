@@ -1,5 +1,4 @@
 import { memo } from 'react';
-import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { TestimonialsCarousel, type TestimonialItem } from '../common';
 
 export interface CustomTestimonialsProps {
@@ -15,21 +14,15 @@ export interface CustomTestimonialsProps {
 /**
  * `custom-testimonials` home block — merchant-authored reviews in the shared
  * {@link TestimonialsCarousel} (gray band via `.s-block--custom-testimonials`,
- * three cards per view, prev/next beside the title when they don't all fit).
+ * one full-width slide at a time, matching the old theme's fading slider).
+ * `title`/`description` are unused — the old theme never renders them here.
  */
 export const CustomTestimonials = memo(function CustomTestimonials({
   data,
 }: CustomTestimonialsProps) {
-  const { t } = useTranslation();
-  const { items, title, description } = data;
+  const { items } = data;
 
   if (!items?.length) return null;
 
-  return (
-    <TestimonialsCarousel
-      items={items}
-      title={title || t('blocks.home.testimonials', 'Customer reviews')}
-      description={description}
-    />
-  );
+  return <TestimonialsCarousel items={items} />;
 });

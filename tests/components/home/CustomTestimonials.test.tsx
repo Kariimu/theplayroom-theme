@@ -37,11 +37,12 @@ describe('CustomTestimonials', () => {
     expect(container.firstChild).toBeNull();
   });
 
-  it('renders the heading and one card per item', () => {
-    const { container, getByText } = render(<CustomTestimonials data={{ items }} />);
-    expect(getByText('Customer reviews')).toBeTruthy();
+  it('renders one card per item, with no heading of its own', () => {
+    const { container, queryByText } = render(<CustomTestimonials data={{ items }} />);
     expect(container.querySelectorAll('.testimonial-card')).toHaveLength(3);
     expect(container.querySelector('.scroll-carousel__track')).toBeTruthy();
+    expect(container.querySelector('.scroll-carousel__head')).toBeNull();
+    expect(queryByText('Customer reviews')).toBeNull();
   });
 
   it('renders the rating as a row of stars, read out as a number', () => {
@@ -59,30 +60,19 @@ describe('CustomTestimonials', () => {
     expect(container.querySelector('.testimonial-card__stars')).toBeNull();
   });
 
-  it('shows the initial when a review has no avatar', () => {
-    const { container } = render(
-      <CustomTestimonials data={{ items: [{ name: 'ندى', text: 'رائع', stars: 5 }] }} />
-    );
-    const initial = container.querySelector('.testimonial-card__avatar.is-initial');
-    expect(initial?.textContent).toBe('ن');
-    expect(initial?.getAttribute('aria-hidden')).toBe('true');
-  });
-
-  it('renders name, text and avatar for each card', () => {
+  it('renders name and text for each card (no avatar — the old slider has none)', () => {
     const { container, getByText } = render(<CustomTestimonials data={{ items }} />);
     expect(getByText('ندى الحسيني')).toBeTruthy();
     expect(getByText('رائحة رائعة')).toBeTruthy();
-    expect(container.querySelector('.testimonial-card__avatar')?.getAttribute('src')).toBe(
-      'a1.jpg'
-    );
+    expect(container.querySelector('.testimonial-card__avatar')).toBeNull();
   });
 
-  it('renders prev / next controls on the title line', () => {
-    const { container, getByLabelText, getByText } = render(<CustomTestimonials data={{ items }} />);
+  it('renders prev / next controls below the row, since there is no heading to sit beside', () => {
+    const { container, getByLabelText } = render(<CustomTestimonials data={{ items }} />);
     expect(getByLabelText('Previous')).toBeTruthy();
     expect(getByLabelText('Next')).toBeTruthy();
     expect(
-      container.querySelector('.scroll-carousel__head')?.contains(getByText('Customer reviews'))
+      container.querySelector('.scroll-carousel__foot')?.contains(getByLabelText('Next'))
     ).toBe(true);
   });
 
@@ -119,13 +109,46 @@ describe('CustomTestimonials', () => {
     expect(fireEvent.click(scroller)).toBe(true);
   });
 
-  it('uses the block title/description when provided', () => {
-    const { getByText } = render(
+  it('offers a "view photo" trigger only for a review with an image, opening it in a sheet', () => {
+    const { container, getByText, queryByText } = render(
+      <CustomTestimonials
+        data={{ items: [...items, { name: 'سارة', text: 'جميل', image: 'photo.jpg' }] }}
+      />
+    );
+    const triggers = container.querySelectorAll('.testimonial-card__view-photo');
+    expect(triggers).toHaveLength(1);
+
+    // BottomSheet portals to document.body, not the render container.
+    expect(document.querySelector('[role="dialog"]')).toBeNull();
+    fireEvent.click(triggers[0]);
+    expect(getByText('View photo')).toBeTruthy();
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog).toBeTruthy();
+    expect(dialog?.querySelector('img')?.getAttribute('src')).toBe('photo.jpg');
+    // The other three reviews have no image, so no trigger for them.
+    expect(queryByText('ممتاز')).toBeTruthy();
+  });
+
+  it('still names the photo dialog and the photo itself when the review has no name', () => {
+    const { container, queryByText } = render(
+      <CustomTestimonials data={{ items: [...items, { text: 'جميل', image: 'photo.jpg' }] }} />
+    );
+    const triggers = container.querySelectorAll('.testimonial-card__view-photo');
+    fireEvent.click(triggers[triggers.length - 1]);
+
+    const dialog = document.querySelector('[role="dialog"]');
+    expect(dialog?.getAttribute('aria-label')).toBe('View photo');
+    expect(dialog?.querySelector('img')?.getAttribute('alt')).toBe('Customer photo');
+    expect(queryByText('ممتاز')).toBeTruthy();
+  });
+
+  it('ignores a block title/description, matching the old theme (no heading on this slider)', () => {
+    const { queryByText } = render(
       <CustomTestimonials
         data={{ items, title: 'آراء العملاء', description: 'اكتشف تجارب عملائنا' }}
       />
     );
-    expect(getByText('آراء العملاء')).toBeTruthy();
-    expect(getByText('اكتشف تجارب عملائنا')).toBeTruthy();
+    expect(queryByText('آراء العملاء')).toBeNull();
+    expect(queryByText('اكتشف تجارب عملائنا')).toBeNull();
   });
 });

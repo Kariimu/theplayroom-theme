@@ -200,16 +200,19 @@ function FooterApps({ className }: { className: string }) {
   );
 }
 
-/** The logo link, same shape in both layouts -- only its own spacing differs. */
+/** The logo link, same shape in both layouts -- only its own spacing differs.
+ *  Prefers the theme's `footer_logo` setting (5A Tier 4), falling back to the
+ *  store logo. */
 function FooterLogo({ className }: { className: string }) {
-  const { store } = useTwilight();
+  const { store, theme } = useTwilight();
+  const footerLogo = (theme?.settings as { footer_logo?: string } | undefined)?.footer_logo;
   return (
     <Link
       to="/"
       className={`store-footer__logo inline-flex items-center m-0 transition-opacity hover:opacity-75 ${className}`}
     >
       <Image
-        src={store.logo}
+        src={footerLogo || store.logo}
         alt={store.name || 'Store'}
         width={150}
         height={44}
@@ -220,10 +223,17 @@ function FooterLogo({ className }: { className: string }) {
   );
 }
 
-/** Merchant-authored description HTML -- mirrors the Twig theme's
- *  `store.description|raw`. Renders nothing when the store has none set. */
+/** Footer blurb: the theme's `footer_description` setting (5A Tier 4,
+ *  `format: text`) as plain text, else the store's description HTML (Twig's
+ *  `store.description|raw`). Renders nothing when neither is set. */
 function FooterDescription({ className }: { className: string }) {
-  const { store } = useTwilight();
+  const { store, theme } = useTwilight();
+  const footerDescription = (
+    theme?.settings as { footer_description?: string } | undefined
+  )?.footer_description?.trim();
+  if (footerDescription) {
+    return <div className={`store-footer__desc opacity-80 ${className}`}>{footerDescription}</div>;
+  }
   if (!store.description) return null;
   return (
     <div
@@ -366,7 +376,16 @@ export function Footer({ inSheet = false }: FooterProps = {}) {
   const { t } = useTranslation();
   const year = new Date().getFullYear();
   const isCentered = theme.settings?.footer_layout === 'centered';
-  const isDark = !!theme.settings?.footer_is_dark;
+  // The merchant's "Dark mode" toggle (`footer_is_dark`) only picks which
+  // background the content band gets — the legacy slate blue (off, this
+  // store's actual look) or near-black (on). Either way the band is a
+  // saturated color, not the engine's original light mint, so its content
+  // always needs light text: `contentIsDark` (always true) feeds the
+  // sub-components' own `dark` prop, separately from `paletteIsDark`, which
+  // still picks the bottom bar's copyright text (near-black root → light
+  // gray; the legacy-blue root's bottom bar is near-white → dark gray).
+  const paletteIsDark = !!theme.settings?.footer_is_dark;
+  const contentIsDark = true;
 
   const Root = inSheet ? 'div' : 'footer';
 
@@ -374,26 +393,26 @@ export function Footer({ inSheet = false }: FooterProps = {}) {
     <Root
       className={`store-footer store-footer--${isCentered ? 'centered' : 'columns'}${
         inSheet ? ' store-footer--sheet' : ''
-      } relative mt-8 sm:mt-16 ${isDark ? 'bg-[#0E0F0F] text-white' : 'bg-[#F4F7F2] text-gray-600'}`}
+      } relative mt-8 sm:mt-16 ${paletteIsDark ? 'bg-[#0E0F0F] text-white' : 'bg-[#F9FAFB] text-gray-600'}`}
       suppressHydrationWarning
     >
       {!inSheet && <HookSlot name="footer:start" />}
 
       <div
         aria-label="footer"
-        className={`store-footer__inner border-b py-8 lg:py-16 ${
-          isDark ? 'bg-[#1D1F1F] border-dashed border-white/10' : 'bg-transparent border-gray-200'
+        className={`store-footer__inner border-b py-8 text-white lg:py-16 ${
+          paletteIsDark ? 'bg-[#1D1F1F] border-dashed border-white/10' : 'bg-[#8FA7C3] border-transparent'
         }`}
       >
         {isCentered ? (
-          <FooterCenteredBody inSheet={inSheet} isDark={isDark} />
+          <FooterCenteredBody inSheet={inSheet} isDark={contentIsDark} />
         ) : (
-          <FooterColumnsBody inSheet={inSheet} isDark={isDark} />
+          <FooterColumnsBody inSheet={inSheet} isDark={contentIsDark} />
         )}
       </div>
 
       <div className="store-footer__bottom container md:flex items-center justify-between gap-4 py-4 lg:py-7 text-center">
-        <span className={`text-sm copyright-text ${isDark ? 'text-gray-400' : 'text-gray-700'}`}>
+        <span className={`text-sm copyright-text ${paletteIsDark ? 'text-gray-400' : 'text-gray-700'}`}>
           <HookSlot
             name="copyright"
             context={{ storeName: store.name }}

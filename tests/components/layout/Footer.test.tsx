@@ -68,6 +68,21 @@ beforeEach(() => {
 });
 
 describe('Footer', () => {
+  it('shows the footer_description setting as plain text, over the store description', () => {
+    state.store = { ...state.store, description: '<b>store html</b>' };
+    state.theme = { settings: { footer_description: 'Handmade wooden toys' } };
+    renderFooter();
+    expect(screen.getByText('Handmade wooden toys')).toBeTruthy();
+    // The setting value is rendered as text, not the store's raw HTML.
+    expect(document.querySelector('.store-footer__desc')?.innerHTML).not.toContain('<b>');
+  });
+
+  it('falls back to the store description HTML when no footer_description setting', () => {
+    state.store = { ...state.store, description: '<span>store blurb</span>' };
+    renderFooter();
+    expect(document.querySelector('.store-footer__desc')?.innerHTML).toContain('store blurb');
+  });
+
   // The tax certificate's modal is lazy. Its own boundary keeps the footer from waiting on it,
   // now that the footer hydrates with the page instead of in a boundary of its own.
   it('renders while the tax certificate modal is still loading', () => {

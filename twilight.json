@@ -424,17 +424,6 @@
             "selected": true
         },
         {
-            "type": "boolean",
-            "icon": "sicon-toggle-off",
-            "label": "اظهار الوسوم",
-            "description": null,
-            "id": "show_tags",
-            "format": "switch",
-            "required": false,
-            "value": true,
-            "selected": true
-        },
-        {
             "id": "slider_background_size",
             "type": "items",
             "format": "dropdown-list",
@@ -474,6 +463,73 @@
             "required": false,
             "value": false,
             "selected": false
+        },
+        {
+            "type": "static",
+            "format": "title",
+            "id": "static-label8",
+            "value": "<div class='rounded-lg' style='background-color: #21636d; display: flex; justify-content: center; align-items: center;padding: 15px;margin-bottom: 20px !important; flex-direction: column;gap: 15px;'><h6 style='color: #ffffff;font-size: 15px; font-weight: bold;'> واتساب والفوتر</h6></div>",
+            "variant": "h6"
+        },
+        {
+            "id": "show_whatsapp",
+            "type": "boolean",
+            "format": "switch",
+            "label": " في حالة تفعيل هذا الخيار سيتم عرض ايقونة الواتساب اسفل الشاشة",
+            "description": "هذه الخاصية تمكنك من التحكم في إظهار واخفاء ايقونة الواتساب",
+            "labelHTML": null,
+            "icon": "sicon-toggle-off",
+            "value": true,
+            "selected": true,
+            "required": false
+        },
+        {
+            "id": "whatsapp_number",
+            "type": "number",
+            "format": "integer",
+            "inputType": "number",
+            "label": "رقم الواتساب",
+            "description": "اكتب رقم واتساب مع المفتاح الدولي بدون مسافات وبدون علامة بلس \"+\"",
+            "labelHTML": null,
+            "placeholder": "000000",
+            "icon": "sicon-hashtag",
+            "value": 0,
+            "required": false,
+            "minimum": 0,
+            "maximum": 10000000000000,
+            "public": false,
+            "conditions": [
+                {
+                    "id": "show_whatsapp",
+                    "operation": "=",
+                    "value": true
+                }
+            ]
+        },
+        {
+            "type": "string",
+            "icon": "sicon-image",
+            "value": null,
+            "id": "footer_logo",
+            "label": "صورة شعار الفوتر",
+            "format": "image",
+            "required": false,
+            "placeholder": null,
+            "description": ""
+        },
+        {
+            "type": "string",
+            "icon": "sicon-format-text-alt",
+            "label": "وصف الفوتر",
+            "multilanguage": true,
+            "id": "footer_description",
+            "value": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع.",
+            "required": false,
+            "format": "text",
+            "placeholder": "يمكنك إضافة وصف بارز هنا...",
+            "hide": false,
+            "minLength": 1,
+            "maxLength": 400
         }
     ],
     "components": [
@@ -2187,6 +2243,17 @@
                             "value": null,
                             "multilanguage": true,
                             "required": false
+                        },
+                        {
+                            "id": "items.image",
+                            "type": "string",
+                            "format": "image",
+                            "label": "صورة",
+                            "description": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
                         }
                     ],
                     "required": false,
@@ -2257,6 +2324,1776 @@
                     "searchable": true,
                     "minLength": 1,
                     "maxLength": 10
+                }
+            ]
+        },
+        {
+            "key": "e0ddefcd-5aee-43ef-9bdb-36880f2239db",
+            "title": {
+                "en": "banner-section",
+                "ar": "سيكشن البانر"
+            },
+            "icon": "sicon-store",
+            "path": "home.banner-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/1.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/1.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-image",
+                    "label": "صورة البنر",
+                    "id": "image_desktop",
+                    "format": "image",
+                    "required": false,
+                    "placeholder": null,
+                    "description": "* المقاس المناسب للصورة هو 640×427 بكسل",
+                    "settings": {
+                        "height": 427,
+                        "width": 640
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "وصف صورة البنر الموبايل",
+                    "multilanguage": true,
+                    "id": "image_mobile_description",
+                    "value": null,
+                    "description": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "format": "textarea",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-image",
+                    "label": "صورة البنر الموبايل",
+                    "id": "image_mobile",
+                    "format": "image",
+                    "required": false,
+                    "placeholder": null,
+                    "description": "* المقاس المناسب للصورة هو 1200×300 بكسل",
+                    "settings": {
+                        "height": 300,
+                        "width": 1200
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "وصف صورة البنر المكتبي",
+                    "multilanguage": true,
+                    "id": "image_desktop_description",
+                    "value": null,
+                    "description": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "format": "textarea",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "boolean",
+                    "icon": "sicon-toggle-off",
+                    "label": "مسافة اعلى البانر",
+                    "description": null,
+                    "id": "top_margin",
+                    "format": "switch",
+                    "required": false,
+                    "value": false,
+                    "selected": 0
+                }
+            ]
+        },
+        {
+            "key": "3cdb6a6e-cbbb-4e1f-b282-6e02eeb85cd1",
+            "title": {
+                "en": "reviews-section",
+                "ar": "سيكشن التقييمات"
+            },
+            "icon": "sicon-store",
+            "path": "home.reviews-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/2.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/2.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "عنوان التقييمات",
+                    "multilanguage": true,
+                    "id": "title",
+                    "value": null,
+                    "description": null,
+                    "format": "textarea",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "وصف التقييمات",
+                    "multilanguage": true,
+                    "id": "description",
+                    "value": null,
+                    "description": null,
+                    "format": "textarea",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة وصف لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-format-text-alt",
+                    "label": "نص الزر",
+                    "multilanguage": true,
+                    "id": "button_text",
+                    "value": null,
+                    "required": false,
+                    "format": "text",
+                    "description": null,
+                    "placeholder": "يمكنك إضافة نص الزر هنا...",
+                    "hide": false,
+                    "minLength": 0,
+                    "maxLength": "20"
+                },
+                {
+                    "type": "items",
+                    "icon": "sicon-link",
+                    "label": "رابط الزر",
+                    "id": "link",
+                    "value": [],
+                    "description": "",
+                    "required": false,
+                    "format": "variable-list",
+                    "searchable": true,
+                    "source": "custom",
+                    "sources": [
+                        {
+                            "label": "منتج",
+                            "key": "products",
+                            "value": "products"
+                        },
+                        {
+                            "label": "تصنيف",
+                            "key": "categories",
+                            "value": "categories"
+                        },
+                        {
+                            "label": "ماركة تجارية",
+                            "key": "brands",
+                            "value": "brands"
+                        },
+                        {
+                            "label": "صفحة تعريفية",
+                            "key": "pages",
+                            "value": "pages"
+                        },
+                        {
+                            "label": "مقالة",
+                            "key": "blog_articles",
+                            "value": "blog_articles"
+                        },
+                        {
+                            "label": "تصنيف ضمن المدونة",
+                            "key": "blog_categories",
+                            "value": "blog_categories"
+                        },
+                        {
+                            "label": "التخفيضات",
+                            "key": "offers_link",
+                            "value": "offers_link"
+                        },
+                        {
+                            "label": "الماركات التجارية",
+                            "key": "brands_link",
+                            "value": "brands_link"
+                        },
+                        {
+                            "label": "المدونة",
+                            "key": "blog_link",
+                            "value": "blog_link"
+                        },
+                        {
+                            "label": "رابط خارجي",
+                            "key": "custom",
+                            "value": "custom"
+                        }
+                    ]
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "رقم التقييمات",
+                    "id": "rating_count",
+                    "value": null,
+                    "description": null,
+                    "format": "text",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة رقم التقييمات لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "اجمالي التقييمات",
+                    "id": "total_reviews",
+                    "multilanguage": true,
+                    "value": null,
+                    "description": null,
+                    "format": "text",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة عدد التقييمات الاجمالية لهذا القسم هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                }
+            ]
+        },
+        {
+            "key": "e898a0a9-abb9-47d9-8bcb-5a20169b62f6",
+            "title": {
+                "en": "custom-brands-section",
+                "ar": "سيكشن البرندات المخصص"
+            },
+            "icon": "sicon-store",
+            "path": "home.custom-brands-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/3.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/3.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "type": "boolean",
+                    "icon": "sicon-layout-grid-rearrange",
+                    "label": "عرض كشبكة (Grid)",
+                    "description": "تفعيل هذا الخيار لعرض العلامات التجارية في شكل شبكة بدلاً من شريط متحرك (Marquee)",
+                    "id": "display_as_grid",
+                    "format": "switch",
+                    "required": false,
+                    "value": false,
+                    "selected": false
+                },
+                {
+                    "id": "brands",
+                    "type": "collection",
+                    "format": "collection",
+                    "required": false,
+                    "minLength": 1,
+                    "maxLength": 20,
+                    "label": "قائمة الصور",
+                    "item_label": "صورة",
+                    "value": [],
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "label": "صورة الماركة",
+                            "id": "brands.image",
+                            "format": "image",
+                            "required": false,
+                            "placeholder": null,
+                            "description": "* المقاس المناسب للصورة هو 640×427 بكسل",
+                            "settings": {
+                                "height": 427,
+                                "width": 640
+                            }
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "وصف الصورة",
+                            "multilanguage": true,
+                            "id": "brands.alt_text",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": "نص يتم إضافته على الصورة بنمط خط كبير",
+                            "placeholder": "أدخل النص هنا...",
+                            "hide": false,
+                            "minLength": 0,
+                            "maxLength": 100
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-link",
+                            "label": "رابط الماركة (اختياري)",
+                            "id": "brands.url",
+                            "value": null,
+                            "required": false,
+                            "format": "url",
+                            "description": "رابط يتم التوجيه إليه عند النقر على الماركة",
+                            "placeholder": "https://..."
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "3db77766-6dcd-4f34-8152-998b227c357a",
+            "title": {
+                "en": "shopping1-section",
+                "ar": "سيكشن التسوق"
+            },
+            "icon": "sicon-store",
+            "path": "home.shopping1-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/4.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/4.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "عنوان القسم",
+                    "multilanguage": true,
+                    "id": "title",
+                    "value": "تسوق حسب النوع",
+                    "required": false,
+                    "format": "text",
+                    "placeholder": "تسوق حسب النوع",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "العنوان الفرعي",
+                    "multilanguage": true,
+                    "id": "subtitle",
+                    "value": "اختر ما يناسب احتياجاتك",
+                    "description": null,
+                    "format": "textarea",
+                    "required": false,
+                    "placeholder": "اختر ما يناسب احتياجاتك",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "id": "items",
+                    "type": "collection",
+                    "format": "collection",
+                    "required": false,
+                    "minLength": 1,
+                    "maxLength": 10,
+                    "label": "عناصر التسوق",
+                    "item_label": "عنصر",
+                    "value": [],
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "label": "الصورة",
+                            "id": "items.image",
+                            "format": "image",
+                            "required": false,
+                            "description": "* المقاس المناسب للصورة بنسبة 4 عرض : 3 طول وأقصى عرض 500 بكسل (مثال: 500×375 بكسل)",
+                            "settings": {
+                                "width": 500,
+                                "height": 375
+                            }
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-typography",
+                            "label": "العنوان",
+                            "multilanguage": true,
+                            "id": "items.title",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "minLength": 2,
+                            "maxLength": "256"
+                        },
+                        {
+                            "type": "boolean",
+                            "icon": "sicon-toggle-off",
+                            "label": "العنوان طبيعى",
+                            "description": null,
+                            "id": "items.title_type",
+                            "format": "switch",
+                            "required": false,
+                            "value": false,
+                            "selected": 0
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-typography",
+                            "label": "العنوان الفرعي",
+                            "multilanguage": true,
+                            "id": "items.subtitle",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "minLength": 2,
+                            "maxLength": "256"
+                        },
+                        {
+                            "type": "boolean",
+                            "icon": "sicon-toggle-off",
+                            "label": "العنوان طبيعى",
+                            "description": null,
+                            "id": "items.subtitle_type",
+                            "format": "switch",
+                            "required": false,
+                            "value": false,
+                            "selected": 0
+                        },
+                        {
+                            "type": "items",
+                            "icon": "sicon-link",
+                            "label": "رابط الزر",
+                            "id": "items.url",
+                            "value": [],
+                            "description": "",
+                            "required": false,
+                            "format": "variable-list",
+                            "searchable": true,
+                            "source": "custom",
+                            "sources": [
+                                {
+                                    "label": "منتج",
+                                    "key": "products",
+                                    "value": "products"
+                                },
+                                {
+                                    "label": "تصنيف",
+                                    "key": "categories",
+                                    "value": "categories"
+                                },
+                                {
+                                    "label": "ماركة تجارية",
+                                    "key": "brands",
+                                    "value": "brands"
+                                },
+                                {
+                                    "label": "صفحة تعريفية",
+                                    "key": "pages",
+                                    "value": "pages"
+                                },
+                                {
+                                    "label": "مقالة",
+                                    "key": "blog_articles",
+                                    "value": "blog_articles"
+                                },
+                                {
+                                    "label": "تصنيف ضمن المدونة",
+                                    "key": "blog_categories",
+                                    "value": "blog_categories"
+                                },
+                                {
+                                    "label": "التخفيضات",
+                                    "key": "offers_link",
+                                    "value": "offers_link"
+                                },
+                                {
+                                    "label": "الماركات التجارية",
+                                    "key": "brands_link",
+                                    "value": "brands_link"
+                                },
+                                {
+                                    "label": "المدونة",
+                                    "key": "blog_link",
+                                    "value": "blog_link"
+                                },
+                                {
+                                    "label": "رابط خارجي",
+                                    "key": "custom",
+                                    "value": "custom"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "a55fde15-f7e6-4796-acec-b1f982f32ea3",
+            "title": {
+                "en": "products-section",
+                "ar": "سيكشن منتجات"
+            },
+            "icon": "sicon-store",
+            "path": "home.products-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/5.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/5.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "50"
+                },
+                {
+                    "id": "desc_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "100"
+                },
+                {
+                    "type": "items",
+                    "icon": "sicon-keyboard_arrow_down",
+                    "label": "منتجات",
+                    "id": "products",
+                    "format": "dropdown-list",
+                    "description": null,
+                    "selected": [],
+                    "options": [],
+                    "required": false,
+                    "multichoice": true,
+                    "source": "products",
+                    "searchable": true,
+                    "maxLength": 24,
+                    "minLength": 1,
+                    "value": []
+                },
+                {
+                    "id": "btn_text",
+                    "type": "string",
+                    "format": "text",
+                    "label": "نص الزر",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "50"
+                },
+                {
+                    "type": "items",
+                    "icon": "sicon-link",
+                    "label": "رابط عرض الكل",
+                    "id": "button_url",
+                    "value": [],
+                    "description": "عند إختيار رابط فارغ سيتم إخفاء زر 'عرض الكل'",
+                    "required": false,
+                    "format": "variable-list",
+                    "searchable": true,
+                    "source": "custom",
+                    "sources": [
+                        {
+                            "label": "منتج",
+                            "key": "products",
+                            "value": "products"
+                        },
+                        {
+                            "label": "تصنيف",
+                            "key": "categories",
+                            "value": "categories"
+                        },
+                        {
+                            "label": "ماركة تجارية",
+                            "key": "brands",
+                            "value": "brands"
+                        },
+                        {
+                            "label": "صفحة تعريفية",
+                            "key": "pages",
+                            "value": "pages"
+                        },
+                        {
+                            "label": "مقالة",
+                            "key": "blog_articles",
+                            "value": "blog_articles"
+                        },
+                        {
+                            "label": "تصنيف ضمن المدونة",
+                            "key": "blog_categories",
+                            "value": "blog_categories"
+                        },
+                        {
+                            "label": "التخفيضات",
+                            "key": "offers_link",
+                            "value": "offers_link"
+                        },
+                        {
+                            "label": "الماركات التجارية",
+                            "key": "brands_link",
+                            "value": "brands_link"
+                        },
+                        {
+                            "label": "المدونة",
+                            "key": "blog_link",
+                            "value": "blog_link"
+                        },
+                        {
+                            "label": "رابط خارجي",
+                            "key": "custom",
+                            "value": "custom"
+                        }
+                    ]
+                },
+                {
+                    "id": "desc2_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف أخر",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                }
+            ]
+        },
+        {
+            "key": "0729141b-3274-41c7-97b5-5fa034835270",
+            "title": {
+                "en": "reels-section",
+                "ar": "سيكشن الفيديوهات"
+            },
+            "icon": "sicon-store",
+            "path": "home.reels-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/6.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/6.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "desc_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                {
+                    "id": "all_products",
+                    "type": "items",
+                    "format": "dropdown-list",
+                    "label": "جميع المنتجات",
+                    "description": null,
+                    "labelHTML": null,
+                    "icon": "sicon-keyboard_arrow_down",
+                    "selected": [],
+                    "options": [],
+                    "source": "products",
+                    "multichoice": true,
+                    "searchable": true,
+                    "required": false,
+                    "value": []
+                },
+                {
+                    "id": "reels",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "الريلز",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "reels.video_url",
+                            "type": "string",
+                            "format": "url",
+                            "inputType": "url",
+                            "label": "رابط الفيديو",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://salla.sa",
+                            "icon": "sicon-link",
+                            "value": null,
+                            "required": false,
+                            "minLength": "2",
+                            "maxLength": "255"
+                        },
+                        {
+                            "id": "reels.poster",
+                            "key": "9ae4a6cc-7d20-4ae9-8bc0-33b2452502ca",
+                            "type": "string",
+                            "format": "image",
+                            "label": "صورة الغلاف",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
+                        },
+                        {
+                            "type": "items",
+                            "icon": "sicon-keyboard_arrow_down",
+                            "label": "منتجات",
+                            "id": "reels.product",
+                            "format": "dropdown-list",
+                            "description": null,
+                            "selected": [],
+                            "options": [],
+                            "required": false,
+                            "multichoice": false,
+                            "source": "products",
+                            "searchable": true,
+                            "maxLength": 2,
+                            "minLength": 1,
+                            "value": []
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 10
+                }
+            ]
+        },
+        {
+            "key": "2bbbcfb0-5009-4164-bcbe-c9686b60bc26",
+            "title": {
+                "en": "features-section",
+                "ar": "خصائص المتجر"
+            },
+            "icon": "sicon-store",
+            "path": "home.features-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/13.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/13.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "features",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "الخصائص",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "label": "صورة الخاصية",
+                            "id": "features.image",
+                            "format": "image",
+                            "required": false,
+                            "placeholder": null,
+                            "description": "* المقاس المناسب للصورة هو 100×100 بكسل",
+                            "settings": {
+                                "height": 100,
+                                "width": 100
+                            }
+                        },
+                        {
+                            "id": "features.title",
+                            "type": "string",
+                            "format": "text",
+                            "label": "عنوان الخاصية",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "Placeholder text ..",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": 2,
+                            "maxLength": 50
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 4
+                }
+            ]
+        },
+        {
+            "key": "2dd209ac-c98f-4bff-b411-cd6cc1fd61a3",
+            "title": {
+                "en": "gallery-section",
+                "ar": "سيكشن المعرض"
+            },
+            "icon": "sicon-store",
+            "path": "home.gallery-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/7.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/7.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "desc_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                {
+                    "id": "gallery",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "معرض الصور",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "gallery.image",
+                            "key": "9ae4a6cc-7d20-4ae9-8bc0-33b2452502ca",
+                            "type": "string",
+                            "format": "image",
+                            "label": "صورة الكمبيوتر (سطح المكتب)",
+                            "description": "الأبعاد المناسبة بنسبة 2 عرض : 3 طول (أقصى طول/ارتفاع 500 بكسل، مثال: 333×500 بكسل)",
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
+                        },
+                        {
+                            "id": "gallery.image_mobile",
+                            "type": "string",
+                            "format": "image",
+                            "label": "صورة الجوال (اختياري)",
+                            "description": "جميع الصور بنسبة 1:1 (مربعة)؛ أول 4 صور أقصى أبعاد 336×336 بكسل، بينما الصورة الخامسة أقصى عرض 687 بكسل",
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-iphone",
+                            "value": null,
+                            "required": false
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "وصف الصورة",
+                            "multilanguage": true,
+                            "id": "gallery.alt_text",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": null,
+                            "placeholder": "وصف الصورة",
+                            "minLength": 1,
+                            "maxLength": 100
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 5
+                },
+                {
+                    "id": "btn_text",
+                    "type": "string",
+                    "format": "text",
+                    "label": "نص الزر",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "50"
+                },
+                {
+                    "type": "items",
+                    "icon": "sicon-link",
+                    "label": "رابط عرض الكل",
+                    "id": "button_url",
+                    "value": [],
+                    "description": "عند إختيار رابط فارغ سيتم إخفاء زر 'عرض الكل'",
+                    "required": false,
+                    "format": "variable-list",
+                    "searchable": true,
+                    "source": "custom",
+                    "sources": [
+                        {
+                            "label": "منتج",
+                            "key": "products",
+                            "value": "products"
+                        },
+                        {
+                            "label": "تصنيف",
+                            "key": "categories",
+                            "value": "categories"
+                        },
+                        {
+                            "label": "ماركة تجارية",
+                            "key": "brands",
+                            "value": "brands"
+                        },
+                        {
+                            "label": "صفحة تعريفية",
+                            "key": "pages",
+                            "value": "pages"
+                        },
+                        {
+                            "label": "مقالة",
+                            "key": "blog_articles",
+                            "value": "blog_articles"
+                        },
+                        {
+                            "label": "تصنيف ضمن المدونة",
+                            "key": "blog_categories",
+                            "value": "blog_categories"
+                        },
+                        {
+                            "label": "التخفيضات",
+                            "key": "offers_link",
+                            "value": "offers_link"
+                        },
+                        {
+                            "label": "الماركات التجارية",
+                            "key": "brands_link",
+                            "value": "brands_link"
+                        },
+                        {
+                            "label": "المدونة",
+                            "key": "blog_link",
+                            "value": "blog_link"
+                        },
+                        {
+                            "label": "رابط خارجي",
+                            "key": "custom",
+                            "value": "custom"
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "key": "866b441f-76bd-4a49-9929-4d3fc78d1160",
+            "title": {
+                "en": "modern-banner-section",
+                "ar": "سيكشن بانر حديث"
+            },
+            "icon": "sicon-store",
+            "path": "home.modern-banner-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/8.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/8.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "نص الايقونة",
+                    "multilanguage": true,
+                    "id": "text_icon",
+                    "value": null,
+                    "description": "يمكنك إضافة نص بجانب الايقونة هنا...",
+                    "format": "text",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة نص بجانب الايقونة هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "desc_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-image",
+                    "label": "صورة البنر",
+                    "id": "image",
+                    "format": "image",
+                    "required": false,
+                    "placeholder": null,
+                    "description": "* المقاس المناسب للصورة هو 640×427 بكسل",
+                    "settings": {
+                        "height": 427,
+                        "width": 640
+                    }
+                },
+                {
+                    "type": "string",
+                    "icon": "sicon-typography",
+                    "label": "نص صورة البنر",
+                    "multilanguage": true,
+                    "id": "text_on_image",
+                    "value": null,
+                    "description": "يمكنك إضافة نص لهذا البنر هنا...",
+                    "format": "text",
+                    "required": false,
+                    "placeholder": "يمكنك إضافة نص لهذا البنر هنا...",
+                    "minLength": 2,
+                    "maxLength": "256"
+                },
+                {
+                    "id": "features",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "المميزات",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "id": "features.image",
+                            "label": "الصورة",
+                            "format": "image",
+                            "required": false,
+                            "placeholder": null,
+                            "description": null
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "عنوان الميزة",
+                            "multilanguage": true,
+                            "id": "features.title",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": null,
+                            "placeholder": "عنوان الميزة",
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "وصف الميزة",
+                            "multilanguage": true,
+                            "id": "features.desc",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": null,
+                            "placeholder": "وصف الميزة",
+                            "minLength": 1,
+                            "maxLength": 100
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 4
+                },
+                {
+                    "id": "title_footer",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان فوتر السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "عنوان فوتر السيكشن",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "desc_footer",
+                    "type": "string",
+                    "format": "text",
+                    "label": "وصف فوتر السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                {
+                    "id": "whatsapp_msg",
+                    "type": "string",
+                    "format": "text",
+                    "label": "نص رسالة الواتساب ",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "نص رسالة الواتساب ",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 1000
+                },
+                {
+                    "id": "whatsapp_number",
+                    "type": "string",
+                    "format": "text",
+                    "label": "رقم الواتساب ",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "رقم الواتساب ",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 100
+                },
+                {
+                    "id": "whatsapp_btn_text",
+                    "type": "string",
+                    "format": "text",
+                    "label": "نص زر الواتساب ",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "نص زر الواتساب ",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 1000
+                },
+                {
+                    "id": "all_products",
+                    "type": "items",
+                    "format": "dropdown-list",
+                    "label": "جميع المنتجات",
+                    "description": null,
+                    "labelHTML": null,
+                    "icon": "sicon-keyboard_arrow_down",
+                    "selected": [],
+                    "options": [],
+                    "source": "products",
+                    "multichoice": true,
+                    "searchable": true,
+                    "required": false,
+                    "value": []
+                },
+                {
+                    "id": "hotspots",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "نقاط المنتجات على البانر",
+                    "description": "أضف نقاط تفاعلية على صورة البانر تظهر معلومات المنتج عند التمرير عليها",
+                    "labelHTML": null,
+                    "item_label": "نقطة منتج",
+                    "icon": "sicon-pin",
+                    "fields": [
+                        {
+                            "type": "items",
+                            "icon": "sicon-keyboard_arrow_down",
+                            "label": "المنتج",
+                            "id": "hotspots.product",
+                            "format": "dropdown-list",
+                            "description": null,
+                            "selected": [],
+                            "options": [],
+                            "required": false,
+                            "multichoice": false,
+                            "source": "products",
+                            "searchable": true,
+                            "maxLength": 1,
+                            "minLength": 0,
+                            "value": []
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "موضع X (من اليسار %)",
+                            "multilanguage": false,
+                            "id": "hotspots.pos_x",
+                            "value": "50",
+                            "required": false,
+                            "format": "text",
+                            "description": "رقم من 0 إلى 100 يحدد موضع النقطة أفقياً على الصورة",
+                            "placeholder": "50",
+                            "minLength": 1,
+                            "maxLength": 5
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "موضع Y (من الأعلى %)",
+                            "multilanguage": false,
+                            "id": "hotspots.pos_y",
+                            "value": "50",
+                            "required": false,
+                            "format": "text",
+                            "description": "رقم من 0 إلى 100 يحدد موضع النقطة عمودياً على الصورة",
+                            "placeholder": "50",
+                            "minLength": 1,
+                            "maxLength": 5
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 8
+                }
+            ]
+        },
+        {
+            "key": "18e6667c-dd09-450a-ba85-799d4bb93b3c",
+            "title": {
+                "en": "features2-section",
+                "ar": "سيكشن الخصائص 2"
+            },
+            "icon": "sicon-store",
+            "path": "home.features2-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/11.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/11.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "fatures",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "Collection",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "id": "fatures.image",
+                            "label": "الصورة",
+                            "format": "image",
+                            "required": false,
+                            "placeholder": null,
+                            "description": null
+                        },
+                        {
+                            "id": "fatures.title",
+                            "type": "string",
+                            "format": "text",
+                            "label": "العنوان",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "اكتب العنوان هنا .....",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": "2",
+                            "maxLength": "100"
+                        },
+                        {
+                            "id": "fatures.desc",
+                            "type": "string",
+                            "format": "textarea",
+                            "label": "النص الفرعي",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "اكتب النص الفرعي هنا ....",
+                            "icon": "sicon-typography",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": "2",
+                            "maxLength": "400"
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 3
+                }
+            ]
+        },
+        {
+            "key": "2a7f0380-d760-4e86-8ce8-7c4767094a79",
+            "title": {
+                "en": "common questions",
+                "ar": "الاسئلة الشائعة"
+            },
+            "icon": "sicon-store",
+            "path": "home.common-questions-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/10.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/10.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عنوان السيكشن",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 50
+                },
+                {
+                    "id": "questions",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "الاسئلة",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "نص السؤال",
+                            "multilanguage": true,
+                            "id": "questions.title",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": null,
+                            "placeholder": "نص السؤال",
+                            "minLength": 1,
+                            "maxLength": 200
+                        },
+                        {
+                            "type": "string",
+                            "icon": "sicon-format-text-alt",
+                            "label": "نص الإجابة",
+                            "multilanguage": true,
+                            "id": "questions.desc",
+                            "value": null,
+                            "required": false,
+                            "format": "text",
+                            "description": null,
+                            "placeholder": "نص الإجابة",
+                            "minLength": 1,
+                            "maxLength": 400
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 15
+                }
+            ]
+        },
+        {
+            "key": "6823f460-29ea-4f9c-946c-c92c6006b666",
+            "title": {
+                "en": "instagram section",
+                "ar": "سيكشن انستجرام"
+            },
+            "icon": "sicon-store",
+            "path": "home.instagram-section",
+            "image": "https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/12.png",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div ><img class='w-full' src='https://themes-assets.codlop.sa/Plays-room-docs/assets/img/home-screen/12.png'></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "page_img",
+                    "type": "string",
+                    "format": "image",
+                    "label": "صورة الصفحة",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "e.g. https://hostname.com/image.png",
+                    "icon": "sicon-image",
+                    "value": null,
+                    "required": false
+                },
+                {
+                    "id": "page_name",
+                    "type": "string",
+                    "format": "text",
+                    "label": "اسم الصفحة",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": false,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "100"
+                },
+                {
+                    "id": "page_link",
+                    "type": "string",
+                    "format": "text",
+                    "label": "لينك الصفحة",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": "@theplayroom.sa",
+                    "multilanguage": false,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "50"
+                },
+                {
+                    "id": "number_posts",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عدد المنشورات",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": "379",
+                    "multilanguage": false,
+                    "required": false,
+                    "minLength": "1",
+                    "maxLength": "5"
+                },
+                {
+                    "id": "number_followers",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عدد المتابعين",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": "22.1K",
+                    "multilanguage": false,
+                    "required": false,
+                    "minLength": "1",
+                    "maxLength": "5"
+                },
+                {
+                    "id": "number_following",
+                    "type": "string",
+                    "format": "text",
+                    "label": "عدد الذى تتابعهم",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "Placeholder text ..",
+                    "icon": "sicon-format-text-alt",
+                    "value": "12",
+                    "multilanguage": false,
+                    "required": false,
+                    "minLength": "1",
+                    "maxLength": "5"
+                },
+                {
+                    "id": "follow_btn",
+                    "type": "string",
+                    "format": "url",
+                    "inputType": "url",
+                    "label": "رابط زر المتابعة",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "e.g. https://salla.sa",
+                    "icon": "sicon-link",
+                    "value": null,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "200"
+                },
+                {
+                    "id": "posts",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": "الصور",
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": null,
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "posts.img",
+                            "type": "string",
+                            "format": "image",
+                            "label": "الصورة",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://hostname.com/image.png",
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
+                        },
+                        {
+                            "id": "posts.video",
+                            "type": "string",
+                            "format": "url",
+                            "inputType": "url",
+                            "label": "رابط الفيديو",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "e.g. https://salla.sa",
+                            "icon": "sicon-link",
+                            "value": null,
+                            "required": false,
+                            "minLength": "2",
+                            "maxLength": "200"
+                        },
+                        {
+                            "type": "boolean",
+                            "icon": "sicon-toggle-off",
+                            "label": "الاولوية للفيديو",
+                            "description": null,
+                            "id": "posts.video_first",
+                            "format": "switch",
+                            "required": false,
+                            "value": false,
+                            "selected": 0
+                        },
+                        {
+                            "id": "posts.desc",
+                            "type": "string",
+                            "format": "text",
+                            "label": "الوصف",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "Placeholder text ..",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": "2",
+                            "maxLength": "200"
+                        },
+                        {
+                            "id": "posts.like_number",
+                            "type": "string",
+                            "format": "text",
+                            "label": "عدد الإعجابات",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "Placeholder text ..",
+                            "icon": "sicon-format-text-alt",
+                            "value": "1",
+                            "multilanguage": false,
+                            "required": false,
+                            "minLength": "1",
+                            "maxLength": "5"
+                        },
+                        {
+                            "id": "posts.comment_number",
+                            "type": "string",
+                            "format": "text",
+                            "label": "عدد التعليقات",
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "Placeholder text ..",
+                            "icon": "sicon-format-text-alt",
+                            "value": "1",
+                            "multilanguage": false,
+                            "required": false,
+                            "minLength": "1",
+                            "maxLength": "5"
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 1,
+                    "maxLength": 20
+                },
+                {
+                    "id": "showing-btn",
+                    "type": "string",
+                    "format": "url",
+                    "inputType": "url",
+                    "label": "رابط زر المشاهدة",
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "e.g. https://salla.sa",
+                    "icon": "sicon-link",
+                    "value": null,
+                    "required": false,
+                    "minLength": "2",
+                    "maxLength": "200"
                 }
             ]
         }

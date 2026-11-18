@@ -20,8 +20,12 @@
    just the handful of pieces rendered by web components Footer has no markup
    of its own for, which it explicitly leaves to the consuming theme. */
 .store-footer {
+  /* The content band (`.store-footer__inner`) is always a saturated color —
+     the legacy slate blue or the merchant's "dark mode" near-black — so its
+     icons/links are always on a colored background, never the engine's
+     original light mint. */
   .social-link {
-    @apply flex h-8 w-8 items-center justify-center rounded-full border border-gray-200 text-sm transition duration-300 hover:opacity-75;
+    @apply flex h-8 w-8 items-center justify-center rounded-full border border-white/30 text-sm text-white transition duration-300 hover:opacity-75;
   }
 
   /* Footer menu — `<salla-menu source="footer">` renders a bare
@@ -39,7 +43,7 @@
       }
 
       .s-menu-footer-item {
-        @apply block text-[15px] leading-snug text-gray-600;
+        @apply block text-[15px] leading-snug text-white/80;
         margin-bottom: 0.625rem;
 
         &:last-child {
@@ -54,7 +58,7 @@
       }
 
       .s-menu-footer-item {
-        @apply border-e border-gray-300 px-3 text-[15px] leading-none text-gray-600 mb-0;
+        @apply border-e border-white/30 px-3 text-[15px] leading-none text-white/80 mb-0;
 
         &:first-child {
           @apply ps-0;
@@ -81,18 +85,5 @@
     > .store-footer__bottom {
       display: none;
     }
-  }
-}
-
-/* `footer_is_dark` darkens `.s-menu-footer-item`'s own border/text too -- the
-   one piece of dark-mode handling still theme-owned, since the two menu
-   variants above are. */
-body.footer-is-dark .store-footer {
-  &__menu--stacked .s-menu-footer-item {
-    @apply text-white;
-  }
-
-  &__menu--inline .s-menu-footer-item {
-    @apply border-white/10 text-white;
   }
 }

@@ -226,8 +226,22 @@
   }
 
   .s-product-card-content-title {
-    @apply mb-1 text-base;
+    @apply mb-1 text-base font-black text-gray-900;
   }
+
+  /* Grid card photo — soft elevated, highly rounded corner, matching the
+     store's bold brand identity. Not applied to the horizontal/list card,
+     whose photo sits flush against the text (`s-product-card-horizontal`,
+     above). */
+  &-vertical .s-product-card-image {
+    @apply overflow-hidden rounded-3xl shadow-xl;
+  }
+}
+
+/* Regular (non-sale) price — bold and brand-colored. The sale price keeps its
+   own red (`.s-product-card-sale-price h4`, below); untouched. */
+.s-product-card-price {
+  @apply font-black text-primary;
 }
 
 /* The placeholder is shown whole, as in Twig, whatever the store's image fit. */
@@ -369,8 +383,10 @@ salla-gifting {
 /*
   Product page data column — the engine wraps each block (options, weight,
   attachments, price, quantity) in a padded, rounded `bg-white` card with its
-  own `mb`. Strip the padding / radius / margin off the children and let the
-  form control the vertical rhythm with a single `gap`.
+  own `mb`. Strip the padding / radius / margin / background off the children
+  and let the form control the vertical rhythm with a single `gap`, flat on
+  the page's own cream `--body-bg` (legacy: `.s-product-options-wrapper
+  { background-color: transparent; }`).
 */
 .product-form {
   @apply mt-6 flex flex-col gap-5;
@@ -379,19 +395,40 @@ salla-gifting {
     display: none;
   }
 
-  > section,
+  /* Not `.sticky-product-bar`: it's a fixed overlay (`product.scss` further
+     down), not a block in the page's own flow, so it needs its own opaque
+     background (set directly on the element, `bg-[var(--body-bg)]`) rather
+     than this transparent reset — otherwise whatever is scrolled behind it
+     shows through. */
+  > section:not(.sticky-product-bar),
   .s-product-options-wrapper {
     padding: 0;
     border-radius: 0;
     margin-bottom: 0;
+    background-color: transparent;
   }
 }
 
 /* The option content is `overflow: auto` by default, which clips the border
     (and rounded corners) of the option pills (country / digital-card / …) at
     the container edge. Let them paint outside the box. */
-.s-product-options-option-content { 
+.s-product-options-option-content {
   overflow: visible;
+}
+
+/* The web component echoes the select's own empty/chosen value as a second
+   line under the option label ("خدمة التركيب" / "اختر") — redundant with the
+   placeholder already inside the select pill itself. Legacy's equivalent
+   `<small>` is empty; hide ours the same way. */
+.s-product-options-option-label small {
+  @apply hidden;
+}
+
+/* The web component sets its own 0.875rem directly on the label — an
+   inherited `text-lg` from an ancestor never wins over that, so it's
+   overridden here instead, matching the rest of the product page's text. */
+.s-product-options-option-label {
+  @apply text-lg;
 }
 
 /* Promotion badge — pill on the image corner */
@@ -403,6 +440,112 @@ salla-gifting {
   border-radius: 9999px;
   max-width: calc(100% - 1.5rem);
   @apply bg-red-800 text-white text-[11px] font-semibold leading-none shadow-sm;
+}
+
+/*
+  Custom grid card (`ProductCard.tsx`, `VerticalProductCard`) — replaces the
+  engine's own vertical card markup for `layout="vertical"` (the default:
+  every home-block / category grid). Square photo, bold title/price below;
+  the quick-action button sits over the photo, always visible on touch but
+  hidden until hover on `md+` (matches the old theme's `.add-btn`).
+*/
+.product-card {
+  @apply relative flex h-full flex-col;
+
+  /* The card's one accessible link (stretched over the whole card, behind
+     everything else — `.product-card__media`'s own `position: relative` and
+     the buttons' `z-[1]` keep them clickable above it). */
+  &__link {
+    @apply absolute inset-0 z-0;
+  }
+
+  &__media {
+    /* 246.13 x 307.66 as a ratio, not a fixed box: the card's own width still
+       comes from its grid column, so the photo scales with it and only the
+       shape (not the pixel size) is pinned. */
+    @apply relative aspect-[246.13/307.66] overflow-hidden rounded-3xl bg-gray-100 shadow-xl;
+  }
+
+  &__image {
+    @apply absolute inset-0 h-full w-full object-cover transition-opacity duration-300;
+
+    &--hover {
+      opacity: 0;
+    }
+  }
+
+  [data-image-placeholder] & &__image {
+    object-fit: contain;
+  }
+
+  &__badge {
+    @apply absolute top-3 z-[1] -rotate-6 rounded-full bg-accent px-3 py-1 text-[11px] font-bold leading-none text-white shadow-sm rtl:right-3 ltr:left-3;
+  }
+
+  /* Floating action circle over the photo's inline-end corner — add-to-cart
+     (primary), "select options" / view-product link, WhatsApp enquiry, or a
+     disabled out-of-stock state. Always visible on touch; on `md+` it's
+     hidden until the card (`.group`) is hovered. `text-primary-reverse` (not
+     a hardcoded white) so the icon stays readable whatever primary color the
+     merchant picks — the button's own background, never body text, carries
+     the color. */
+  &__quick-action {
+    @apply absolute bottom-3 z-[1] flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-reverse shadow-lg transition-all duration-300 rtl:left-3 ltr:right-3 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100;
+
+    &:hover {
+      @apply bg-primary-d;
+    }
+
+    &:disabled,
+    &--disabled {
+      @apply cursor-not-allowed bg-gray-300 text-gray-500;
+    }
+  }
+
+  &__body {
+    @apply flex flex-1 flex-col gap-1 pt-6;
+  }
+
+  &__subtitle {
+    @apply text-xs text-gray-500;
+  }
+
+  &__title {
+    @apply line-clamp-2 text-base font-black text-gray-900;
+  }
+
+  &__rating {
+    @apply flex items-center gap-0.5;
+  }
+
+  &__star,
+  &__star--filled {
+    @apply text-gray-200;
+  }
+
+  &__star--filled {
+    @apply fill-accent text-accent;
+  }
+
+  &__rating-count {
+    @apply ms-1 text-xs text-gray-500;
+  }
+
+  &__price {
+    @apply mt-auto flex items-center gap-2 pt-1;
+  }
+
+  &__price-now {
+    @apply text-lg font-black text-primary;
+  }
+
+  &__price-was {
+    @apply text-sm text-gray-400 line-through;
+  }
+
+  &__oos-label {
+    @apply absolute top-3 z-[1] rounded-full bg-gray-800 px-3 py-1 text-[11px] font-bold leading-none text-white rtl:right-3 ltr:left-3;
+  }
 }
 
 /* Add to cart sticky bar */
@@ -902,7 +1045,7 @@ salla-gifting {
 
   .s-rating-stars-reviews {
     margin-inline-start: 6px;
-    @apply text-xs;
+    @apply text-lg;
   }
 }
 
@@ -1087,4 +1230,31 @@ salla-gifting {
   inset-inline: 0;
   top: 0;
   z-index: 2;
+}
+
+/* Payment options under the add-to-cart button (`ProductPage`) — the trust
+   badges that used to sit next to this were dropped (the footer already
+   shows them once). With the row to itself, the icons stretch to fill it
+   on web: `flex-1` on each item grows them evenly across the full width
+   instead of clustering small at the inline-start with empty space after.
+   On mobile the row becomes a fixed 4-column grid (2 rows for the 8 icons
+   Salla ships today) instead of wrapping unevenly. */
+.product-payments {
+  .s-payments-list {
+    @apply flex w-full flex-wrap gap-3;
+  }
+
+  .s-payments-list-item {
+    @apply h-11 flex-1 basis-0;
+  }
+
+  @media (max-width: 767px) {
+    .s-payments-list {
+      @apply grid grid-cols-4;
+    }
+
+    .s-payments-list-item {
+      @apply h-9 w-full;
+    }
+  }
 }

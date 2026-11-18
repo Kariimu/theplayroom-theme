@@ -4,6 +4,10 @@ body {
   line-height: 26px;
   color: var(--main-text-color);
   position: relative;
+  // The Playroom's warm off-white page background (old theme body).
+  background-color: var(--body-bg, #fcf9f5);
+  -moz-osx-font-smoothing: grayscale;
+  font-synthesis: none;
 }
 
 // p {

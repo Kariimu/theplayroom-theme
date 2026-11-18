@@ -1,0 +1,255 @@
+[
+  {
+    "verdict": "confirmed",
+    "fingerprint": "seroval-transitive-dependency-cve-ghsa-f86p-9wx9",
+    "title": "Vulnerable seroval 1.6.9 resolved into the runtime SSR/hydration dependency chain",
+    "description": "pnpm audit reports two advisories against seroval@1.6.9: GHSA-f86p-h4j2-7qgj (code injection via a typed array's own constructor property, vulnerable >=1.6.0 <1.6.11) and GHSA-9wx9-5pv9-3349 (script injection via unescaped '<' in RegExp sources, vulnerable >=1.5.5 <1.6.10). pnpm why seroval shows exactly one deduped install (1.6.9) shared by @tanstack/router-core, which is pulled in by @tanstack/react-start (a direct runtime dependency of this theme, used for every SSR request's loader-data serialization/hydration) as well as by @tanstack/react-start-server, @tanstack/start-server-core and @tanstack/start-client-core. The devDependency path pnpm audit happens to print (via @tanstack/router-plugin) does not make this build-time-only: because only one seroval install exists in the whole tree, the same vulnerable version is the one actually loaded at request-serving time by the genuinely runtime start packages.",
+    "root_cause": "node_modules/@tanstack/router-core/package.json declares \"seroval\": \"^1.6.7\" and pnpm-lock.yaml has resolved the single deduped seroval install for the whole tree to 1.6.9, a version inside both GHSA vulnerable ranges. ^1.6.7 already permits versions up to <2.0.0, so this is a stale lockfile resolution, not a semver ceiling imposed by the dependent package.",
+    "intended_behavior": "The serialization layer used for every SSR response (loader-data dehydration embedded in the server-rendered HTML for client hydration) should not contain a known code/script-injection flaw in its typed-array or RegExp serialization paths.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "package.json",
+        "line": 22,
+        "scope": "dependencies.@tanstack/react-start",
+        "description": "@tanstack/react-start is a direct runtime dependency (not devDependency) of this theme -- TanStack Start's server-rendering/hydration-data-serialization package, invoked on every SSR request."
+      },
+      {
+        "kind": "propagation",
+        "file": "node_modules/.pnpm/@tanstack+router-core@1.171.35/node_modules/@tanstack/router-core/package.json",
+        "line": 171,
+        "scope": "dependencies.seroval",
+        "description": "@tanstack/router-core (pulled in transitively by @tanstack/react-start and the other runtime start-* packages, confirmed deduped to a single instance via pnpm why seroval) declares \"seroval\": \"^1.6.7\", a range that already permits the patched 1.6.11+ releases."
+      },
+      {
+        "kind": "sink",
+        "file": "pnpm-lock.yaml",
+        "line": 6548,
+        "scope": "packages.seroval@1.6.9",
+        "description": "The lockfile has resolved and pinned the single deduped seroval install for the entire tree to 1.6.9 -- inside both advisory vulnerable ranges -- which is the version actually loaded at runtime by router-core's serialization code during SSR."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "package.json",
+        "line": 22,
+        "description": "\"@tanstack/react-start\": \"~1.168.57\" listed under top-level dependencies, confirming it ships to production/runtime, not build-tooling only."
+      },
+      {
+        "file": "pnpm-lock.yaml",
+        "line": 6548,
+        "description": "seroval@1.6.9: {} -- the single resolved/installed version for the whole repo; independently confirmed via pnpm audit --json (advisories 1243609 and 1243611, both reporting finding version 1.6.9) and pnpm why seroval (\"Found 1 version of seroval\")."
+      },
+      {
+        "file": "node_modules/.pnpm/@tanstack+router-core@1.171.35/node_modules/@tanstack/router-core/package.json",
+        "line": 171,
+        "description": "\"seroval\": \"^1.6.7\" -- the declared range already permits patched versions (1.6.10, 1.6.11, and current latest 1.8.1), so the fix requires only a lockfile/version bump, not a package.json override."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "third_party_dependency",
+        "description": "Exploitability depends on seroval's own internal behavior, not on this theme's application code: GHSA-f86p-h4j2-7qgj requires a typed array with an attacker-influenced own constructor property to reach serialize/crossSerialize/Serializer; GHSA-9wx9-5pv9-3349 requires a RegExp built from untrusted pattern syntax containing '<' to be serialized and embedded in a <script> element. Whether this theme's own route loaders construct typed arrays or RegExps from attacker-controlled input and pass them through loader data was not found in this repo's source; that precondition belongs to the framework/application layer generally, not something independently established here."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "An attacker cannot trigger this directly against theplayroom.sa without first finding an application code path (in this theme or in the TanStack Start/Router framework itself) that serializes, via seroval, either (a) a typed array whose own constructor property has been set from attacker-controlled data, or (b) a RegExp built from an attacker-controlled pattern string containing '<'. If loader data containing such a value were dehydrated into the SSR HTML response, the injected constructor name or unescaped RegExp source would be written verbatim into the serialized JS embedded in a <script> tag, running attacker script in every visitor's browser on that page.",
+      "payloads": [
+        "A typed array (e.g. Uint8Array) with an own enumerable constructor property reassigned to a malicious value, serialized by serialize/crossSerialize/Serializer/compileJSON (GHSA-f86p-h4j2-7qgj).",
+        "A RegExp constructed from untrusted pattern text containing '<', serialized and embedded inside an HTML <script> element during SSR (GHSA-9wx9-5pv9-3349)."
+      ],
+      "instructions": [
+        "Run `pnpm audit --json` at the repo root and confirm advisories 1243609 (GHSA-f86p-h4j2-7qgj) and 1243611 (GHSA-9wx9-5pv9-3349) are present with module_name seroval, version 1.6.9.",
+        "Run `pnpm why seroval` and confirm a single resolved version (1.6.9) shared by @tanstack/router-core and, through it, by @tanstack/react-start and the other start-* runtime packages.",
+        "After remediation, re-run `pnpm audit --json` and confirm seroval no longer appears in the advisories list, and `pnpm why seroval` reports a version >= 1.6.11."
+      ],
+      "observed_result": "Installed/resolved version seroval@1.6.9 (pnpm-lock.yaml:6548), confirmed by pnpm audit --json (both advisories report finding version 1.6.9) and pnpm why seroval (exactly one deduped install). 1.6.9 falls inside both vulnerable ranges. @tanstack/router-core (package.json:171) declares seroval \"^1.6.7\", which already permits patched releases (latest published is 1.8.1)."
+    },
+    "remediation": {
+      "strategy": "Lockfile-resolution fix, not a package.json range change: @tanstack/router-core's own declared range (^1.6.7) already permits the patched seroval releases (>=1.6.11), so no pnpm.overrides/package.json pinning is required. Run `pnpm update seroval` to let pnpm re-resolve the single deduped seroval install to a version >= 1.6.11, commit the updated pnpm-lock.yaml, then re-run pnpm build/typecheck/test and pnpm audit to confirm the advisories are gone.",
+      "code_changes": [
+        {
+          "file_name": "pnpm-lock.yaml",
+          "fixed_code": "(generated by `pnpm update seroval` -- bumps the single deduped seroval entry from 1.6.9 to >=1.6.11 within the existing ^1.6.7 range already declared by @tanstack/router-core; no package.json edit needed)"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Both advisories require a narrow precondition (an attacker able to inject an own constructor property onto a serialized typed array, or an attacker-controlled RegExp pattern containing '<' reaching serialization) that was not found to exist in this theme's own route/loader code; the precondition lives in the shared framework dependency, not demonstrated application-reachable input in this repo."
+      },
+      "impact": {
+        "score": "medium",
+        "reason": "If the precondition is met, the result is script injection into the server-rendered HTML sent to every visitor of the affected page, since seroval's serialization runs on SSR responses for hydration across this TanStack Start app -- consistent with the advisories' own moderate CVSS ratings."
+      },
+      "overall_severity": "medium"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "The installed version, its membership in both vulnerable ranges, runtime (not build-only) reachability via @tanstack/react-start's dependency tree, and the fact that the dependent's declared semver range already permits a patched version were independently reproduced from this repo's own pnpm audit --json output, pnpm why seroval, pnpm-lock.yaml, and the installed router-core package.json by a fresh verifier agent, not inferred from the original candidate alone."
+    }
+  },
+  {
+    "verdict": "confirmed",
+    "fingerprint": "public-headers-missing-baseline-security-headers",
+    "title": "Theme's public/_headers sets Cache-Control only; no baseline security response headers declared for any path",
+    "description": "public/_headers is the only file in this repository through which the theme itself can declare static response headers (Cloudflare-Pages-style _headers syntax). Its entire content is a single rule scoping Cache-Control to /assets/*. No rule exists for X-Content-Type-Options, X-Frame-Options / Content-Security-Policy frame-ancestors, Referrer-Policy, Permissions-Policy, or Strict-Transport-Security, for /assets/* or any other path including /* (the whole site). A repo-wide search of every theme-owned server-rendering entry point (app/server.ts, app/start.ts, vite.config.ts, app/routes/__root.tsx, and every file under app/routes) found no middleware, route-level headers() export, or response.setHeader call that sets any of these headers either.",
+    "root_cause": "The theme ships only a cache-control rule in public/_headers and never adds a catch-all (/*) security-header rule, and no custom TanStack Start middleware or root-route headers() export was added to compensate. The gap is an omission: nothing actively removes or overrides headers, it simply never declares the recommended baseline ones.",
+    "intended_behavior": "A production storefront should serve, for every response the theme's own layer influences, baseline hardening headers (X-Content-Type-Options: nosniff, a frame-ancestors/X-Frame-Options restriction, Referrer-Policy, Permissions-Policy, and Strict-Transport-Security over HTTPS) regardless of what the hosting edge separately does, since defense-in-depth at the theme layer costs nothing and is the only layer this repository's own source can attest to.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "public/_headers",
+        "line": 1,
+        "scope": "theme-owned static headers file",
+        "description": "The only rule declared is scoped to /assets/* (Cache-Control); no catch-all (/*) rule exists for any security header."
+      },
+      {
+        "kind": "propagation",
+        "file": "app/server.ts",
+        "line": 4,
+        "scope": "SSR server entry",
+        "description": "export default withThemeSentry(handler, 'raed') -- the entire file is 4 lines wrapping the TanStack Start server-entry handler with Sentry; no header-setting logic of any kind."
+      },
+      {
+        "kind": "sink",
+        "file": "app/routes/__root.tsx",
+        "line": 1,
+        "scope": "root route head()/document shell",
+        "description": "Grep for 'headers()', 'X-Frame-Options', 'Content-Security-Policy', 'Strict-Transport-Security', 'Referrer-Policy', 'Permissions-Policy', 'X-Content-Type-Options' across app/routes and vite.config.ts returned no matches; every HTTP response this theme's own layer influences is sent without any of these five headers unless added by a layer outside this repository."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "public/_headers",
+        "line": 1,
+        "description": "/assets/*\\n  Cache-Control: public, max-age=31556952, immutable -- the file's entire content."
+      },
+      {
+        "file": "app/server.ts",
+        "line": 1,
+        "description": "import { withThemeSentry } from '@salla.sa/twilight-theme-engine/sentry/server'; import handler from '@tanstack/react-start/server-entry'; export default withThemeSentry(handler, 'raed'); -- no header-setting code."
+      }
+    ],
+    "conditions": [
+      {
+        "kind": "system_configuration",
+        "description": "Applies to the theme's own build/source layer only; whether theplayroom.sa's actual served responses are additionally protected depends on Salla's production hosting edge configuration, which is outside this repository and not something its source can confirm or deny (platform-level settings are an owner review item per this project's AGENTS.md)."
+      }
+    ],
+    "execution": {
+      "attacker_perspective": "The risk is the absence of theme-layer defense-in-depth against clickjacking (framing the storefront in a malicious iframe to overlay fake UI/phishing), MIME-sniffing-based content-type confusion, referrer leakage of URLs to third-party resources, and (if HSTS is absent end-to-end) downgrade/SSL-stripping on first visit. All are mitigated by the headers listed, none of which this repo's source adds.",
+      "payloads": ["N/A -- this is a configuration/omission gap, not an injectable payload"],
+      "instructions": [
+        "Once a public or staging URL for this theme build exists, run `curl -I https://<staging-or-prod-url>/` and inspect the response headers for X-Frame-Options / Content-Security-Policy, X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Strict-Transport-Security.",
+        "Separately run `curl -I https://<url>/assets/<some-asset>` to confirm only Cache-Control is present there, matching this repo's _headers file.",
+        "If any of the five headers already appear on the live response despite this repo's _headers not declaring them, Salla's hosting edge is adding them independently of this repository, which lowers real-world impact accordingly without changing whether this repo's own layer should still add them."
+      ],
+      "observed_result": "public/_headers and the build output dist/client/_headers both contain only the Cache-Control rule for /assets/*. Grep across app/server.ts, app/start.ts, vite.config.ts, app/routes/__root.tsx, and all files under app/routes found zero occurrences of any of the five target header names or of a TanStack Start route-level headers() export."
+    },
+    "remediation": {
+      "strategy": "Add a catch-all security-header rule to the theme-owned public/_headers file so every response this theme's static-hosting layer serves carries the standard baseline headers, independent of whatever Salla's platform edge may or may not already set. This is a no-cost, strictly beneficial change: it cannot be redundant-harmful, and it closes the repo's own-layer gap regardless of the unresolved platform-edge fact. The existing /assets/* Cache-Control rule is unrelated and stays as-is.",
+      "code_changes": [
+        {
+          "file_name": "public/_headers",
+          "fixed_code": "/*\n  X-Content-Type-Options: nosniff\n  Referrer-Policy: strict-origin-when-cross-origin\n  Permissions-Policy: camera=(), microphone=(), geolocation=()\n  Strict-Transport-Security: max-age=63072000; includeSubDomains; preload\n\n/assets/*\n  Cache-Control: public, max-age=31556952, immutable\n"
+        }
+      ]
+    },
+    "severity": {
+      "likelihood": {
+        "score": "low",
+        "reason": "Exploiting the absence of these headers requires a separate attack vector (e.g. an attacker-controlled page framing theplayroom.sa, or a MIME-confusion payload) layered on top of the missing header, not a direct exploit of the gap itself, and the platform edge may already supply some or all of these headers independent of this repo."
+      },
+      "impact": {
+        "score": "low",
+        "reason": "If genuinely unprotected end-to-end, the realistic impact is clickjacking/UI-redress and minor referrer information leakage against a single-merchant storefront with no admin/auth surface exposed here -- not data exfiltration or RCE. Severity is calibrated to what is demonstrated (this repo's own layer contributes nothing), not to an unverified worst case."
+      },
+      "overall_severity": "low"
+    },
+    "confidence": {
+      "score": "high",
+      "reason": "The file content, the identical post-build output, and the absence of any header-setting code across every theme-owned server/route/config file were all verified directly from source by a fresh, independent verifier agent, not inferred from the original candidate alone. The only residual uncertainty (platform-edge behavior) is explicitly out of scope for a source-only confirmation and does not affect confidence in the repo-layer finding itself."
+    }
+  },
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "public-headers-frame-ancestors-editor-origin-unverified",
+    "title": "public/_headers has no frame-ancestors/X-Frame-Options, and the correct value isn't source-visible",
+    "description": "Of the five baseline headers identified in finding public-headers-missing-baseline-security-headers, four were added to public/_headers directly. X-Frame-Options/Content-Security-Policy: frame-ancestors was deliberately left out of that fix rather than applied as a blanket DENY/SAMEORIGIN.",
+    "claimed_root_cause": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts confirms the engine ships its own live-editor iframe component, and this theme's own twilight.preview.json exists for exactly that embedded dashboard preview workflow. A blanket frame-deny header would plausibly break the merchant's own live-editor preview, which needs to frame the storefront from the Salla dashboard's origin. The correct fix is a frame-ancestors <editor-origin> allowlist naming that specific origin, not a bare deny -- and the editor's real origin is not observable from this repository's source.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "public/_headers",
+        "line": 1,
+        "scope": "theme-owned static headers file",
+        "description": "The /* catch-all rule added by the companion fix carries no frame-ancestors/X-Frame-Options directive."
+      },
+      {
+        "kind": "sink",
+        "file": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts",
+        "line": 1,
+        "scope": "engine live-editor iframe component",
+        "description": "Confirms the engine embeds the storefront in an iframe for its own live-editor preview workflow, the reason a blanket frame-deny header was not applied."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "public/_headers",
+        "line": 1,
+        "description": "/* rule contains X-Content-Type-Options, Referrer-Policy, Permissions-Policy, and Strict-Transport-Security, but no frame-ancestors/X-Frame-Options."
+      },
+      {
+        "file": "node_modules/@salla.sa/twilight-theme-engine/dist/components/live-editor/frame.d.ts",
+        "line": 1,
+        "description": "Type declaration file for the engine's own live-editor iframe component, confirming the storefront is embedded cross-origin by Salla's own dashboard tooling."
+      }
+    ],
+    "blockers": [
+      "The Salla live-editor's actual iframe origin is a platform detail not present in this repository's source, so the correct frame-ancestors allowlist value cannot be determined from here."
+    ],
+    "validation_plan": {
+      "local": "Not resolvable locally -- the live-editor's origin is a Salla platform detail, not present in this repository.",
+      "deployment": "Once the Stage 14 staging URL exists, open the Salla dashboard's live editor against it and record the origin the preview iframe actually loads from (browser network panel or the iframe's src). Add Content-Security-Policy: frame-ancestors 'self' <that-origin> (or the equivalent X-Frame-Options value) to public/_headers's /* rule. If the editor uses postMessage-based embedding rather than a same-tab iframe, or Salla's edge already sets a working frame-ancestors independently, this may resolve rejected instead."
+    }
+  },
+  {
+    "verdict": "needs_validation",
+    "fingerprint": "resolvelink-engine-picker-scheme-constraint-unverified",
+    "title": "resolveLink.ts passes the engine-resolved CTA target string into an href with no scheme check of its own",
+    "description": "app/lib/resolveLink.ts returns a home-block CTA link-target string unchanged (trimmed, with '#' and empty treated as absent) for direct use as an href across several home blocks. The string originates from the Salla dashboard's own link-target picker field, resolved server-side by the engine before this theme's code ever sees it. Whether that dashboard picker UI constrains the merchant to http(s)/relative targets, or would accept and resolve freehand text containing a javascript: scheme, is not visible from this repository's source.",
+    "claimed_root_cause": "If the engine's dashboard link-picker allows a merchant to enter or resolve to a javascript:-scheme (or other executable-scheme) string, and resolveLink.ts performs no scheme allowlist of its own before that string is used as an href, a merchant (or anyone with dashboard access) could set a self-XSS-capable link. Per this audit's trust calibration, a merchant acting against their own storefront is self-impact, not a crossed boundary -- but the decisive fact (does the picker actually constrain schemes) is not source-visible, so this cannot be confirmed or rejected from this repository alone.",
+    "trace": [
+      {
+        "kind": "entrypoint",
+        "file": "app/lib/resolveLink.ts",
+        "line": 7,
+        "scope": "resolveLink(value)",
+        "description": "Accepts the engine-resolved CTA target string and returns it trimmed, with only '#' and empty excluded -- no scheme or protocol check of any kind."
+      },
+      {
+        "kind": "sink",
+        "file": "app/lib/resolveLink.ts",
+        "line": 10,
+        "scope": "return trimmed && trimmed !== '#' ? trimmed : undefined;",
+        "description": "The unmodified string is returned for direct use as an href by the calling home-block component."
+      }
+    ],
+    "evidence": [
+      {
+        "file": "app/lib/resolveLink.ts",
+        "line": 7,
+        "description": "export function resolveLink(value: unknown): string | undefined { if (typeof value !== 'string') return undefined; const trimmed = value.trim(); return trimmed && trimmed !== '#' ? trimmed : undefined; }"
+      }
+    ],
+    "blockers": [
+      "The Salla dashboard's link-target picker UI and its server-side resolution logic are not present in this repository's source, so whether the resolved string is constrained to safe schemes (http/https/relative paths) cannot be established from here."
+    ],
+    "validation_plan": {
+      "local": "Not resolvable locally: the picker UI and its resolution logic live in the Salla dashboard/engine backend, not in this repository.",
+      "deployment": "On the Stage 14 staging store, have the owner attempt to set a home-block CTA link-target field to a javascript: URI (or confirm the picker UI only offers page/product/category selection plus a URL field that itself validates http(s)) and observe whether the dashboard accepts and resolves it. If the picker only accepts http(s)/relative targets by construction, this is rejected with no code change needed; if it accepts freehand javascript: text, add a scheme allowlist to resolveLink.ts (reject any scheme other than http:, https:, or a relative path) as the smallest fix."
+    }
+  }
+]

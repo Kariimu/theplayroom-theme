@@ -5,7 +5,6 @@ import {
   useRef,
   useState,
   type CSSProperties,
-  type MouseEvent,
 } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
@@ -52,8 +51,6 @@ function menuKey(items: MenuItem[]): string {
   return `${items.length}-${(hash >>> 0).toString(36)}`;
 }
 
-/** The "More" link only opens its dropdown (on hover / focus); it goes nowhere. */
-const preventJump = (event: MouseEvent<HTMLAnchorElement>) => event.preventDefault();
 
 /**
  * The default layout's main menu (`lg+`).
@@ -234,12 +231,15 @@ function MenuEntry({ item, root }: { item: MenuItem; root: boolean }) {
       {...(hasChildren ? { onMouseEnter: onOpen, onFocus: onOpen } : {})}
     >
       {isMore ? (
-        <a href="#" role="button" aria-haspopup="true" onClick={preventJump}>
+        // Opens its dropdown (on hover / focus) and goes nowhere, so a button, not a
+        // placeholder `href="#"` link.
+        <button type="button" aria-haspopup="true">
           <span>{item.title}</span>
-        </a>
+        </button>
       ) : (
         <Link
           to={item.url}
+          {...(hasChildren ? { 'aria-haspopup': 'true' } : {})}
           {...(item.target && item.target !== '_self'
             ? { target: item.target, rel: 'noopener noreferrer' }
             : {})}

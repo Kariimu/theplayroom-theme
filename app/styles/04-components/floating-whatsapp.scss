@@ -1,0 +1,66 @@
+/* Floating WhatsApp button (old theme `.wa-float-btn`). GPU-composited pulse.
+   Pinned bottom-start-left in both directions to match the live site — an
+   intentional fixed affordance, deliberately not mirrored with text direction. */
+.wa-float-btn {
+  position: fixed;
+  bottom: calc(24px + env(safe-area-inset-bottom, 0px));
+  left: 20px;
+  z-index: 9999;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background-color: #25d366;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 16px rgba(37, 211, 102, 0.45);
+  transition: transform 0.2s ease;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.wa-float-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background-color: #25d366;
+  z-index: -1;
+  animation: whatsapp-pulse 2s cubic-bezier(0.24, 0, 0.38, 1) infinite;
+  pointer-events: none;
+  will-change: transform, opacity;
+}
+
+.wa-float-btn:hover,
+.wa-float-btn:active {
+  transform: scale(1.12);
+}
+
+@media (max-width: 768px) {
+  .wa-float-btn {
+    width: 52px;
+    height: 52px;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    left: 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wa-float-btn::before {
+    animation: none;
+  }
+}
+
+@keyframes whatsapp-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.6;
+  }
+  70% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.35);
+    opacity: 0;
+  }
+}

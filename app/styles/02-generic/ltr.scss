@@ -2,6 +2,15 @@
   direction: ltr;
 }
 
+/* The Playroom ships an Arabic-first display font (the engine's `--font-main`).
+   On English (LTR) pages it has poor Latin coverage, so fall back to the system
+   sans stack, as the old theme did. Arabic (RTL) keeps `--font-main`. */
+[dir="ltr"],
+[dir="ltr"] * {
+  font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji",
+    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji" !important;
+}
+
 [dir="ltr"] {
   .with-arrow .sicon-keyboard_arrow_left:before,
   nav .sicon-keyboard_arrow_left:before,

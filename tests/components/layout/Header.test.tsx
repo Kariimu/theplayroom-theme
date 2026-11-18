@@ -73,8 +73,15 @@ vi.mock('@salla.sa/twilight-components-react/user-menu', () => ({
   SallaUserMenu: () => <salla-user-menu />,
 }));
 vi.mock('@salla.sa/twilight-components-react/cart-summary', () => ({
+  // The real component's light DOM: a host custom element wrapping an <a>
+  // straight to /cart (`salla-cart-summary.js`) — matched so the click
+  // interception test exercises the same bubble-up-through-an-anchor path.
   SallaCartSummary: ({ children }: { children?: React.ReactNode }) => (
-    <salla-cart-summary>{children}</salla-cart-summary>
+    <salla-cart-summary>
+      <a href="/cart" className="s-cart-summary-wrapper">
+        {children}
+      </a>
+    </salla-cart-summary>
   ),
 }));
 
@@ -204,30 +211,33 @@ describe('Header', () => {
     expect(container.querySelector('.site-header__intro-text')).toBeNull();
   });
 
-  it('uses <h1> for the intro title on the homepage', () => {
+  it('uses <p>, not <h1>, for the intro title on the homepage', () => {
+    // The homepage's one real <h1> is the page's own now (`app/routes/index.tsx`,
+    // SEO audit #2) — the header never doubles it, on home or anywhere else.
     state.routeIds = [HOME_ROUTE_ID];
     const { container } = render(<Header />);
-    expect(container.querySelector('h1.site-header__intro-title')?.textContent).toBe('Acme');
+    expect(container.querySelector('h1.site-header__intro-title')).toBeNull();
+    expect(container.querySelector('p.site-header__intro-title')?.textContent).toBe('Acme');
   });
 
-  it('server-renders one <h1> on the homepage: the intro title when the row shows', () => {
+  it('never server-renders an <h1> on the homepage: the intro title when the row shows', () => {
     state.routeIds = [HOME_ROUTE_ID];
     const html = renderToString(<Header />);
 
-    expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html).toMatch(/<h1 class="site-header__intro-title">Acme<\/h1>/);
+    expect(html).not.toMatch(/<h1\b/);
+    expect(html).toMatch(/<p class="site-header__intro-title">Acme<\/p>/);
   });
 
-  it('server-renders one <h1> on the homepage: the store name in the logo link when the intro row is off', () => {
+  it('never server-renders an <h1> on the homepage: the store name in the logo link when the intro row is off', () => {
     state.theme = { settings: {} };
     state.routeIds = [HOME_ROUTE_ID];
     const html = renderToString(<Header />);
 
-    expect(html.match(/<h1\b/g)).toHaveLength(1);
-    expect(html).toMatch(/site-header__brand[^]*<h1 class="sr-only">Acme<\/h1>/);
+    expect(html).not.toMatch(/<h1\b/);
+    expect(html).toMatch(/site-header__brand[^]*<span class="sr-only">Acme<\/span>/);
   });
 
-  it('leaves the <h1> to the page everywhere but the homepage', () => {
+  it('leaves the <h1> to the page everywhere, home included', () => {
     state.theme = { settings: { header_show_store_info: true, header_store_info_home_only: false } };
     state.routeIds = ['/{-$locale}/cart'];
     state.isHome = false;
@@ -286,6 +296,31 @@ describe('Header', () => {
     const { getByLabelText } = render(<Header />);
     fireEvent.click(getByLabelText('Search'));
     expect(dispatch).toHaveBeenCalledWith('search::open');
+  });
+
+  describe('cart icon', () => {
+    it('opens the cart drawer instead of following the link, on a plain click', () => {
+      const dispatch = vi.fn();
+      (window as unknown as { salla: unknown }).salla = { event: { dispatch } };
+      const { container } = render(<Header />);
+      const link = container.querySelector('.s-cart-summary-wrapper') as HTMLAnchorElement;
+
+      const event = fireEvent.click(link, { button: 0 });
+      expect(dispatch).toHaveBeenCalledWith('theme::cart-drawer.open');
+      // jsdom's fireEvent returns false when preventDefault() was called.
+      expect(event).toBe(false);
+    });
+
+    it('lets a modified click (new tab / middle click) through untouched', () => {
+      const dispatch = vi.fn();
+      (window as unknown as { salla: unknown }).salla = { event: { dispatch } };
+      const { container } = render(<Header />);
+      const link = container.querySelector('.s-cart-summary-wrapper') as HTMLAnchorElement;
+
+      const event = fireEvent.click(link, { button: 0, ctrlKey: true });
+      expect(dispatch).not.toHaveBeenCalledWith('theme::cart-drawer.open');
+      expect(event).toBe(true);
+    });
   });
 
   it('pins the bar on scroll by default (header_is_sticky unset)', () => {

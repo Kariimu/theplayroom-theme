@@ -97,6 +97,32 @@ If a Tier 1 row fails, drop that row one tier down; do not fall back to a root c
 3. Owner (or a bulk import, if Salla's product import covers specs and tags) enters the data on the products and categories **while the Twig theme is still live**. The old theme ignores it, so there is no downtime and no big-bang switch.
 4. Old settings are left untouched until cut-over, for rollback.
 
+**Phase 0b extraction result (owner-verified on the live site, 11 Nov 2026 — `scripts/extract-legacy-data.mjs`, data in `docs/legacy/data/`):**
+- **Catalogue is 14 products, not 43.** Of the 43 sitemap products, only 14 render a product page; the other 29 (including the flagship climbing products) 302-redirect to the storefront home. Rows for those are marked `redirected` in `products.csv`. Treat the 14 as the live catalogue.
+- **FAQ is store-wide, not per-product.** All 14 render the same 16 questions, so row 67 (per-product FAQ → specs) has no data; there is one shared list. **D2 resolved (12 Nov 2026): keep it dashboard-editable**, not hard-coded in `locales` — the merchant edits it through the `common-questions-section` block (and/or product specs), so editing the FAQ is a dashboard change, not a theme commit. The 16 Qs are **Arabic only** — EN product pages do not render the FAQ, so the English copy must be written for the migration, not extracted. Captured in `store-wide.json`; `faq.csv` is header-only by design.
+- **Facts (row 65):** only 3 of the 14 carry for_who / material / inner_box (بيت الألعاب, صندوق التخزين, مجموعة المغامرة). All 14 already have Salla spec groups.
+- **No product is WhatsApp-only today** (`categories_whatsapp`, row 73, is effectively unused on the catalogue).
+- **Not observed on the 14** (all zero in the sheet): dimensions image, feature badges, image cards, suggested games — the products that would carry these are mostly among the 29 that redirect. Re-check if any of those 29 are later unhidden.
+- **Category banners (row 76): none configured today.** Across all 58 live categories (52 reachable at their sitemap slug + 6 whose slug was renamed — see below), **0** emit the `<picture>` banner markup (`categories_banners` is unused on the live store). The extractor's selector matches the old theme's `pages/product/index.twig` (`section.container picture`) exactly — the empty column is absence of data, not a bad selector — so row 76 has nothing to migrate unless the owner adds category banners.
+- **Category sitemap slugs are partly stale.** 6 of the 59 sitemap categories 301 to a new slug but keep the same `c<id>` and still render (now captured as `fetched: renamed`, with the live URL in the `final_url` column): gallery `c1241225104` → معرض-الأعمال, `c2118208525` → جميع-المنتجات, and three age filters (`c48709728`, `c2021109091`, `c1247595628`) plus a seasonal sale (`c333670039`) that now points at تخفيضات-اليوم-الوطني. Only **1** category is truly gone (`c1489698407`, old National-Day sale → home; `fetched: redirected`). So the real category count is **58 live / 1 gone**, not 52.
+
+## 5B. Phase 0 findings (12 Nov 2026 — full report in `docs/PHASE-0-FINDINGS.md`)
+
+Measured against the live Store API and the engine 1.0.173 types. The four 5A verification items are **resolved**; tiers below are final.
+
+- **Specs readable as data: YES, but client-side only.** Spec sections/fields come back as `{ sections: [{ name, fields: [{ name, type, value }] }] }` (`type` seen: `text`, `file`). *Repo-verified in Stage 1:* the engine exposes **no** server-side metadata query or loader helper — specs render through the client `SallaMetadata` component, the product only carries `has_metadata: boolean`, and the SDK (`window.salla`) is client-only. **Consequence:** per-product facts live in specs (structured data), but any SEO/GEO-critical text (facts, FAQ) must **also** be in the product **description**, which is server-rendered and in View Source (Stages 9–10). Section names are free text → fix them in one place (`app/lib/specs.ts`, Stage 5) and the owner standardises them in data entry (Stage 7).
+- **Tags on list responses & list-by-tag: YES.** Tag shape `{ name, url }`, **no id** → match by `name`. *Repo-verified:* `'tags'` ∈ `ProductsListSource` and `product.list({ source, sourceValue })` takes `sourceValue: number | number[]`, so listing a product's companions needs the **numeric** tag id from the tag URL (`app/lib/tags.ts` → `tagIdFromUrl`). `categories_whatsapp` stays **out** of the manifest — tags cover it.
+- **Category `description` / `image` / `sub_categories`: available.** *Repo-verified:* the engine `Category` type carries all three and `CategoryPageProps.category: Category`; whether this store's values are filled is Stage 7 data entry. Category hero + sub-category cards stay Tier 1.
+- **Menus: footer YES, header PARTLY.** `getMenus('footer')` → one link column (Tier 1; two titled columns aren't expressible). `getMenus('header')` → the full category list, so the side menu (Tier 1) needs a display rule and the owner tidies the dashboard menu.
+
+**Final tier per 5A row** (from `docs/PHASE-0-FINDINGS.md`): facts → 1 (specs, 3 products today); dimensions image → 1 (description, none today); FAQ → per D2 = the `common-questions-section` block (one store-wide list of 16, Arabic only); feature badges/cards → **deferred** (none exist today, build the library only when needed); suggested games → 2 (`set:` tag, listed by numeric tag id); universal features → 3 (locales + `public/`); WhatsApp-only → 2 (tag `whatsapp`, no fallback setting); cart upsell → 2 (tag `cart-upsell`); sub-categories + category hero → 1 (category data); gallery → per D3; side menu → 1 (header menu + display rule); footer links → 1 (footer menu, one column); payment/trust badges → 1 (native components, confirm render in Stage 2); search suggestions → 3 (locales); `footer_logo`/`footer_description`/`show_whatsapp`/`whatsapp_number` → 4 (settings).
+
+**Stage 1 manifest outcomes (12 Nov 2026, branch `stage-1-manifest`):**
+- The 6 shared home blocks already carry the **legacy UUID `key`s** in the React Raed starter (verified), and none is missing a legacy field — only `enhanced-slider` *adds* `in_container`/`auto_play`. No re-keying was needed.
+- The 12 custom blocks were ported verbatim from `docs/legacy/old-twilight.json` (keys, paths, field ids incl. the `fatures` typo, Arabic labels, icons). The stricter React `check:manifest` required two value-only fixes that touch no ids: boolean switch defaults `0 → false` (4), and collection `maxLength` string → number (7).
+- Keep-settings added: `show_whatsapp`, `whatsapp_number`, `footer_logo`, `footer_description` (Tier 4, from old labels). No root collections, no root product pickers.
+- `twilight.preview.json` is the dev-server home preview layout (`enabled`/`settings`/`layout[]`); kept. It currently holds the starter's default arrangement, not the live Playroom home — the real arrangement is rebuilt in the dev panel in Stage 3 and screenshotted for carry-over in Stage 7.
+
 ## 6. Feature mapping (store-specific work, see 06 for current behaviour)
 | # | Feature | Target implementation | Notes |
 |---|---|---|---|
@@ -111,7 +137,7 @@ If a Tier 1 row fails, drop that row one tier down; do not fall back to a root c
 | 9 | Custom reviews UI | Use engine reviews data/components | Do not port the hidden `<salla-comments>` scraping (09 #11) |
 | 10 | Cart page layout, free-shipping bar, upsell slider | Fork `CartPage`; upsell = products tagged `cart-upsell` (5A) | |
 | 11 | Add-to-cart toast | Starter's `AddProductToast` | Restyle only |
-| 12 | Side cart drawer | Not live today (09 #4). Owner decides: skip or build fresh | Do not port the dead code |
+| 12 | Side cart drawer | Not live today (09 #4). **D4 resolved 14 Nov 2026: build fresh** — `CartDrawer`, Stage 6 | Did not port the dead `cart-drawer.js`/`.scss` |
 | 13 | 3D model viewer, digital files | Starter has `DigitalFilesSettings`; check engine gallery for 3D support before adding `model-viewer` | Pin any external script |
 | 14 | Design tokens, colours, custom fonts (`dongol`), body background | Port `:root` tokens from `master.twig` and `05-utilities/styles.scss` into `app/styles` | |
 | 15 | Translations (49 keys) | Merge `src/locales/*` into `locales/*`; fix the 4 mismatched keys (09 #8); replace hard-coded ar/en ternaries with keys | |

@@ -3,161 +3,47 @@
   "id": "1766413304",
   "ar_url": "https://theplayroom.sa/ar/سلم-سويدي/p1766413304",
   "en_url": "https://theplayroom.sa/en/Wooden-Swedish-climbing-ladder/p1766413304",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1123263757",
   "ar_url": "https://theplayroom.sa/ar/مثلث-بيكلر/p1123263757",
   "en_url": "https://theplayroom.sa/en/pickle--Triangle/p1123263757",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "352895048",
   "ar_url": "https://theplayroom.sa/ar/لوح-التوازن/p352895048",
   "en_url": "https://theplayroom.sa/en/Rocker/p352895048",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1717161098",
   "ar_url": "https://theplayroom.sa/ar/مرتبة-الهزاز-لوح-التوازن/p1717161098",
   "en_url": "https://theplayroom.sa/en/Rocker's-Mattress/p1717161098",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1091153064",
   "ar_url": "https://theplayroom.sa/ar/خيمة/p1091153064",
   "en_url": "https://theplayroom.sa/en/Tent-(pikler-Accessorie)/p1091153064",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1385822926",
   "ar_url": "https://theplayroom.sa/ar/خدمة-التركيب/p1385822926",
   "en_url": "https://theplayroom.sa/en/Installation-Service/p1385822926",
+  "redirected": false,
   "ar": {
    "name": "خدمة التركيب",
    "for_who": [],
@@ -296,347 +182,95 @@
   "id": "307838547",
   "ar_url": "https://theplayroom.sa/ar/بيت-التسلق/p307838547",
   "en_url": "https://theplayroom.sa/en/Gungle-GYM/p307838547",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "2041594111",
   "ar_url": "https://theplayroom.sa/ar/بيت-الطاحونة/p2041594111",
   "en_url": "https://theplayroom.sa/en/Mill-House/p2041594111",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "651980275",
   "ar_url": "https://theplayroom.sa/ar/المرسم-المتنقل-إكسسوار-فقط/p651980275",
   "en_url": "https://theplayroom.sa/en/Drawing-Studio-Is-An-Accessory-Only-/p651980275",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "2018480837",
   "ar_url": "https://theplayroom.sa/ar/سلم-التسلق-إكسسوار-فقط/p2018480837",
   "en_url": "https://theplayroom.sa/en/Ladder-Climbing-Accessory-Only/p2018480837",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "639096459",
   "ar_url": "https://theplayroom.sa/ar/{Brand}/p639096459",
   "en_url": "https://theplayroom.sa/en/Climbing-Wall/p639096459",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1138619753",
   "ar_url": "https://theplayroom.sa/ar/شبك-التسلق/p1138619753",
   "en_url": "https://theplayroom.sa/en/Climbing-Net/p1138619753",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "865446816",
   "ar_url": "https://theplayroom.sa/ar/طاولة-اللعب-الحسي/p865446816",
   "en_url": "https://theplayroom.sa/en/Sensory-Play-Table/p865446816",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "650869007",
   "ar_url": "https://theplayroom.sa/ar/المجموعة-الجدارية/p650869007",
   "en_url": "https://theplayroom.sa/en/Description-of-the-climbing-set/p650869007",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1130405142",
   "ar_url": "https://theplayroom.sa/ar/مرجيحة-الزرافة/p1130405142",
   "en_url": "https://theplayroom.sa/en/giraffe-pod-swing-seat/p1130405142",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1550010155",
   "ar_url": "https://theplayroom.sa/ar/مرجيحة-اليونيكورن/p1550010155",
   "en_url": "https://theplayroom.sa/en/unicorn-pod-swing-seat/p1550010155",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "987601404",
   "ar_url": "https://theplayroom.sa/ar/مرجيحة-الاطفال/p987601404",
   "en_url": "https://theplayroom.sa/en/baby-pod-swing-seat/p987601404",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "334846772",
   "ar_url": "https://theplayroom.sa/ar/حلقات-خشبية/p334846772",
   "en_url": "https://theplayroom.sa/en/حلقات-خشبية/p334846772",
+  "redirected": false,
   "ar": {
    "name": "حلقات خشبية",
    "for_who": [],
@@ -775,6 +409,7 @@
   "id": "1230899322",
   "ar_url": "https://theplayroom.sa/ar/ارضيات-بلاط-خارجي/p1230899322",
   "en_url": "https://theplayroom.sa/en/ارضيات-بلاط-خارجي/p1230899322",
+  "redirected": false,
   "ar": {
    "name": "ارضيات بلاط خارجي",
    "for_who": [],
@@ -913,6 +548,7 @@
   "id": "439970423",
   "ar_url": "https://theplayroom.sa/ar/ملصقات-معدنية-للجوال/p439970423",
   "en_url": "https://theplayroom.sa/en/ملصقات-معدنية-للجوال/p439970423",
+  "redirected": false,
   "ar": {
    "name": "ملصقات معدنية للجوال",
    "for_who": [],
@@ -1051,6 +687,7 @@
   "id": "129353473",
   "ar_url": "https://theplayroom.sa/ar/كوب-غرفة-الألعاب/p129353473",
   "en_url": "https://theplayroom.sa/en/كوب-غرفة-الألعاب/p129353473",
+  "redirected": false,
   "ar": {
    "name": "كوب غرفة الألعاب",
    "for_who": [],
@@ -1189,37 +826,15 @@
   "id": "1539029891",
   "ar_url": "https://theplayroom.sa/ar/سلم-سويدي-للكبار/p1539029891",
   "en_url": "https://theplayroom.sa/en/swedish-ladder/p1539029891",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "754836750",
   "ar_url": "https://theplayroom.sa/ar/رول-البيت-المغناطيسي/p754836750",
   "en_url": "https://theplayroom.sa/en/house-magnatic-board/p754836750",
+  "redirected": false,
   "ar": {
    "name": "رول البيت المغناطيسي",
    "for_who": [],
@@ -1358,6 +973,7 @@
   "id": "1900499967",
   "ar_url": "https://theplayroom.sa/ar/رول-القوس-المغناطيسي/p1900499967",
   "en_url": "https://theplayroom.sa/en/arch-magnatic-baord/p1900499967",
+  "redirected": false,
   "ar": {
    "name": "رول القوس المغناطيسي",
    "for_who": [],
@@ -1496,6 +1112,7 @@
   "id": "431530834",
   "ar_url": "https://theplayroom.sa/ar/إستاند-للمراجيح/p431530834",
   "en_url": "https://theplayroom.sa/en/إستاند-للمراجيح/p431530834",
+  "redirected": false,
   "ar": {
    "name": "إستاند للمراجيح",
    "for_who": [],
@@ -1634,6 +1251,7 @@
   "id": "1880665425",
   "ar_url": "https://theplayroom.sa/ar/حوض-الكور/p1880665425",
   "en_url": "https://theplayroom.sa/en/ball-pit/p1880665425",
+  "redirected": false,
   "ar": {
    "name": "حوض الكور",
    "for_who": [],
@@ -1772,130 +1390,39 @@
   "id": "1623556455",
   "ar_url": "https://theplayroom.sa/ar/السلم-السويدي-و-شبك-التسلق/p1623556455",
   "en_url": "https://theplayroom.sa/en/السلم-السويدي-و-شبك-التسلق/p1623556455",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1866444551",
   "ar_url": "https://theplayroom.sa/ar/السلم-السويدي-و-جدار-التسلق/p1866444551",
   "en_url": "https://theplayroom.sa/en/السلم-السويدي-و-جدار-التسلق/p1866444551",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "400547830",
   "ar_url": "https://theplayroom.sa/ar/شبك-التسلق-و-جدار-التسلق/p400547830",
   "en_url": "https://theplayroom.sa/en/شبك-التسلق-و-جدار-التسلق/p400547830",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "652247213",
   "ar_url": "https://theplayroom.sa/ar/تصميم-١-طلب-تفصيل/p652247213",
   "en_url": "https://theplayroom.sa/en/تصميم-١-طلب-تفصيل/p652247213",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1246641851",
   "ar_url": "https://theplayroom.sa/ar/بيت-الالعاب/p1246641851",
   "en_url": "https://theplayroom.sa/en/بيت-الالعاب/p1246641851",
+  "redirected": false,
   "ar": {
    "name": "بيت الألعاب",
    "for_who": [
@@ -2046,6 +1573,7 @@
   "id": "979102582",
   "ar_url": "https://theplayroom.sa/ar/صندوق-التخزين/p979102582",
   "en_url": "https://theplayroom.sa/en/صندوق-التخزين/p979102582",
+  "redirected": false,
   "ar": {
    "name": "صندوق التخزين",
    "for_who": [
@@ -2196,223 +1724,63 @@
   "id": "246241575",
   "ar_url": "https://theplayroom.sa/ar/ستاند-مع-مرجيحة-اليونيكورن/p246241575",
   "en_url": "https://theplayroom.sa/en/ستاند-مع-مرجيحة-اليونيكورن/p246241575",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "231308857",
   "ar_url": "https://theplayroom.sa/ar/طاولة-اللعب-الحسي-و-معناطيس-الاحرف/p231308857",
   "en_url": "https://theplayroom.sa/en/طاولة-اللعب-الحسي-و-معناطيس-الاحرف/p231308857",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "2050916351",
   "ar_url": "https://theplayroom.sa/ar/لوح-التوازن-خشبي-مع-المرتبة/p2050916351",
   "en_url": "https://theplayroom.sa/en/لوح-التوازن-خشبي-مع-المرتبة/p2050916351",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1950579108",
   "ar_url": "https://theplayroom.sa/ar/لوح-التوازن-ملون-مع-المرتبة/p1950579108",
   "en_url": "https://theplayroom.sa/en/لوح-التوازن-ملون-مع-المرتبة/p1950579108",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1284087742",
   "ar_url": "https://theplayroom.sa/ar/مثلث-بيكلر-وسلم-تسلق-خشبي/p1284087742",
   "en_url": "https://theplayroom.sa/en/مثلث-بيكلر-وسلم-تسلق-خشبي/p1284087742",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "654647501",
   "ar_url": "https://theplayroom.sa/ar/مثلث-بيكلر-وسلم-تسلق-ملون/p654647501",
   "en_url": "https://theplayroom.sa/en/مثلث-بيكلر-وسلم-تسلق-ملون/p654647501",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "1472698692",
   "ar_url": "https://theplayroom.sa/ar/بيت-الطاحونة-والحلقات-الخشبية/p1472698692",
   "en_url": "https://theplayroom.sa/en/بيت-الطاحونة-والحلقات-الخشبية/p1472698692",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "744217497",
   "ar_url": "https://theplayroom.sa/ar/مجموعة-المغامرة/p744217497",
   "en_url": "https://theplayroom.sa/en/مجموعة-المغامرة/p744217497",
+  "redirected": false,
   "ar": {
    "name": "مجموعة المغامرة",
    "for_who": [
@@ -2563,37 +1931,15 @@
   "id": "611430428",
   "ar_url": "https://theplayroom.sa/ar/بيت-التسلق-ومرجيحة-الأطفال/p611430428",
   "en_url": "https://theplayroom.sa/en/بيت-التسلق-ومرجيحة-الأطفال/p611430428",
-  "ar": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  },
-  "en": {
-   "name": "",
-   "for_who": [],
-   "material": [],
-   "inner_box": [],
-   "dimensions_image": "",
-   "features": [],
-   "cards": [],
-   "faq": [],
-   "suggested_games": [],
-   "whatsapp_only": false,
-   "universal": []
-  }
+  "redirected": true,
+  "ar": null,
+  "en": null
  },
  {
   "id": "826587792",
   "ar_url": "https://theplayroom.sa/ar/أرضيات-فوم-للأطفال/p826587792",
   "en_url": "https://theplayroom.sa/en/Foam-Flooring-For-Children/p826587792",
+  "redirected": false,
   "ar": {
    "name": "أرضيات فوم للأطفال",
    "for_who": [],
@@ -2732,6 +2078,7 @@
   "id": "1783930334",
   "ar_url": "https://theplayroom.sa/ar/الإستيكرات/p1783930334",
   "en_url": "https://theplayroom.sa/en/الإستيكرات/p1783930334",
+  "redirected": false,
   "ar": {
    "name": "الإستيكرات",
    "for_who": [],

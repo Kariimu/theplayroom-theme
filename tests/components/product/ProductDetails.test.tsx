@@ -3,7 +3,7 @@ import { describe, it, expect, vi, beforeAll, beforeEach, afterEach } from 'vite
 import { render, waitFor, act, fireEvent } from '@testing-library/react';
 import { resetWishlistStore } from '@salla.sa/twilight-theme-engine/hooks/useWishlist';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
-import { ProductDetails } from '../../../app/components/product/ProductDetails';
+import { ProductDetails, ProductDescription } from '../../../app/components/product/ProductDetails';
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({
@@ -273,6 +273,22 @@ describe('ProductDetails price', () => {
   });
 });
 
+describe('ProductDetails rating summary (GEO audit #5)', () => {
+  it('renders a real sr-only text summary next to the deferred-hydration stars widget', () => {
+    const { container } = render(
+      <ProductDetails product={makeProduct({ rating: { stars: 4.5, count: 23 } as never })} />
+    );
+    const row = container.querySelector('.product-details__rating');
+    expect(row).not.toBeNull();
+    expect(row?.querySelector('.sr-only')).not.toBeNull();
+  });
+
+  it('renders nothing when the product has no rating', () => {
+    const { container } = render(<ProductDetails product={makeProduct()} />);
+    expect(container.querySelector('.product-details__rating')).toBeNull();
+  });
+});
+
 describe('ProductDetails remaining quantity', () => {
   it('shows the remaining count for an out of stock product, as Twig does', async () => {
     const { container } = render(
@@ -336,7 +352,10 @@ describe('ProductDetails brand logo', () => {
   });
 });
 
-describe('ProductDetails description embeds', () => {
+// `ProductDescription` no longer renders inside `ProductDetails` — it moved to
+// `ProductPage` (mobile: under the payment badges; desktop: under the gallery
+// slider), so these exercise the exported component directly.
+describe('ProductDescription embeds', () => {
   it('loads iframes lazily unless the merchant set their own loading', async () => {
     const description =
       '<p>Intro</p><iframe class="ql-video" src="https://www.youtube.com/embed/x"></iframe>' +
@@ -344,7 +363,7 @@ describe('ProductDetails description embeds', () => {
       '<iframe loading = "eager" src="https://maps.test/spaced"></iframe>' +
       '<iframe title="A > B" loading="eager" src="https://maps.test/quoted"></iframe>' +
       '<iframe title="no loading=here" src="https://player.vimeo.com/video/1"></iframe>';
-    const { container } = render(<ProductDetails product={makeProduct({ description })} />);
+    const { container } = render(<ProductDescription product={makeProduct({ description })} />);
 
     const frames = () => [...container.querySelectorAll('.product__description iframe')];
     await waitFor(() => expect(frames()).toHaveLength(5));
@@ -360,7 +379,7 @@ describe('ProductDetails description embeds', () => {
   it('shows a YouTube video as a thumbnail and loads the player only once it is played', async () => {
     const description =
       '<p>Intro</p><iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ"></iframe>';
-    const { container } = render(<ProductDetails product={makeProduct({ description })} />);
+    const { container } = render(<ProductDescription product={makeProduct({ description })} />);
 
     const facade = await waitFor(() => {
       const element = container.querySelector<HTMLButtonElement>('.product__description .video-facade');
@@ -377,12 +396,12 @@ describe('ProductDetails description embeds', () => {
   });
 });
 
-describe('ProductDetails read more', () => {
+describe('ProductDescription read more', () => {
   const longProduct = () =>
     makeProduct({ description: '<p>Long text</p>', has_read_more: true } as Partial<Product>);
 
   it('says what the button expands and whether it has', async () => {
-    const { container } = render(<ProductDetails product={longProduct()} />);
+    const { container } = render(<ProductDescription product={longProduct()} />);
     const button = await waitFor(() => container.querySelector<HTMLElement>('#btn-show-more')!);
 
     expect(button.getAttribute('aria-controls')).toBe('more-content');
@@ -391,7 +410,7 @@ describe('ProductDetails read more', () => {
   });
 
   it('moves focus to the revealed text, since the button fades out and leaves the tab order', async () => {
-    const { container } = render(<ProductDetails product={longProduct()} />);
+    const { container } = render(<ProductDescription product={longProduct()} />);
     const button = await waitFor(() => container.querySelector<HTMLElement>('#btn-show-more')!);
     button.focus();
 

@@ -4,6 +4,7 @@ import { Link, Image } from '@salla.sa/twilight-theme-engine/common';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { ArrowLeftIcon, ArrowRightIcon } from '../icons';
 import { useLoopCarousel } from '../../hooks/useLoopCarousel';
+import { resolveLink } from '../../lib/resolveLink';
 
 interface PhotoItem {
   id?: string | number;
@@ -80,23 +81,30 @@ function StageSlide({
   current: boolean;
   copy?: boolean;
 }) {
-  return (
-    <Link
-      to={item.url || '#'}
-      className={`s-photos-slider__slide${current ? ' is-current' : ''}`}
-      {...(copy && COPY_PROPS)}
-    >
-      <Image
-        src={item.image}
-        alt={copy ? '' : `photos-slider-${index}`}
-        width={1280}
-        height={753}
-        sizes={SIZES}
-        srcSetWidths={SRCSET_WIDTHS}
-        priority={!copy && index === 0}
-        draggable={false}
-      />
+  const url = resolveLink(item.url);
+  const className = `s-photos-slider__slide${current ? ' is-current' : ''}`;
+  const image = (
+    <Image
+      src={item.image}
+      alt={copy ? '' : `photos-slider-${index}`}
+      width={1280}
+      height={753}
+      sizes={SIZES}
+      srcSetWidths={SRCSET_WIDTHS}
+      priority={!copy && index === 0}
+      draggable={false}
+    />
+  );
+  // No real destination: a plain tile (no dead `#` link) — click-to-center still
+  // works, since useLoopCarousel delegates clicks on the track, not the anchor.
+  return url ? (
+    <Link to={url} className={className} {...(copy && COPY_PROPS)}>
+      {image}
     </Link>
+  ) : (
+    <div className={className} {...(copy && COPY_PROPS)}>
+      {image}
+    </div>
   );
 }
 
