@@ -11,7 +11,7 @@
   max-width: 100vw;
   margin-inline: calc(50% - 50vw);
   margin-bottom: 1.25rem;
-  background: color-mix(in srgb, var(--color-primary) 5%, transparent);
+  background-color: var(--body-bg, #fcf9f5);
   @apply py-1 sm:py-5;
 
   .s-breadcrumb-wrapper {
@@ -46,5 +46,5 @@
    `<svg>` (an `inline-flex` span) sits on the text baseline and rides high.
    Make the item a centered flex row so the chevron lines up with the label. */
 .s-breadcrumb-item {
-  @apply inline-flex items-center;
+  @apply inline-flex items-center text-base;
 }

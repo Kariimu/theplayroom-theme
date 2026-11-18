@@ -32,6 +32,26 @@ export const FACTS_FIELD_NAMES = {
 
 export type FactKey = keyof typeof FACTS_FIELD_NAMES;
 
+/**
+ * The generic specs accordion's (`ProductMetadata`) other groups, in the
+ * fixed display order the storefront enforces — the merchant/dashboard's own
+ * group order isn't under our control, only the storefront rendering is.
+ * Names are the exact live group headers (both locales, theplayroom.sa), not
+ * invented labels — a group with none of these names keeps its original
+ * position, appended after every known group.
+ */
+export const METADATA_GROUPS = [
+  { key: 'features', names: ['مميزات المنتج', 'Product Features'] },
+  { key: 'uses', names: ['إستخدامات المنتج', 'Product Uses'] },
+  { key: 'installationGuide', names: ['دليل التركيب', 'Installation Guide'] },
+  { key: 'installationService', names: ['خدمة التركيب', 'Installation Service'] },
+  { key: 'shipping', names: ['تفاصيل الشحن', 'Shipping Details'] },
+  { key: 'returnExchange', names: ['آلية الإسترجاع و الإستبدال', 'Return & Exchange Policy'] },
+  { key: 'note', names: ['ملاحظة', 'Note'] },
+] as const satisfies ReadonlyArray<{ key: string; names: readonly string[] }>;
+
+export type MetadataGroupKey = (typeof METADATA_GROUPS)[number]['key'];
+
 const normalize = (value: string) => value.trim().toLowerCase();
 
 /** Case/whitespace-insensitive match against a list of candidate names. */
@@ -60,6 +80,23 @@ export function extractFacts(section: SpecSection | undefined): Partial<Record<F
     }
   }
   return facts;
+}
+
+/**
+ * Splits a metadata value into list items on a newline or `|`. Salla's
+ * metadata field is single-line `type: "text"` — a merchant can't type an
+ * actual newline into the dashboard, so `|` is the separator documented in
+ * `docs/DATA-ENTRY.md` for a field meant to read as a list (box contents,
+ * installation steps, etc.). `\n` is also accepted in case a value ever
+ * arrives with one (e.g. pasted from elsewhere) — it just can't be typed.
+ * A value with neither character returns a single-item array, so callers
+ * can use this unconditionally instead of branching on "is this a list".
+ */
+export function splitListValue(value: string): string[] {
+  return value
+    .split(/\n|\|/)
+    .map((line) => line.trim())
+    .filter(Boolean);
 }
 
 /**

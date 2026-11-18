@@ -201,13 +201,16 @@ registerHomeComponentConfig({
   'banner-section': {
     height: 'clamp(140px, 30vw, 427px)',
   },
-  // A row of up to 4 icon+title items, 2 per row on phones.
+  // A row of up to 4 icon+title items, 2 per row on phones, on a tinted band
+  // (`bg-brand-blue-light`) with a section heading above it.
   'features-section': {
-    height: '160px',
+    height: 'clamp(280px, 34vw, 400px)',
   },
-  // Up to 3 larger feature cards (icon, title, description).
+  // Up to 3 larger feature cards (icon, title, description), on a tinted band
+  // (`bg-brand-orange-light`) — a horizontal-scroll row on phones, a 3-col
+  // grid on desktop.
   'features2-section': {
-    height: '280px',
+    height: 'clamp(300px, 36vw, 440px)',
   },
   // A collapsed accordion of up to 15 Q&As; closed-row height × a handful visible.
   'common-questions-section': {

@@ -25,9 +25,11 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: '10px',
+      // Matches the live site: a 1280px cap (vs. Tailwind's default 1536px)
+      // left the page's side margins noticeably wider on large screens.
+      padding: '2rem',
       screens: {
-        '2xl': '1280px',
+        '2xl': '1536px',
       },
     },
     fontFamily: {

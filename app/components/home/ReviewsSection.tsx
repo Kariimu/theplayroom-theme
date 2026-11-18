@@ -22,55 +22,56 @@ const STAR_POSITIONS = [1, 2, 3, 4, 5];
  * `reviews-section` home block — a merchant-authored rating-summary banner
  * (free-text `rating_count`/`total_reviews`, e.g. "4.9" / "+3,000 happy
  * parents"), not a list of individual reviews; those stay on the engine's own
- * reviews data (`06-feature-mapping` #9). `rating_count` is documented as a
- * plain number ("4.9"), so it also drives the star row; a merchant value that
- * doesn't parse just skips the stars.
+ * reviews data (`06-feature-mapping` #9). Styling ported pixel-for-pixel from
+ * the live old-theme spec (`reviews-section.twig` / `styles.scss`): all 5
+ * stars always render solid gold — the old template has no per-star
+ * active/inactive state, it is not a function of `rating_count`.
  */
 export const ReviewsSection = memo(function ReviewsSection({ data }: ReviewsSectionProps) {
   const { title, description, button_text: buttonText, link: linkField, rating_count: rating, total_reviews: total } = data;
   const link = resolveLink(linkField);
-  const ratingValue = rating ? Number.parseFloat(rating) : NaN;
-  const hasStars = Number.isFinite(ratingValue);
 
   if (!title && !description && !rating && !total) return null;
 
   return (
-    <div className="py-8 md:py-12">
-      <div className="container max-w-4xl text-center">
+    <div className="px-5 py-[50px] text-center">
+      <div className="container max-w-[900px]">
         {title && (
-          <h2 className="mb-4 text-3xl font-black leading-tight text-primary">
+          <h2 className="mb-5 text-[40px] font-black leading-[1.25] text-primary-dark max-md:text-[28px]">
             {title}
           </h2>
         )}
         {description && (
-          <p className="mb-8 text-lg leading-relaxed text-gray-500">{description}</p>
+          <p className="mb-8 text-[22px] leading-[1.8] text-[#475569] max-md:text-[18px]">
+            {description}
+          </p>
         )}
 
         {link && buttonText && (
           <Link
             to={link}
-            className="inline-block rounded-full bg-primary px-10 py-4 text-xl font-bold text-primary-reverse shadow-lg transition-transform hover:scale-105 hover:bg-primary-d"
+            className="inline-block rounded-full bg-primary-dark px-10 py-4 text-[22px] font-bold text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition hover:scale-105 hover:opacity-90 max-md:px-[30px] max-md:py-[14px] max-md:text-[18px]"
           >
             {buttonText}
           </Link>
         )}
 
-        {(hasStars || rating || total) && (
-          <div className="mt-8 flex flex-row items-center justify-center gap-3">
-            {hasStars && (
-              <span className="inline-flex gap-1" role="img" aria-label={rating}>
+        {(rating || total) && (
+          <div className="mt-[35px] flex flex-wrap items-end justify-center gap-[15px]">
+            {rating && (
+              <span className="inline-flex gap-[5px]" role="img" aria-label={rating}>
                 {STAR_POSITIONS.map((position) => (
                   <StarIcon
                     key={position}
-                    className={`h-7 w-7 md:h-9 md:w-9 ${position <= Math.round(ratingValue) ? 'fill-accent text-accent' : 'text-gray-200'}`}
+                    className="h-[35px] w-[35px] fill-[#ffdf20] text-[#ffdf20] max-md:h-[28px] max-md:w-[28px]"
                     aria-hidden="true"
                   />
                 ))}
               </span>
             )}
-            <p className="text-xl font-bold text-gray-900 md:text-2xl">
-              {rating}
-              {rating && total && <span className="font-normal text-gray-500"> | </span>}
+            <p className="text-2xl font-normal text-[#2d3e50] max-md:text-[22px]">
+              {rating && <>{rating} / 5</>}
+              {rating && total && <span className="font-normal text-[#64748b]"> | </span>}
               {total}
             </p>
           </div>

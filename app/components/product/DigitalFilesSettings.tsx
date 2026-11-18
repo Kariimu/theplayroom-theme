@@ -33,7 +33,7 @@ export function DigitalFilesSettings({
         <li className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <i className="sicon-page" />
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 text-lg">
               {t('pages.products.number_of_files', 'Number of Files')}
             </div>
           </div>
@@ -43,32 +43,32 @@ export function DigitalFilesSettings({
         <li className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <i className="sicon-file-archive" />
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 text-lg">
               {t('pages.products.file_formats', 'File Formats')}
             </div>
           </div>
-          <div className="text-gray-900 text-sm">{formatsDisplay}</div>
+          <div className="text-gray-900 text-lg">{formatsDisplay}</div>
         </li>
 
         <li className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <i className="sicon-calendar" />
-            <div className="text-gray-600 text-sm">
+            <div className="text-gray-600 text-lg">
               {t('pages.products.file_expiration_period', 'File Expiration Period')}
             </div>
           </div>
-          <div className="text-gray-900 text-sm">{download_period || '-'}</div>
+          <div className="text-gray-900 text-lg">{download_period || '-'}</div>
         </li>
 
         {access_new_files && (
           <li className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <i className="sicon-rotate" />
-              <div className="text-gray-600 text-sm">
+              <div className="text-gray-600 text-lg">
                 {t('pages.products.free_access_to_new_files', 'Free Access to New Files')}
               </div>
             </div>
-            <div className="text-gray-900 text-sm">
+            <div className="text-gray-900 text-lg">
               <i className="sicon-check-circle text-lg" />
             </div>
           </li>

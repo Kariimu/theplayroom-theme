@@ -20,6 +20,7 @@ import type { ReactNode } from 'react';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { usePriceBump } from '../../hooks/usePriceBump';
 import { ProductOptionsPanel, type PanelOption } from '../common/ProductOptionsPanel';
+import { InstallationServiceOption } from './InstallationServiceOption';
 
 /** The web component's `type="submit"` path skips its own loader, so drive the
     inner `<salla-button>` spinner by hand. */
@@ -88,42 +89,77 @@ const handleChange = (e: React.FormEvent<HTMLFormElement>) => {
   }
 };
 
-/** Weight line + a link that opens the size-guide modal. Renders nothing for a
- * product with neither. */
-function WeightAndSizeGuideSection({ product }: { product: Product }) {
+/** One row of the info section below: an icon + label on the inline-start
+ * side, a value (or a link/button, for size guide) on the inline-end side.
+ * The same `grid-cols-3` split as every other row — the label always takes
+ * the first column, so every value starts at the same x position regardless
+ * of how long its own label is. */
+function InfoRow({
+  icon,
+  label,
+  bold,
+  children,
+}: {
+  icon: string;
+  label: ReactNode;
+  bold?: boolean;
+  children: ReactNode;
+}) {
+  const Label = bold ? 'b' : 'div';
+  return (
+    <div className="flex justify-between sm:grid sm:grid-cols-3">
+      <Label className="flex items-center gap-1">
+        <i className={icon}></i>
+        <span>{label}</span>
+      </Label>
+      <div className="text-unicode">{children}</div>
+    </div>
+  );
+}
+
+/** SKU / barcode / weight / size-guide — one info section, same row layout
+ * and the same gap between every row (`space-y-4`, not a `mb-4` on some rows
+ * and nothing on others). Reads the live `product` (this component's, not
+ * `ProductDetails`' stable loader prop): all four are per-variant. */
+function ProductInfoSection({ product }: { product: Product }) {
   const { t } = useTranslation();
-  if (!product.weight && !product.has_size_guide) return null;
+  if (!product.sku && !product.barcode && !product.weight && !product.has_size_guide) {
+    return null;
+  }
 
   return (
-    <section>
-      {product.weight && (
-        <div
-          className={`center-between ${product.has_size_guide ? 'pb-5 mb-5 border-b-[1px]' : ''}`}
-        >
-          <b className="form-label rtl:space-x-reverse space-x-1">
-            <i className="sicon-luggage-cart"></i>
-            <span>{t('pages.products.weight')}</span>
-          </b>
-          <span className="product-weight text-sm">{product.weight}</span>
-        </div>
+    <section className="space-y-4">
+      {product.sku && (
+        <InfoRow icon="sicon-barcode" label={t('pages.products.sku')}>
+          {product.sku}
+        </InfoRow>
       )}
+
+      {product.barcode && (
+        <InfoRow icon="sicon-barcode" label={t('pages.products.barcode')}>
+          {product.barcode}
+        </InfoRow>
+      )}
+
+      {product.weight && (
+        <InfoRow icon="sicon-luggage-cart" label={t('pages.products.weight')} bold>
+          {product.weight}
+        </InfoRow>
+      )}
+
       {product.has_size_guide && (
         <>
-          <div className="center-between">
-            <b className="form-label rtl:space-x-reverse space-x-1">
-              <i className="sicon-pencil-ruler"></i>
-              <span>{t('pages.products.size_guides')}</span>
-            </b>
+          <InfoRow icon="sicon-pencil-ruler" label={t('pages.products.size_guides')} bold>
             <SallaButton
               shape="link"
               color="primary"
-              className="!p-0 text-sm with-arrow"
+              className="!p-0 with-arrow"
               onClick={() => window.salla?.event?.dispatch('size-guide::open', String(product.id))}
             >
               {t('pages.products.show_size_guides')}
               <i className="sicon-keyboard_arrow_left"></i>
             </SallaButton>
-          </div>
+          </InfoRow>
           <SallaProductSizeGuide />
         </>
       )}
@@ -271,7 +307,7 @@ function StickyPriceDisplay({ product, priceBump }: { product: Product; priceBum
       </div>
 
       <div
-        className={`out-of-stock min-h-7 leading-7 text-base text-red-600 !opacity-50 font-bold ${product.is_out_of_stock ? 'scale-pulse' : 'hidden'}`}
+        className={`out-of-stock min-h-7 leading-7 text-lg text-red-600 !opacity-50 font-bold ${product.is_out_of_stock ? 'scale-pulse' : 'hidden'}`}
       >
         {t('pages.products.out_of_stock')}
       </div>
@@ -341,7 +377,7 @@ function StickyProductBar({
   const soldOut = product.is_out_of_stock && product.status !== 'out-and-notify';
   return (
     <section
-      className={`sticky-product-bar bg-white${soldOut ? ' sticky-product-bar--sold-out' : ''}`}
+      className={`sticky-product-bar bg-[var(--body-bg)]${soldOut ? ' sticky-product-bar--sold-out' : ''}`}
     >
       {/* Live price on the start side, quantity stepper on the end side
           (replaces the standalone price section and the "Quantity" label). */}
@@ -489,11 +525,15 @@ export function AddToCartForm({
         </ProductOptionsPanel>
       )}
 
+      {optionsReady && product.options && product.options.length > 0 && (
+        <InstallationServiceOption options={product.options as PanelOption[]} />
+      )}
+
       {product.has_bundle_products && (
         <SallaMultipleBundleProduct bundleSections={JSON.stringify(product)} />
       )}
 
-      <WeightAndSizeGuideSection product={product} />
+      <ProductInfoSection product={product} />
 
       <AttachmentsSection
         product={product}

@@ -1,8 +1,6 @@
 import { Fragment, useEffect, useMemo, useState } from 'react';
 import { SallaQuickOrder } from '@salla.sa/twilight-components-react/quick-order';
 import { SallaOffer } from '@salla.sa/twilight-components-react/offer';
-import { SallaComments } from '@salla.sa/twilight-components-react/comments';
-import { SallaTrustBadges } from '@salla.sa/twilight-components-react/trust-badges';
 import { SallaPayments } from '@salla.sa/twilight-components-react/payments';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
@@ -14,16 +12,22 @@ import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import type { ProductPageProps } from '@salla.sa/twilight-theme-engine/routes/product';
 import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
 import { ProductGallery } from './ProductGallery';
-import { ProductDetails } from './ProductDetails';
+import { ProductDetails, ProductDescription } from './ProductDetails';
+import { ProductFacts } from './ProductFacts';
+import { ProductAddOns } from './ProductAddOns';
+import { ProductMetadata } from './ProductMetadata';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { UniversalFeatures } from './UniversalFeatures';
 import { ProductFaq } from './ProductFaq';
 import { SuggestedGames } from './SuggestedGames';
+import { ProductReviews } from './ProductReviews';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home/ProductsSlider';
 import { isWhatsappProduct } from '../../lib/tags';
 import { cleanWhatsappNumber } from '../../lib/whatsapp';
+import { useHydrated } from '../../hooks/useHydrated';
+import { useMobileViewport } from '../../hooks/useMobileViewport';
 
 /**
  * "Similar products" slider. A separate component (not inline in
@@ -92,6 +96,8 @@ export function ProductPage({
   const { t } = useTranslation();
   const { product } = useProduct(initialProduct);
   const { commentsKey } = useComments();
+  const hydrated = useHydrated();
+  const isMobile = useMobileViewport();
   const blockScope = useMemo(() => ({ product_id: product.id }), [product.id]);
 
   // Products tagged `whatsapp` can't be bought online (06 §7): the add-to-cart
@@ -148,15 +154,16 @@ export function ProductPage({
         <div className="flex flex-col items-start md:flex-row" id={`product-${product.id}`}>
           <ProductGallery product={product} />
 
-          <div className="main-content md:sticky md:overflow-hidden md:top-24 w-full md:w-2/4 md:pb-16">
+          <div className="main-content md:sticky md:overflow-hidden md:top-24 w-full md:w-2/4 md:pb-16 text-lg">
+            {/* Base text size for this column: the product's normal/body text
+                (labels, SKU/weight rows, descriptions) was 14–15px (`text-sm`
+                or the unset body default); 18px now, set once here rather than
+                on every individual element. Anything with its own explicit
+                size class (the 36px title, 30px price, the 18px facts/specs
+                rows already set directly) is unaffected — a class always wins
+                over this inherited value. */}
             <HookSlot name="product:details.start" />
-            {/* Loader product: like Twig, the header price stays the unit price; only the SKU and barcode are live */}
-            <ProductDetails
-              product={initialProduct}
-              sku={product.sku}
-              barcode={product.barcode}
-              showTags={theme.settings.show_tags}
-            />
+            <ProductDetails product={initialProduct} />
             <HookSlot name="product:details.end" />
 
             <HookSlot name="product:single.form.start" />
@@ -165,11 +172,48 @@ export function ProductPage({
             ) : (
               <AddToCartForm product={product} stickyAddToCart={theme.settings.sticky_add_to_cart} />
             )}
-            {/* Payment/trust badges (06 §7, §5A row 80) */}
-            <div className="mt-5 flex flex-wrap items-center gap-4">
-              <SallaTrustBadges />
+            {/* Payment options (06 §7, §5A row 80) — trust badges dropped here,
+                `Footer` already shows them once; showing them twice on the
+                same page was redundant. */}
+            <div className="product-payments mt-5">
               <SallaPayments />
             </div>
+
+            {/* for-who / material / box-contents (§5A row 65) — under the
+                payment badges. `initialProduct.has_metadata`, not the live
+                `product` from `useProduct`: a variant-options reload replaces
+                that object wholesale from `getDetails(id, ["images",
+                "category"])`, whose response doesn't carry `has_metadata` —
+                it would go from true to undefined the moment a shopper
+                touches an option. */}
+            <ProductFacts
+              productId={Number(product.id)}
+              hasMetadata={initialProduct.has_metadata}
+            />
+
+            {/* Accessory products sold alongside this one — also under the
+                payment badges, each with its own catalog entry and one-click
+                add to cart. Renders only when this product is the master of
+                an `addons-p<id>` group (`ProductAddOns`); an accessory's own
+                page renders nothing. `initialProduct.tags`, not the live
+                `product` from `useProduct`, for the same variant-reload
+                reason as `ProductFacts` above. */}
+            <ProductAddOns productId={product.id} tags={initialProduct.tags} />
+
+            {/* Metadata / specs and description — mobile only, under the payment
+                badges. On `md`+ they render under the gallery slider instead
+                (`ProductGallery`) — same hydration-gated dual mount there, so
+                together the two never run two `<SallaMetadata>` instances at
+                once past first paint. `initialProduct`, not the live `product`
+                from `useProduct`, for the same variant-reload reason as
+                `ProductFacts` above. */}
+            {initialProduct.has_metadata && (!hydrated || isMobile) && (
+              <ProductMetadata className="mb-3 md:hidden" />
+            )}
+            {(!hydrated || isMobile) && (
+              <ProductDescription product={initialProduct} className="md:hidden" />
+            )}
+
             <HookSlot name="product:single.form.end" />
             {/* Twig renders this hook and its merchant blocks after the form */}
             <HookSlot name="product:single.description.end" context={{ product }} />
@@ -196,8 +240,8 @@ export function ProductPage({
         // `estimatedHeight="0"`: `RenderWhenVisible` hard-codes `min-height` on its
         // wrapper section and never clears it, so the default 400px leaves an empty
         // gap when the product has no reviews. Comments size themselves once present.
-        <RenderWhenVisible estimatedHeight="0px" className="s-block--full-bg">
-          <SallaComments key={commentsKey} itemId={product.id} type={'product' as never} />
+        <RenderWhenVisible estimatedHeight="0px" className="s-block s-block--full-bg text-start">
+          <ProductReviews key={commentsKey} product={product} />
         </RenderWhenVisible>
       )}
 

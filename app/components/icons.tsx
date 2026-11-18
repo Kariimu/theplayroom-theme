@@ -365,3 +365,64 @@ export const CrownIcon = (props: SVGProps<SVGSVGElement>) => (
     <path d="M5 21H19" {...stroke} />
   </svg>
 );
+
+/**
+ * lucide `users` / `leaf` / `package` / bare check, paths copied verbatim from
+ * the legacy theme's product-facts accordion (`single.twig`) so the Playroom
+ * migration keeps the exact icon shapes shoppers already recognize. Stroke
+ * width 2 (not this file's usual 1.5) to match lucide's own default — these
+ * four are meant to look identical to the old theme, not to the rest of the
+ * icon set.
+ */
+export const UsersIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...base} {...props}>
+    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" {...stroke} strokeWidth={2} />
+    <circle cx="9" cy="7" r="4" {...stroke} strokeWidth={2} />
+    <path d="M22 21v-2a4 4 0 0 0-3-3.87" {...stroke} strokeWidth={2} />
+    <path d="M16 3.13a4 4 0 0 1 0 7.75" {...stroke} strokeWidth={2} />
+  </svg>
+);
+
+export const LeafIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...base} {...props}>
+    <path
+      d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
+      {...stroke}
+      strokeWidth={2}
+    />
+    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" {...stroke} strokeWidth={2} />
+  </svg>
+);
+
+export const PackageIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...base} {...props}>
+    <path
+      d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"
+      {...stroke}
+      strokeWidth={2}
+    />
+    <path d="M12 22V12" {...stroke} strokeWidth={2} />
+    <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7" {...stroke} strokeWidth={2} />
+    <path d="m7.5 4.27 9 5.15" {...stroke} strokeWidth={2} />
+  </svg>
+);
+
+export const CheckIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...base} {...props}>
+    <path d="M20 6 9 17l-5-5" {...stroke} strokeWidth={2} />
+  </svg>
+);
+
+/** lucide `wrench`. Used by the installation-service accordion header
+ * (`InstallationServiceOption`) — stroke width 2, default 20px, matching the
+ * exact markup design handed off for that feature rather than this file's
+ * usual 1.5/24px default. */
+export const WrenchIcon = (props: SVGProps<SVGSVGElement>) => (
+  <svg {...base} width={20} height={20} {...props}>
+    <path
+      d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"
+      {...stroke}
+      strokeWidth={2}
+    />
+  </svg>
+);

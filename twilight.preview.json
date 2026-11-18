@@ -20,7 +20,7 @@
     "notify_when_available_in_card": true,
     "sticky_add_to_cart": true,
     "product_options_collapsible": true,
-    "show_tags": true,
+    "show_tags": false,
     "slider_background_size": "contain",
     "imageZoom": false,
     "show_whatsapp": true,

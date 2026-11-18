@@ -11,6 +11,7 @@ import { ArrowRightIcon } from '../icons';
 import { useHydrated } from '../../hooks/useHydrated';
 import { useMobileViewport } from '../../hooks/useMobileViewport';
 import { ProductMetadata } from './ProductMetadata';
+import { ProductDescription } from './ProductDetails';
 
 export interface ProductGalleryProps {
   product: Product;
@@ -54,12 +55,18 @@ function sliderObjectFit(raw: unknown): ObjectFit {
 /**
  * Theme fork of the engine `ProductGallery`.
  *
- * Differs from upstream in four ways:
+ * Differs from upstream in five ways:
  *  - the thumbnails slider runs `slidesPerView: 'auto'` (`thumbsConfig`). The
  *    theme sizes thumbs to a fixed 80px in `slider.scss`; with the engine
  *    default (`slidesPerView: 4`) Swiper lays the track out for quarter-width
  *    slides, so a product with few images left a long, mostly empty track.
  *    `'auto'` makes Swiper measure the real CSS width instead.
+ *  - the thumbnail strip shows on every breakpoint, not just `md`+ — mobile
+ *    gets the same swipeable thumbs row instead of Swiper's auto-rendered dot
+ *    pagination. The dots are hidden outright (`slider.scss`); the
+ *    pre-hydration flash that used to justify hiding thumbs on mobile is
+ *    gated with `:not(.hydrated)` in CSS instead, so it's covered on both
+ *    mobile and desktop.
  *  - `<SallaMetadata>` (specs table) renders here, below the slider, instead of
  *    in the buy-box column — so the column drops its `md:sticky` when a product
  *    has metadata.
@@ -138,8 +145,9 @@ export function ProductGallery({ product }: ProductGalleryProps) {
   };
 
   return (
-    // Sticky only when there's nothing under the slider; with `<SallaMetadata>`
-    // below it the column is tall, so let it scroll with the page instead.
+    // Sticky only when there's nothing under the slider; with metadata and/or
+    // the description below it the column is tall, so let it scroll with the
+    // page instead.
     // `top-24` clears the sticky header once stuck — `md:` scoped to match
     // `md:sticky`. Unscoped, `relative` (below) made `top` apply on mobile
     // too, visually shifting the whole gallery down 96px while the content
@@ -227,12 +235,13 @@ export function ProductGallery({ product }: ProductGalleryProps) {
         </div>
 
         {hasManyImages && (
-          // `hidden md:block` on the slot itself (not just the `.s-slider-thumbs`
-          // wrapper Stencil renders after hydration, `04-components/slider.scss`)
-          // — before hydration this content is still plain unstyled light-DOM
-          // children of `salla-slider`, so it was briefly visible on mobile
-          // until Stencil moved/wrapped it and the vendor-class rule could apply.
-          <div slot="thumbs" className="hidden md:block">
+          // Shown on every breakpoint now (mobile included — see the fork
+          // notes above). Before hydration this content is still plain
+          // unstyled light-DOM children of `salla-slider`, so the flash is
+          // gated in CSS via `&:not(.hydrated) [slot='thumbs']`
+          // (`04-components/slider.scss`) rather than a `hidden md:block`
+          // class here.
+          <div slot="thumbs">
             {images.map((image, index) => (
               <ThumbSlide
                 key={image.id ?? image.three_d_image_url ?? image.video_url ?? image.url}
@@ -259,7 +268,7 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       )}
 
       {/* Product metadata / specs — on `md`+ it renders here, below the slider.
-          On mobile it moves to the end of the description in `ProductDetails`.
+          On mobile it moves under the payment badges in `ProductPage`.
           Both copies render until hydration completes (matches the pre-hydration
           CSS-hidden state exactly, so no SSR/first-paint mismatch) — once
           `hydrated`, only the copy the current viewport actually shows stays
@@ -270,16 +279,30 @@ export function ProductGallery({ product }: ProductGalleryProps) {
       {product.has_metadata && (!hydrated || !isMobile) && (
         <ProductMetadata className="mt-8 hidden md:block" />
       )}
+
+      {/* Description — on `md`+ it renders here, under the metadata (above). On
+          mobile it moves under the payment badges in `ProductPage`, after the
+          metadata; see the comment on that copy for the hydration-gated dual
+          mount. */}
+      {(!hydrated || !isMobile) && (
+        <ProductDescription product={product} className="mt-8 hidden md:block" />
+      )}
     </div>
   );
 }
 
 function galleryClassName(product: Product, first: ProductImage | undefined): string {
+  // `top-24` only means anything paired with `sticky` (clearing the sticky
+  // header once stuck) — on its own, `relative` + `top-*` still offsets the
+  // box from its normal position, which pushed every non-sticky gallery
+  // (any product with metadata and/or a description) down out of line with
+  // the title next to it for no reason.
+  const sticky = !product.has_metadata && !product.description;
   return [
     'product-gallery',
     first?.three_d_image_url && 'product-gallery--model',
-    'sidebar relative md:top-24 w-full md:!w-2/4 rtl:ml-8 ltr:mr-8 pb-8 md:pb-16 overflow-hidden shrink-0',
-    !product.has_metadata && 'md:sticky',
+    'sidebar relative w-full md:!w-2/4 rtl:ml-8 ltr:mr-8 pb-8 md:pb-16 overflow-hidden shrink-0',
+    sticky && 'md:sticky md:top-24',
   ]
     .filter(Boolean)
     .join(' ');

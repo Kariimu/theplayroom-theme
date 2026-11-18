@@ -27,27 +27,73 @@ export const Features2Section = memo(function Features2Section({ data }: Feature
   if (!features.length) return null;
 
   return (
-    <div className="container">
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-        {features.map((feature, index) => (
-          // A static settings list with no id; see .react-doctor/false-positives.md.
-          // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-          <div key={index} className="flex flex-col items-center text-center gap-3 p-4">
-            {feature.image && (
-              <img
-                src={getCdnImageUrl(feature.image, { width: 160 }) ?? feature.image}
-                width="80"
-                height="80"
-                alt=""
-                loading="lazy"
-                decoding="async"
-                className="h-20 w-20 object-contain"
-              />
-            )}
-            {feature.title && <h3 className="font-semibold">{feature.title}</h3>}
-            {feature.desc && <p className="text-sm opacity-70">{feature.desc}</p>}
+    <div className="relative overflow-hidden bg-brand-orange-light px-4 py-10 md:py-14">
+      <div className="container relative z-10">
+        {/* Phones: a horizontal-scroll row of cards. */}
+        <div className="-mx-4 overflow-x-auto px-4 pb-4 scrollbar-hide md:hidden">
+          <div className="flex gap-4" style={{ width: 'max-content' }}>
+            {features.map((feature, index) => (
+              // A static settings list with no id; see .react-doctor/false-positives.md.
+              // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+              <div
+                key={index}
+                className="group w-[80vw] flex-shrink-0 rounded-3xl bg-white/50 p-6 text-center"
+              >
+                {feature.image && (
+                  <div className="mb-8 flex justify-center">
+                    <div className="flex h-16 w-16 items-center justify-center rounded-full bg-white shadow-lg transition-transform duration-500 group-hover:scale-110">
+                      <img
+                        src={getCdnImageUrl(feature.image, { width: 140 }) ?? feature.image}
+                        width="40"
+                        height="40"
+                        alt=""
+                        loading="lazy"
+                        decoding="async"
+                        className="h-10 w-10 object-contain"
+                      />
+                    </div>
+                  </div>
+                )}
+                {feature.title && (
+                  <h3 className="mb-4 text-xl font-black text-gray-900">{feature.title}</h3>
+                )}
+                {feature.desc && (
+                  <p className="text-base leading-relaxed text-gray-500">{feature.desc}</p>
+                )}
+              </div>
+            ))}
           </div>
-        ))}
+        </div>
+
+        {/* Desktop: a 3-column grid. */}
+        <div className="hidden grid-cols-3 gap-12 md:grid">
+          {features.map((feature, index) => (
+            // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+            <div key={index} className="group text-center">
+              {feature.image && (
+                <div className="mb-8 flex justify-center">
+                  <div className="rounded-full bg-white p-6 shadow-lg transition-transform duration-500 group-hover:scale-110">
+                    <img
+                      src={getCdnImageUrl(feature.image, { width: 140 }) ?? feature.image}
+                      width="64"
+                      height="64"
+                      alt=""
+                      loading="lazy"
+                      decoding="async"
+                      className="h-16 w-16 object-contain"
+                    />
+                  </div>
+                </div>
+              )}
+              {feature.title && (
+                <h3 className="mb-4 text-2xl font-black text-gray-900">{feature.title}</h3>
+              )}
+              {feature.desc && (
+                <p className="text-lg leading-relaxed text-gray-500">{feature.desc}</p>
+              )}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );

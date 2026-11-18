@@ -424,17 +424,6 @@
             "selected": true
         },
         {
-            "type": "boolean",
-            "icon": "sicon-toggle-off",
-            "label": "اظهار الوسوم",
-            "description": null,
-            "id": "show_tags",
-            "format": "switch",
-            "required": false,
-            "value": false,
-            "selected": false
-        },
-        {
             "id": "slider_background_size",
             "type": "items",
             "format": "dropdown-list",

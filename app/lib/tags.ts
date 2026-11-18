@@ -26,6 +26,19 @@ export const TAG_PREFIX = {
   card: 'card:',
   /** Companion "set"; products sharing a set are suggested together (replaces `products_play_games`). */
   set: 'set:',
+  /**
+   * Add-on group, keyed by the *master* product's own numeric id
+   * (`addons-p<id>`, e.g. `addons-p1571449334`) rather than a merchant-picked
+   * name — directional, not a shared/symmetric group: tag the master product
+   * and every accessory with the identical `addons-p<masterId>` tag, and only
+   * the product whose own id matches the key (the master) lists the group's
+   * other members (`ProductAddOns`). An accessory carrying the same tag
+   * renders nothing on its own page. No colon (Salla's tag-name validation
+   * rejects it — `product::order.errors.tag_name_regex`); `feature:`/`card:`/
+   * `set:` above have the same colon and haven't been verified against a real
+   * store yet.
+   */
+  addOn: 'addons-p',
 } as const;
 
 export type TagPrefix = keyof typeof TAG_PREFIX;

@@ -37,6 +37,20 @@ accordion, not the dedicated UI.
 - Spec group name: **`تفاصيل المنتج`** (or `Product Details` on the English spec set)
 - Field names: **`مناسب لـ`** (`Suitable for`) · **`الخامة`** (`Material`) · **`محتويات الصندوق`** (`Box contents`)
 
+**List fields (usually `محتويات الصندوق` / Box contents):** the dashboard field
+is single-line text — there's no way to type a real line break into it — so
+separate each item with **`|`** and the storefront renders it as a checklist
+instead of one run-on sentence. `\n` works too if a value ever already has one
+(e.g. pasted from a spreadsheet cell), but `|` is the one to actually type.
+A value with no `|` just renders as a normal sentence, so `مناسب لـ` /
+`الخامة` don't need this unless you want them as a list too. Example:
+
+> `هيكل بيت الالعاب | حبال سميكة | أدوات التجميع | دليل التركيب`
+
+renders as four checked lines, not one. (This applies to any spec field, not
+just the three facts above — the generic specs accordion splits on `|` the
+same way.)
+
 **Where:** these are Salla's "Custom fields" (`product.has_metadata`/specs), not a
 plain text box. One-time setup, then per-product entry:
 1. **Store settings → Custom fields → Products tab → Add new section.** Name it
@@ -49,9 +63,9 @@ plain text box. One-time setup, then per-product entry:
 
 | Done | Product (ar) | id | `مناسب لـ` / Suitable for | `الخامة` / Material | `محتويات الصندوق` / Box contents |
 |---|---|---|---|---|---|
-| [ ] | بيت الألعاب | 1246641851 | مناسب لجميع الفئات العمرية | خشب الزان الصلب | هيكل بيت الالعاب؛ حبال سميكة؛ أدوات التجميع؛ دليل التركيب |
-| [ ] | صندوق التخزين | 979102582 | مناسب لجميع الفئات العمرية | خشب الزان الصلب، مسامير من الستانلس ستيل، طلاء زيت خشب طبيعي | هيكل صندوق التخزين؛ مات يتم وضعها فوق الصندوق؛ أدوات التجميع؛ دليل التركيب |
-| [ ] | مجموعة المغامرة | 744217497 | للأطفال من عمر 9 اشهر الى 6 سنوات تقريبًا | خشب الزان الصلب | هيكل مجموعة المغامرة؛ لوح تزحلق بوجهين وجه للسلق ووجه للتزحلق؛ ارجوحة اطفال؛ أدوات التجميع؛ دليل التركيب |
+| [ ] | بيت الألعاب | 1246641851 | مناسب لجميع الفئات العمرية | خشب الزان الصلب | هيكل بيت الالعاب \| حبال سميكة \| أدوات التجميع \| دليل التركيب |
+| [ ] | صندوق التخزين | 979102582 | مناسب لجميع الفئات العمرية | خشب الزان الصلب، مسامير من الستانلس ستيل، طلاء زيت خشب طبيعي | هيكل صندوق التخزين \| مات يتم وضعها فوق الصندوق \| أدوات التجميع \| دليل التركيب |
+| [ ] | مجموعة المغامرة | 744217497 | للأطفال من عمر 9 اشهر الى 6 سنوات تقريبًا | خشب الزان الصلب | هيكل مجموعة المغامرة \| لوح تزحلق بوجهين وجه للسلق ووجه للتزحلق \| ارجوحة اطفال \| أدوات التجميع \| دليل التركيب |
 
 No English text was captured for these three (the old site only ever had Arabic
 values for these fields) — write the English spec set yourself, or leave it
@@ -59,13 +73,24 @@ Arabic-only if the dashboard allows it.
 
 ---
 
-## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`)
+## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`)
 
 **Where:** open the product → **Product details** tab → the **tags** field →
-type the exact tag text (`whatsapp`, `cart-upsell`, or `set:<name>`, matching
-`app/lib/tags.ts` literally) → **Add**/Enter → **Save product details**. Tags
-need the Plus/Pro plan. To tag several products at once faster, the product
-list's bulk-actions menu can also set tags across a selection.
+type the exact tag text (`whatsapp`, `cart-upsell`, `set:<name>`, or
+`addons-p<id>`, matching `app/lib/tags.ts` literally) → **Add**/Enter →
+**Save product details**. Tags need the Plus/Pro plan. To tag several
+products at once faster, the product list's bulk-actions menu can also set
+tags across a selection.
+
+**⚠ Known issue — colon tags fail dashboard validation.** Confirmed while
+building the `addons-p<id>` convention below: the dashboard rejected a
+`addon:swedish-ladder`-style tag with `product::order.errors.tag_name_regex`
+(the real server-side error, not a typo). `whatsapp` and `cart-upsell` are
+plain words, so they're unaffected, but **`set:<name>` below has the same
+colon and almost certainly fails the same way — it has never actually been
+entered on a real store.** Don't attempt a `set:` tag as currently written;
+flag this to whoever's doing Stage 7 so `set:` gets the same colon-free
+rename as `addons-p<id>` (e.g. `set-p<id>` or similar) before it's relied on.
 
 Convention source: `app/lib/tags.ts`. **Extraction gap:** the old theme drove
 these from three dashboard settings whose *values* (which categories/products
@@ -79,6 +104,60 @@ store's current theme settings (while the Twig theme is still active) and read:
 | `categories_whatsapp` | categories whose products get a WhatsApp enquiry button instead of add-to-cart | tag the matching products `whatsapp` |
 | `products_in_cart` | the cart upsell slider's product list | tag the matching products `cart-upsell` |
 | `products_play_games` | `target_product` → its `products` (the "suggested games" group) | tag every product in one group with the same `set:<name>` (pick any short name, e.g. `set:climbing-triangle`) |
+
+### `addons-p<id>` — Product add-ons (new feature, no legacy data)
+
+Shows a "Product add-ons" row of accessory products (each its own catalog
+product, with its own one-click add to cart) under the payment badges on the
+product page. This isn't a port of an old theme setting — there's nothing to
+extract from `docs/legacy/`, so there's no pre-filled checklist below; tag
+groups as the merchant decides which accessories go with which product.
+
+**Directional, not a shared group:** the tag's own text names the *master*
+product by its numeric id, so only that one product's page shows the row —
+an accessory's own page stays untouched, even though it carries the exact
+same tag.
+
+**How to tag a group:**
+1. Open the **main product** (the one that should show the add-ons row) and
+   note its id from the dashboard URL — the same id already used throughout
+   this file's tables, e.g. `1571449334` for "السلم السويدي".
+2. Tag that main product itself with `addons-p<its own id>`, e.g.
+   `addons-p1571449334`.
+3. Tag **every accessory** that should appear on that product's page with the
+   *identical* tag text, `addons-p1571449334` — yes, including on the
+   accessories, with the main product's id, not their own.
+
+**Things that will surprise you if you don't know them going in:**
+- **The id in the tag is always the master's, never the accessory's own id.**
+  Copy-pasting the same tag text onto every product in the group (main
+  product included) is correct — don't change the number per product.
+- **An accessory's own page shows nothing**, by design — opening "Wooden
+  Rings" on its own does **not** show the Swedish Ladder or siblings as "its"
+  add-ons, only the ladder's page shows the full row. If an accessory should
+  *also* have its own add-ons row, give it its own tag with its own id
+  (`addons-p<wooden rings' id>`) and tag whatever belongs under it the same way.
+- **One master group per product.** A product can carry an `addons-p<id>` tag
+  naming another product's group (as an accessory) *and* its own
+  `addons-p<its own id>` tag (as a master of its own group) at the same
+  time — only the one matching its own id ever renders on its page.
+- **An add-on with options (size, color, etc.) still adds straight to cart**,
+  with none of them chosen yet — the customer picks them afterward on the
+  cart page, same as any other item there. A non-plain type (e.g. a booking,
+  which needs a date picker, not a missing option) links to its own page
+  instead; an out-of-stock add-on shows a disabled label. Nothing needs
+  configuring for this — it's automatic from the product's own data.
+
+**Worked example** (shape borrowed from the reference redesign at
+`https://the-playroom.onrender.com/product/swedish-ladder`, with the id of the
+"السلم السويدي" product used for dev testing on this store — `1571449334` —
+substituted in; this product isn't part of the 14-product legacy list below,
+it's just whichever one you're testing against): tag it with
+`addons-p1571449334`, then tag "Wooden Rings", "Giraffe Swing", "Balance Board
+Mattress" and "Kids Swing" with that exact same tag, `addons-p1571449334`.
+Opening the ladder's page shows all four accessories; opening "Wooden Rings"
+on its own shows nothing, since the tag it carries names the ladder, not
+itself.
 
 Only the 14 products below actually render a product page today (the other 29
 sitemap URLs redirect to the home page — tagging a redirecting product is

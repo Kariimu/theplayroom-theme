@@ -1,0 +1,217 @@
+/* =========================================================================
+   Installation-service accordion (`InstallationServiceOption`) — replaces the
+   native rendering of one product option ("خدمة التركيب") with a collapsible
+   card of pill radios. The native `<select>`/radio group it drives stays
+   mounted inside `<salla-product-options>` elsewhere in the form; this file
+   only hides that one option's container once the component has found it.
+   ========================================================================= */
+
+/* Not nested under `.installation-service`: the element this hides
+   (`[data-option-id]`) lives inside `<salla-product-options>`, a sibling
+   block, not a descendant of this card. `display: none` (not just visually
+   hidden) is deliberate — a form field is still posted via `FormData` either
+   way, and this avoids a screen reader announcing the same choice twice
+   (once here, once from the pills below). */
+.installation-service__native-hidden {
+  @apply hidden;
+}
+
+.installation-service {
+  @apply bg-white;
+  border: 1px solid #efe7dc;
+  border-radius: 20px;
+  overflow: hidden;
+
+  @media (max-width: 767px) {
+    border-radius: 18px;
+  }
+
+  &__header {
+    @apply flex w-full cursor-pointer select-none items-center justify-between gap-3;
+    /* Kept at the 44px touch-target floor rather than 0 — a header any
+       shorter would fail the accessibility note's minimum tap size. */
+    min-height: 44px;
+    padding: 6px 20px;
+
+    @media (max-width: 767px) {
+      min-height: 44px;
+      padding: 4px 14px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary, #f47e4d);
+      outline-offset: -2px;
+    }
+  }
+
+  &__label {
+    @apply flex min-w-0 items-center gap-2;
+  }
+
+  &__icon {
+    @apply shrink-0;
+    color: var(--color-primary, #f47e4d);
+  }
+
+  &__title {
+    font-size: 19px;
+    font-weight: 800;
+    color: var(--main-text-color-dark, #2d3e50);
+
+    @media (max-width: 767px) {
+      font-size: 17px;
+    }
+  }
+
+  &__optional {
+    @apply shrink-0;
+    color: #64748b;
+    font-size: 14px;
+  }
+
+  &__state {
+    @apply flex shrink-0 items-center gap-2;
+  }
+
+  &__summary {
+    @apply whitespace-nowrap;
+    color: var(--color-primary, #f47e4d);
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  &__chevron {
+    @apply h-5 w-5 shrink-0 text-gray-400 transition-transform duration-200;
+
+    &.is-open {
+      @apply rotate-180;
+    }
+  }
+
+  /* `hidden` (the element's own attribute, not a class) takes zero height and
+     is removed from layout entirely — no reserved gap while collapsed, and
+     opening pushes the quantity/add-to-cart below it down, since this card
+     stays in normal flow (no absolute positioning). */
+  &__panel {
+    @apply flex flex-col;
+    gap: 14px;
+    border-top: 1px solid #f3ede5;
+    padding: 4px 20px 20px;
+
+    /* `@apply flex` is a class selector — more specific than the UA
+       stylesheet's `[hidden] { display: none }` (an attribute selector), so
+       without this the panel's own `display` would win and the `hidden`
+       attribute would stop collapsing it. */
+    &[hidden] {
+      display: none;
+    }
+
+    @media (max-width: 767px) {
+      padding: 12px 14px 16px;
+    }
+  }
+
+  &__helper {
+    @apply m-0;
+    color: #64748b;
+    font-size: 14px;
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 10px;
+
+    @media (max-width: 767px) {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+  }
+
+  &__pill {
+    @apply flex w-full cursor-pointer items-center gap-2 bg-white transition-colors;
+    min-height: 52px;
+    border-radius: 999px;
+    border: 1.5px solid #e2d8cb;
+    padding: 6px 14px;
+
+    @media (max-width: 767px) {
+      min-height: 48px;
+      padding: 6px 12px;
+    }
+  }
+
+  &__pill-radio {
+    @apply relative shrink-0;
+    width: 18px;
+    height: 18px;
+    border-radius: 999px;
+    border: 2px solid #c9bfb2;
+
+    &::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      margin: auto;
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--color-primary, #f47e4d);
+      opacity: 0;
+    }
+  }
+
+  &__pill-city {
+    @apply min-w-0 flex-1 truncate;
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--main-text-color-dark, #2d3e50);
+  }
+
+  &__pill-price {
+    @apply shrink-0 whitespace-nowrap;
+    font-size: 13px;
+    color: #55657a;
+  }
+
+  /* The pill's own input is `.sr-only` (visually hidden but still focusable/
+     tabbable) — its checked/focus state is read off the adjacent `<label>`. */
+  input:checked + &__pill {
+    border-color: var(--color-primary, #f47e4d);
+    background-color: #fff4ee;
+
+    .installation-service__pill-radio {
+      border-color: var(--color-primary, #f47e4d);
+
+      &::after {
+        opacity: 1;
+      }
+    }
+
+    .installation-service__pill-city {
+      font-weight: 700;
+    }
+
+    .installation-service__pill-price {
+      font-weight: 700;
+      color: #b8481c;
+    }
+  }
+
+  input:focus-visible + &__pill {
+    outline: 2px solid var(--color-primary, #f47e4d);
+    outline-offset: 2px;
+  }
+
+  &__note {
+    border-radius: 12px;
+    background: #fff4ee;
+    padding: 10px 14px;
+    font-size: 14px;
+    color: var(--main-text-color-dark, #2d3e50);
+
+    @media (max-width: 767px) {
+      font-size: 13px;
+    }
+  }
+}

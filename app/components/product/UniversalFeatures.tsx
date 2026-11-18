@@ -34,8 +34,8 @@ export function UniversalFeatures() {
             decoding="async"
             className="h-12 w-12"
           />
-          <b className="universal-features__title mt-3 font-bold text-gray-900">{title}</b>
-          {desc && <p className="universal-features__desc text-sm text-gray-500">{desc}</p>}
+          <b className="universal-features__title mt-3 text-lg font-bold text-gray-900">{title}</b>
+          {desc && <p className="universal-features__desc text-lg text-gray-500">{desc}</p>}
         </div>
       ))}
     </div>

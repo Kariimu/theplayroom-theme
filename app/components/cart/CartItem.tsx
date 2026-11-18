@@ -6,6 +6,7 @@ import { Link, Image } from '@salla.sa/twilight-theme-engine/common';
 import { SallaCartItemOffers } from '@salla.sa/twilight-components-react/cart-item-offers';
 import { Delete01Icon } from '../icons';
 import { ProductOptionsPanel, type PanelOption } from '../common/ProductOptionsPanel';
+import { InstallationServiceOption } from '../product/InstallationServiceOption';
 import { CartQuantity } from './CartQuantity';
 import { toNumber, moneyCurrency } from './cartMoney';
 
@@ -266,6 +267,10 @@ export function CartItem({ item, isFirst = false, onMutated }: CartItemProps) {
               product-id={item.product_id}
             />
           </ProductOptionsPanel>
+        )}
+
+        {item.options && item.options.length > 0 && (
+          <InstallationServiceOption options={item.options as unknown as PanelOption[]} />
         )}
       </section>
     </form>
