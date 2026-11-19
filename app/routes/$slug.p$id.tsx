@@ -6,6 +6,7 @@ import { home } from '@salla.sa/twilight-theme-engine/api/home';
 import { ProductPage, type ProductPageWithFaq } from '../components/product/ProductPage';
 import { redirectHomeIfNotFound } from '../lib/productNotFound';
 import { buildFaqJsonLd } from '../lib/faqJsonLd';
+import { hasFeatureTags, productFeatures, type ProductFeature } from '../lib/productFeatures';
 
 export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
   loader: async ({ params, preload }): Promise<ProductPageWithFaq> => {
@@ -18,11 +19,23 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
       /* private mode */
     }
     try {
-      return await Product.loader({ params: { id: params.id }, locale: params.locale }, async () => {
-        const { queryClient } = getTwilightContext();
-        const faqComponents = await queryClient.ensureQueryData(home.queries.components());
-        return { faqComponents };
-      });
+      return await Product.loader(
+        { params: { id: params.id }, locale: params.locale },
+        async (data) => {
+          const { queryClient, locale } = getTwilightContext();
+          const [faqComponents, featureLibrary] = await Promise.all([
+            queryClient.ensureQueryData(home.queries.components()),
+            // Only a product with a `feature-` tag pays for the blog lookup. A
+            // failed or missing library never breaks the product page.
+            hasFeatureTags(data.product.tags)
+              ? queryClient
+                  .ensureQueryData(productFeatures.queries.library(locale))
+                  .catch((): ProductFeature[] => [])
+              : Promise.resolve(undefined),
+          ]);
+          return { faqComponents, featureLibrary };
+        }
+      );
     } catch (error) {
       // Hidden or deleted product: home page with a "Page not found" toast, not the 404 page.
       return redirectHomeIfNotFound(error, { locale: params.locale, preload });

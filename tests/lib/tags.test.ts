@@ -42,18 +42,18 @@ describe('whole-tag membership', () => {
 
 describe('prefixedTagKeys', () => {
   it('extracts and trims the key after the prefix, preserving order', () => {
-    const tags = ['feature: wood ', 'feature:safe', 'set:pikler', 'card:a', 'whatsapp'];
+    const tags = ['feature- wood ', 'feature-safe', 'set:pikler', 'card:a', 'whatsapp'];
     expect(prefixedTagKeys(tags, 'feature')).toEqual(['wood', 'safe']);
     expect(prefixedTagKeys(tags, 'set')).toEqual(['pikler']);
     expect(prefixedTagKeys(tags, 'card')).toEqual(['a']);
   });
 
   it('ignores a bare prefix with no key', () => {
-    expect(prefixedTagKeys(['feature:', 'feature: '], 'feature')).toEqual([]);
+    expect(prefixedTagKeys(['feature-', 'feature- '], 'feature')).toEqual([]);
   });
 
   it('matches the prefix case-insensitively', () => {
-    expect(prefixedTagKeys(['Feature:Wood'], 'feature')).toEqual(['Wood']);
+    expect(prefixedTagKeys(['Feature-Wood'], 'feature')).toEqual(['Wood']);
   });
 });
 
@@ -100,13 +100,18 @@ describe('warnUnknownTagKey', () => {
     warnUnknownTagKey('feature', 'mystery-key', known);
     warnUnknownTagKey('feature', 'mystery-key', known); // deduped
     expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0][0]).toContain('feature:mystery-key');
+    expect(warn.mock.calls[0][0]).toContain('feature-mystery-key');
   });
 });
 
 describe('convention literals', () => {
   it('are the exact strings the merchant and Phase 0b data entry rely on', () => {
     expect(TAG).toEqual({ whatsapp: 'whatsapp', cartUpsell: 'cart-upsell' });
-    expect(TAG_PREFIX).toEqual({ feature: 'feature:', card: 'card:', set: 'set:' });
+    expect(TAG_PREFIX).toEqual({
+      feature: 'feature-',
+      card: 'card:',
+      set: 'set:',
+      addOn: 'addons-p',
+    });
   });
 });

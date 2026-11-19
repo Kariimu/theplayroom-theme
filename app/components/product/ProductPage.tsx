@@ -15,6 +15,8 @@ import { ProductGallery } from './ProductGallery';
 import { ProductDetails, ProductDescription } from './ProductDetails';
 import { ProductFacts } from './ProductFacts';
 import { ProductAddOns } from './ProductAddOns';
+import { ProductFeatures } from './ProductFeatures';
+import type { ProductFeature } from '../../lib/productFeatures';
 import { ProductMetadata } from './ProductMetadata';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
@@ -85,12 +87,17 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  *
  * Upgrade notes: `FORKS.md`.
  */
-export type ProductPageWithFaq = ProductPageProps & { faqComponents?: HomeComponentData[] };
+export type ProductPageWithFaq = ProductPageProps & {
+  faqComponents?: HomeComponentData[];
+  /** The blog feature library; only loaded when the product has a `feature-` tag. */
+  featureLibrary?: ProductFeature[];
+};
 
 export function ProductPage({
   product: initialProduct,
   page,
   faqComponents,
+  featureLibrary,
 }: ProductPageWithFaq) {
   const { theme, store } = useTwilight();
   const { t } = useTranslation();
@@ -224,6 +231,11 @@ export function ProductPage({
         </div>
 
         <SallaOffer />
+
+        {/* This product's own features (06 §7.6, §5A row 69): `feature-<key>`
+            tags resolved against the blog feature library, directly under the
+            product info and above the suggested games. */}
+        <ProductFeatures tags={initialProduct.tags} library={featureLibrary} />
       </div>
 
       {/* "Suggested games" (06 §7.5, §5A row 71) — between the info and the reviews */}

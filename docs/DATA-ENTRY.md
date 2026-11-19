@@ -19,6 +19,7 @@ doesn't match exactly, it's the nearest tab/button, not a different page.
 |---|---|
 | A. Facts (specs) | **Store settings → Custom fields → Products tab** to create the section once; then open each **product → Custom fields tab** to fill in values |
 | B. Tags | **Products → open a product → Product details → tags field** |
+| B. Feature library | **Blog** → the `مميزات ألعابنا` category → one article per feature (see `feature-<key>` below) |
 | C. Category image / description | **Products → Categories & options → Categories → open a category** |
 | D. Header/footer menus | **Store & Channels → Store Design → Customize → Menu Management** |
 | E. Home block screenshots | **Store & Channels → Store Design → Customize** → the live editor (block list + each block's Edit panel); theme-wide settings are its **Design Options** tab |
@@ -73,7 +74,7 @@ Arabic-only if the dashboard allows it.
 
 ---
 
-## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`)
+## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`, `feature-<key>`)
 
 **Where:** open the product → **Product details** tab → the **tags** field →
 type the exact tag text (`whatsapp`, `cart-upsell`, `set:<name>`, or
@@ -184,6 +185,41 @@ dashboard settings above and tick whichever tags apply; most will get none.
 If the old settings turn out to be empty/unused on the live store, tick the
 section as "N/A — nothing to carry over" in `TASK.md` rather than inventing
 tag assignments.
+
+---
+
+### `feature-<key>`: Product features (replaces `special_features`)
+
+Shows up to 4 feature badges (80×80 icon + title) on the page background,
+styled like the store-wide features row, directly under the product info. Each badge links to its own explainer article. The
+feature list lives in the store's **blog**, not in the theme, so adding or
+changing a feature is dashboard work only. Code: `app/lib/productFeatures.ts`.
+
+**1. Create the feature library (once).**
+- Dashboard → **Blog** → categories → create a category named exactly
+  **`مميزات ألعابنا`** (Arabic) / **`Our toy features`** (English). The theme
+  finds the category by this name, so don't rename it.
+- Add one **article** per feature in that category:
+  - **Title** (Arabic, plus the English version): shown as the badge title.
+    Keep it short, 1 to 3 words.
+  - **Image**: the badge icon. Square, a simple icon on a light or transparent
+    background. It's also the article's cover picture in the blog.
+  - **Content**: a short explainer ("What makes a toy Montessori?"). This is
+    the page the badge links to, and the part search engines index.
+  - **Blog tag** `feature-<key>`: the key, lower-case Latin with hyphens, e.g.
+    `feature-montessori`, `feature-no-batteries`. One per article.
+
+**2. Assign features to a product.** Open the product → tags field → add the
+*identical* text, e.g. `feature-montessori`. Up to 4 show, in the order the
+tags are listed.
+
+**Things that will surprise you:**
+- A product tag with no matching article shows nothing (no error).
+- A product without `feature-` tags makes no blog request at all.
+- Changes appear within about 5 minutes (the library is cached per language).
+- Not yet verified on the real store: what English pages show when an
+  article has no English version. Check this during the first test.
+- The articles also appear in the store's blog list, by design.
 
 ---
 

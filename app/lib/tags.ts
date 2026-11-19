@@ -20,8 +20,13 @@ export const TAG = {
 
 /** `<prefix><key>` tags. The key selects an entry in a code-side library. */
 export const TAG_PREFIX = {
-  /** Feature badge; key → app/lib/features.ts (replaces `special_features`). */
-  feature: 'feature:',
+  /**
+   * Feature badge (replaces `special_features`); key → the blog article in the
+   * features category carrying the same `feature-<key>` blog tag
+   * (`app/lib/productFeatures.ts`). Hyphen, not colon: Salla rejects colons in
+   * tag names (see `addOn` below).
+   */
+  feature: 'feature-',
   /** Image card; key → card library (replaces `slider_in_products`). */
   card: 'card:',
   /** Companion "set"; products sharing a set are suggested together (replaces `products_play_games`). */
@@ -34,9 +39,8 @@ export const TAG_PREFIX = {
    * the product whose own id matches the key (the master) lists the group's
    * other members (`ProductAddOns`). An accessory carrying the same tag
    * renders nothing on its own page. No colon (Salla's tag-name validation
-   * rejects it — `product::order.errors.tag_name_regex`); `feature:`/`card:`/
-   * `set:` above have the same colon and haven't been verified against a real
-   * store yet.
+   * rejects it — `product::order.errors.tag_name_regex`); `card:`/`set:` above
+   * have the same colon and haven't been verified against a real store yet.
    */
   addOn: 'addons-p',
 } as const;

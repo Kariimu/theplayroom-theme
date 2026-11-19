@@ -66,7 +66,7 @@ Target rule: **the theme stores configuration, never content about a product or 
 | `products_settings.image_dimensions` | Per-product dimensions picture | An image inside the product description, or the last gallery image marked by its alt text; pick one in Phase 0 | 1 |
 | `products_questions` (per product) | Product FAQ | Product specs group "الأسئلة الشائعة" (field = question, value = answer). Fallback: an FAQ block at the end of the description | 1 |
 | `products_questions` (`all_products` rows) | Store-wide FAQ | `locales` keys rendered by one `ProductFaq` component | 3 |
-| `special_features` | Up to 4 image+title badges per product | Feature library in code (`app/lib/features.ts`: key, icon, ar/en title); product gets tags `feature:<key>` | 2+3 |
+| `special_features` | Up to 4 image+title badges per product | **Owner decision 19 Nov 2026:** feature library in the store blog (category `مميزات ألعابنا`, one article per feature: title, image as icon, blog tag `feature-<key>`), read server-side in the product loader (`app/lib/productFeatures.ts`); product gets the same tag `feature-<key>` (hyphen: Salla rejects colons) | 1+2 |
 | `slider_in_products` | Per-product image cards | Same library pattern with tags `card:<key>`; if the cards are truly unique per product, they belong in the description | 2+3 |
 | `products_play_games` | "Suggested games" for a product | Shared tag `set:<name>` on the product and its companions; block lists products with the same `set:` tag. Fallback: Salla's related-products list already on the page | 2 |
 | `universal_features` | 4 store-wide features | `locales` + icons in `public/` | 3 |

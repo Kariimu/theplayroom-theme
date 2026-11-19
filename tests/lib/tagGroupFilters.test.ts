@@ -40,7 +40,7 @@ describe('buildTagFilterGroups', () => {
   });
 
   it('excludes this theme convention tags, so cart-upsell is never a fake "cart" group', () => {
-    const products = [product(1, ['cart-upsell', 'whatsapp', 'feature:wood', 'set:pikler', 'gallery'])];
+    const products = [product(1, ['cart-upsell', 'whatsapp', 'feature-wood', 'set:pikler', 'gallery'])];
     expect(buildTagFilterGroups(products, false)).toEqual([]);
   });
 
