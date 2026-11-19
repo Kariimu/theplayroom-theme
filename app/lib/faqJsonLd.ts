@@ -1,4 +1,5 @@
 import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
+import { findHomeBlock } from './homeBlocks';
 
 const COMMON_QUESTIONS_PATH = 'common-questions-section';
 
@@ -17,8 +18,9 @@ export function buildFaqJsonLd(
   locale: string,
   pageUrl: string
 ): Record<string, unknown> | undefined {
-  const block = components?.find((c) => c.path === COMMON_QUESTIONS_PATH);
-  const questions = (block?.component?.questions as QuestionItem[] | undefined) ?? [];
+  const questions = (findHomeBlock(components, COMMON_QUESTIONS_PATH)?.questions as
+    | QuestionItem[]
+    | undefined) ?? [];
   const mainEntity = questions
     .filter((q): q is Required<QuestionItem> => Boolean(q.title?.trim() && q.desc?.trim()))
     .map((q) => ({

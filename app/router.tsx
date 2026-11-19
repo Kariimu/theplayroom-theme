@@ -182,11 +182,18 @@ registerHomeComponents({
   'modern-banner-section': ModernBannerSection,
   'reels-section': ReelsSection,
   'instagram-section': InstagramSection,
+  // Data-only block: it holds the product page's in-use gallery cards
+  // (`app/lib/productUsageGallery.ts`) and draws nothing on the home page.
+  // Registered so the engine doesn't show its "Unknown component" fallback.
+  'product-usage-gallery': () => null,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
 // the literal `styleN` values; this covers the semantic `view_style`s too.
 registerHomeComponentConfig({
+  // The data-only in-use gallery block: a hidden, zero-height shell, so the
+  // engine's lazy wrapper doesn't reserve its default 400px on the home page.
+  'product-usage-gallery': { className: 'hidden', height: '0px', placeholder: null },
   'featured-products': featuredProductsConfig,
   'featured-products-special-offer': featuredProductsConfig,
   'featured-products-special-product': featuredProductsConfig,

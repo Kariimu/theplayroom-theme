@@ -35,7 +35,7 @@ Read first: `AGENTS.md` (engine rules + Playroom section) and `docs/MIGRATION-PL
 ## Stage 1 — Plan update and manifest
 Goal: the plan reflects what Phase 0 proved, and `twilight.json` is final.
 - [x] "Phase 0 findings" section in `docs/MIGRATION-PLAN.md` §5B (from `docs/PHASE-0-FINDINGS.md`) with the final tier for every 5A row; PENDING flags cleared. The three "Confirm in Stage 1" items verified against the engine in this repo: (1) specs are **client-only** (no server metadata fetch → SEO text also goes in the description); (2) `'tags'` is a valid list source, numeric id from the tag URL (`tagIdFromUrl`); (3) `Category` carries `description`/`image`/`sub_categories` (values are Stage-7 data entry).
-- [x] `app/lib/tags.ts`: the single list of tag conventions (`whatsapp`, `cart-upsell`, `feature:`, `card:`, `set:`, `Group-Value` filter tags) + dev-only unknown-tag warning, with tests
+- [x] `app/lib/tags.ts`: the single list of tag conventions (`whatsapp`, `cart-upsell`, `feature-`, `inuse-` (was `card:`), `set:`, `Group-Value` filter tags) + dev-only unknown-tag warning, with tests
 - [x] `twilight.json`: starter base + the Tier-4 "keep" settings (`show_whatsapp`, `whatsapp_number`, `footer_logo`, `footer_description`) with old ids/Arabic labels; no root collections, no root product pickers. `categories_whatsapp` held pending the spike (tags vs fallback dropdown)
 - [x] Six shared home blocks: already carry the legacy `key`/`path` in the starter and lack no legacy field (verified) — no change needed
 - [x] Twelve custom home blocks declared with exact `key`/`path`/title/icon/fields (incl. `fatures`); two value-only fixes for the React validator (boolean `0→false`, collection `maxLength` string→int), no ids touched
@@ -105,6 +105,7 @@ Built this stage: **(1)** `CartUpsellSlider` — the one real gap in item 1 (`Ca
 The old theme ignores this data, so it is safe to enter while the Twig theme is live.
 - [ ] Enter facts as specs on the 3 products listed in `docs/legacy/data/products.csv`
 - [ ] Add tags where needed (`whatsapp`, `cart-upsell`, `set:<name>`) per `app/lib/tags.ts`
+- [ ] In-use gallery: add the `product-usage-gallery` block once, enter its cards, tag products `inuse-<key>` (`docs/DATA-ENTRY.md` → `inuse-<key>`)
 - [ ] Category images and descriptions for categories that had banners (`docs/legacy/data/categories.csv`)
 - [ ] Header and footer menus in the dashboard match the old side menu and footer columns
 - [ ] Screenshot the current home page setup and every theme setting screen (rollback reference)

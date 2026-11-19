@@ -21,6 +21,7 @@ import { ProductMetadata } from './ProductMetadata';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { UniversalFeatures } from './UniversalFeatures';
+import { ProductUsageGallery } from './ProductUsageGallery';
 import { ProductFaq } from './ProductFaq';
 import { SuggestedGames } from './SuggestedGames';
 import { ProductReviews } from './ProductReviews';
@@ -81,7 +82,8 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * of `<AddToCartForm>` — same convention as the product card. Also adds what
  * the engine route doesn't render at all: trust/payment badges beside the
  * form, {@link SuggestedGames} (a `set:` tag companion list) between the info
- * and the reviews, and the store-wide {@link UniversalFeatures} / {@link
+ * and the reviews, the product's own in-use photos ({@link
+ * ProductUsageGallery}, §5A row 70), and the store-wide {@link UniversalFeatures} / {@link
  * ProductFaq} between the reviews and related products (06 §7, §5A rows
  * 71/72/80, D2).
  *
@@ -256,6 +258,11 @@ export function ProductPage({
           <ProductReviews key={commentsKey} product={product} />
         </RenderWhenVisible>
       )}
+
+      {/* The product in use (06 §7.6, §5A row 70): cards from the
+          `product-usage-gallery` home block matched by `inuse-<key>` tags —
+          directly above the store-wide features. */}
+      <ProductUsageGallery components={faqComponents} tags={initialProduct.tags} />
 
       {/* Store-wide features (06 §7.8, §5A row 72) — between the reviews and related */}
       <UniversalFeatures />

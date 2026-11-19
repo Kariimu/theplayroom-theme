@@ -6,6 +6,7 @@ import { home } from '@salla.sa/twilight-theme-engine/api/home';
 import { ProductPage, type ProductPageWithFaq } from '../components/product/ProductPage';
 import { redirectHomeIfNotFound } from '../lib/productNotFound';
 import { buildFaqJsonLd } from '../lib/faqJsonLd';
+import { devPreviewBlocks } from '../lib/homeBlocks';
 import { hasFeatureTags, productFeatures, type ProductFeature } from '../lib/productFeatures';
 
 export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
@@ -23,7 +24,7 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
         { params: { id: params.id }, locale: params.locale },
         async (data) => {
           const { queryClient, locale } = getTwilightContext();
-          const [faqComponents, featureLibrary] = await Promise.all([
+          const [storeComponents, featureLibrary, previewComponents] = await Promise.all([
             queryClient.ensureQueryData(home.queries.components()),
             // Only a product with a `feature-` tag pays for the blog lookup. A
             // failed or missing library never breaks the product page.
@@ -32,7 +33,11 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
                   .ensureQueryData(productFeatures.queries.library(locale))
                   .catch((): ProductFeature[] => [])
               : Promise.resolve(undefined),
+            // `pnpm dev` only: the dev panel's home layout, when its overrides
+            // are on, so blocks added there (FAQ, in-use gallery) show here too.
+            devPreviewBlocks(),
           ]);
+          const faqComponents = previewComponents ?? storeComponents;
           return { faqComponents, featureLibrary };
         }
       );

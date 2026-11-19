@@ -42,10 +42,10 @@ describe('whole-tag membership', () => {
 
 describe('prefixedTagKeys', () => {
   it('extracts and trims the key after the prefix, preserving order', () => {
-    const tags = ['feature- wood ', 'feature-safe', 'set:pikler', 'card:a', 'whatsapp'];
+    const tags = ['feature- wood ', 'feature-safe', 'set:pikler', 'inuse-a', 'whatsapp'];
     expect(prefixedTagKeys(tags, 'feature')).toEqual(['wood', 'safe']);
     expect(prefixedTagKeys(tags, 'set')).toEqual(['pikler']);
-    expect(prefixedTagKeys(tags, 'card')).toEqual(['a']);
+    expect(prefixedTagKeys(tags, 'inUse')).toEqual(['a']);
   });
 
   it('ignores a bare prefix with no key', () => {
@@ -109,7 +109,7 @@ describe('convention literals', () => {
     expect(TAG).toEqual({ whatsapp: 'whatsapp', cartUpsell: 'cart-upsell' });
     expect(TAG_PREFIX).toEqual({
       feature: 'feature-',
-      card: 'card:',
+      inUse: 'inuse-',
       set: 'set:',
       addOn: 'addons-p',
     });

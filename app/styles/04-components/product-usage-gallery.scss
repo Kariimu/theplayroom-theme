@@ -1,0 +1,68 @@
+/* =========================================================================
+   Product in-use gallery (`ProductUsageGallery`): photo, title, description
+   per card, above the universal features. From `md` up it is the shared
+   `.scroll-carousel` row, three cards across. On phones the same track
+   becomes a one-column grid (image, title, description, next card): no
+   horizontal scroll, no dots.
+   ========================================================================= */
+
+.product-usage-gallery {
+  margin-block: 48px;
+
+  @media (min-width: 768px) {
+    margin-block: 64px;
+  }
+
+  &__heading {
+    @apply text-2xl font-black text-gray-900 md:text-3xl;
+  }
+
+  &__card {
+    margin: 0;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+
+    @media (min-width: 768px) {
+      width: calc((100% - 2 * 1rem) / 3); /* md:gap-4 */
+    }
+
+    @media (min-width: 1024px) {
+      width: calc((100% - 2 * 1.5rem) / 3); /* lg:gap-6 */
+    }
+  }
+
+  &__image {
+    @apply block w-full rounded-2xl bg-gray-100 object-cover;
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  &__caption {
+    @apply mt-4 text-start;
+  }
+
+  &__title {
+    @apply text-xl font-black text-gray-900;
+  }
+
+  &__desc {
+    @apply mt-1 text-lg text-gray-500;
+  }
+
+  @media (max-width: 767px) {
+    .scroll-carousel__track.product-usage-gallery__track {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+      cursor: auto;
+      scroll-snap-type: none;
+    }
+
+    .carousel-dots {
+      display: none;
+    }
+  }
+}

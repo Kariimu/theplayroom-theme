@@ -1,6 +1,7 @@
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
 import { FaqAccordion, type FaqQuestionItem } from '../common/FaqAccordion';
+import { findHomeBlock } from '../../lib/homeBlocks';
 
 const COMMON_QUESTIONS_PATH = 'common-questions-section';
 
@@ -15,8 +16,8 @@ const COMMON_QUESTIONS_PATH = 'common-questions-section';
  */
 export function ProductFaq({ components }: { components?: HomeComponentData[] }) {
   const { t } = useTranslation();
-  const block = components?.find((c) => c.path === COMMON_QUESTIONS_PATH);
-  const questions = (block?.component?.questions as FaqQuestionItem[] | undefined) ?? [];
+  const questions =
+    (findHomeBlock(components, COMMON_QUESTIONS_PATH)?.questions as FaqQuestionItem[] | undefined) ?? [];
 
   if (!questions.length) return null;
 

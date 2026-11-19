@@ -3,7 +3,7 @@
  * The single source of truth for product-tag conventions in this theme.
  *
  * The old Twig theme drove several behaviours from theme settings that listed
- * product ids (WhatsApp categories, cart upsell, feature badges, image cards,
+ * product ids (WhatsApp categories, cart upsell, feature badges, in-use cards,
  * "suggested games"). Per docs/MIGRATION-PLAN.md §5A those move onto the product
  * itself as tags, so the card and product page read one product's own tags
  * instead of a store-wide crawl. Keep every convention here; nothing else in the
@@ -27,8 +27,13 @@ export const TAG_PREFIX = {
    * tag names (see `addOn` below).
    */
   feature: 'feature-',
-  /** Image card; key → card library (replaces `slider_in_products`). */
-  card: 'card:',
+  /**
+   * In-use gallery group (replaces `slider_in_products`); key → the cards with
+   * the same group key in the `product-usage-gallery` home block
+   * (`app/lib/productUsageGallery.ts`). Hyphen, not colon: Salla rejects colons
+   * in tag names (see `addOn` below).
+   */
+  inUse: 'inuse-',
   /** Companion "set"; products sharing a set are suggested together (replaces `products_play_games`). */
   set: 'set:',
   /**
@@ -39,8 +44,8 @@ export const TAG_PREFIX = {
    * the product whose own id matches the key (the master) lists the group's
    * other members (`ProductAddOns`). An accessory carrying the same tag
    * renders nothing on its own page. No colon (Salla's tag-name validation
-   * rejects it — `product::order.errors.tag_name_regex`); `card:`/`set:` above
-   * have the same colon and haven't been verified against a real store yet.
+   * rejects it — `product::order.errors.tag_name_regex`); `set:` above has the
+   * same colon and hasn't been verified against a real store yet.
    */
   addOn: 'addons-p',
 } as const;
@@ -116,7 +121,7 @@ export function parseGroupValueTag(tag: string): { group: string; value: string 
 
 /**
  * Dev-only guard: warn once per unknown `<prefix><key>` tag whose key is not in
- * the code library, so a mistyped `feature:` / `card:` / `set:` tag is caught in
+ * the code library, so a mistyped `feature-` / `inuse-` / `set:` tag is caught in
  * the editor instead of silently rendering nothing (MIGRATION-PLAN §8). No-op in
  * production builds.
  */

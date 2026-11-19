@@ -20,6 +20,7 @@ doesn't match exactly, it's the nearest tab/button, not a different page.
 | A. Facts (specs) | **Store settings → Custom fields → Products tab** to create the section once; then open each **product → Custom fields tab** to fill in values |
 | B. Tags | **Products → open a product → Product details → tags field** |
 | B. Feature library | **Blog** → the `مميزات ألعابنا` category → one article per feature (see `feature-<key>` below) |
+| B. In-use gallery cards | **Store Design → Customize** → the `معرض الاستخدام (صفحة المنتج فقط)` block (see `inuse-<key>` below) |
 | C. Category image / description | **Products → Categories & options → Categories → open a category** |
 | D. Header/footer menus | **Store & Channels → Store Design → Customize → Menu Management** |
 | E. Home block screenshots | **Store & Channels → Store Design → Customize** → the live editor (block list + each block's Edit panel); theme-wide settings are its **Design Options** tab |
@@ -74,7 +75,7 @@ Arabic-only if the dashboard allows it.
 
 ---
 
-## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`, `feature-<key>`)
+## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`, `feature-<key>`, `inuse-<key>`)
 
 **Where:** open the product → **Product details** tab → the **tags** field →
 type the exact tag text (`whatsapp`, `cart-upsell`, `set:<name>`, or
@@ -220,6 +221,50 @@ tags are listed.
 - Not yet verified on the real store: what English pages show when an
   article has no English version. Check this during the first test.
 - The articles also appear in the store's blog list, by design.
+
+### `inuse-<key>`: Product in-use gallery (replaces `slider_in_products`)
+
+Shows photos of the product in use, each with a title and a short
+description, on the product page **directly above the store-wide features**.
+Desktop: a row of 3 cards with arrows. Mobile: one card under the other
+(image, title, description). The cards live in a theme block, so adding or
+changing one is dashboard work only. Code: `app/lib/productUsageGallery.ts`.
+
+**1. Add the block (once).** Store Design → Customize → home page → add the
+block **"معرض الاستخدام (صفحة المنتج فقط)"**. It shows **nothing** on the home
+page: it only holds the cards. Keep it in the home layout and switched on,
+or the product pages lose their cards. Optionally fill **"عنوان القسم في صفحة
+المنتج"** (AR + EN); empty uses "شاهدها أثناء اللعب" / "See it in action".
+
+**2. Add the cards.** One item per photo:
+- **مفتاح المجموعة / Group key**: lower-case Latin with hyphens, e.g.
+  `swedish-ladder`. Every card of one product (or one product family) uses
+  the same key.
+- **Image**: square, 900×900 or larger.
+- **Title** (AR + EN): short, e.g. "سلالم التسلق".
+- **Description** (AR + EN, optional): one line.
+
+Cards show in the order they are listed in the block (drag to reorder), at
+most 8 per product.
+
+**3. Tag the product.** Open the product → tags field → add `inuse-<key>`,
+e.g. `inuse-swedish-ladder`. Several products can carry the same tag (sizes,
+colours); a product can carry more than one `inuse-` tag.
+
+**From the live store (copy before switching themes)**, Swedish ladder
+`p1571449334`. Images are on the live product page; save them from there.
+
+- [ ] Card key `swedish-ladder`: سلالم التسلق, "تطوير القوة والتنسيق الحركي"
+- [ ] Card key `swedish-ladder`: أرجوحة القراءة, "مساحة هادئة للاسترخاء والقراءة"
+- [ ] Card key `swedish-ladder`: حلقات الجمباز, "تقوية عضلات الذراعين والكتفين"
+- [ ] Write the English title and description for each card
+- [ ] Tag السلم السويدي (`p1571449334`) with `inuse-swedish-ladder`
+- [ ] Open the live theme's `slider_in_products` setting and check for any other cards
+
+**Things that will surprise you:**
+- A tag with no matching card, or a card with no image or title, shows nothing.
+- The key is matched without regard to upper/lower case or spaces at the ends.
+- Removing the block from the home layout removes every product's cards.
 
 ---
 

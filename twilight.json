@@ -4096,6 +4096,128 @@
                     "maxLength": "200"
                 }
             ]
+        },
+        {
+            "key": "3916cf61-6bbb-4b24-ac07-d5bcfee0d123",
+            "title": {
+                "en": "Product in-use gallery (product page only)",
+                "ar": "معرض الاستخدام (صفحة المنتج فقط)"
+            },
+            "icon": "sicon-image",
+            "path": "home.product-usage-gallery",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div><p>هذا القسم لا يظهر في الصفحة الرئيسية. يحفظ صور استخدام المنتجات (صورة، عنوان، وصف) وتظهر في صفحة المنتج فوق المميزات العامة.</p><p>لكل بطاقة اكتب «مفتاح المجموعة» (مثال: swedish-ladder)، ثم أضف للمنتج الوسم <b>inuse-swedish-ladder</b>. كل منتج يحمل الوسم يعرض بطاقات تلك المجموعة.</p><p>This block is not shown on the home page. It holds the product page's in-use photos. Give each card a group key (e.g. swedish-ladder) and tag the product inuse-swedish-ladder.</p></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": {
+                        "ar": "عنوان القسم في صفحة المنتج",
+                        "en": "Section title on the product page"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "شاهدها أثناء اللعب",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 2,
+                    "maxLength": 60
+                },
+                {
+                    "id": "items",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": {
+                        "ar": "بطاقات صور الاستخدام",
+                        "en": "In-use cards"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": "بطاقة",
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "items.key",
+                            "type": "string",
+                            "format": "text",
+                            "label": {
+                                "ar": "مفتاح المجموعة",
+                                "en": "Group key"
+                            },
+                            "description": "حروف إنجليزية صغيرة وشرطات فقط. يطابق وسم المنتج inuse-<المفتاح>",
+                            "placeholder": "swedish-ladder",
+                            "icon": "sicon-tag",
+                            "value": null,
+                            "multilanguage": false,
+                            "required": true,
+                            "minLength": 1,
+                            "maxLength": 60
+                        },
+                        {
+                            "id": "items.image",
+                            "type": "string",
+                            "format": "image",
+                            "label": {
+                                "ar": "الصورة (مربعة، 900×900)",
+                                "en": "Image (square, 900×900)"
+                            },
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": true,
+                            "placeholder": null,
+                            "description": null
+                        },
+                        {
+                            "id": "items.title",
+                            "type": "string",
+                            "format": "text",
+                            "label": {
+                                "ar": "العنوان",
+                                "en": "Title"
+                            },
+                            "description": null,
+                            "placeholder": "سلالم التسلق",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": true,
+                            "minLength": 1,
+                            "maxLength": 100
+                        },
+                        {
+                            "id": "items.desc",
+                            "type": "string",
+                            "format": "textarea",
+                            "label": {
+                                "ar": "الوصف",
+                                "en": "Description"
+                            },
+                            "description": null,
+                            "placeholder": "تطوير القوة والتنسيق الحركي",
+                            "icon": "sicon-typography",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": 1,
+                            "maxLength": 300
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 0,
+                    "maxLength": 100
+                }
+            ]
         }
     ],
     "support_url": null,
