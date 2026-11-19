@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "settings": {
     "product_card_layout": "vertical",
     "product_card_img_ratio": "auto",
@@ -8,25 +8,25 @@
     "header_show_store_info": false,
     "header_store_info_home_only": true,
     "header_is_sticky": false,
-    "topnav_is_dark": true,
+    "topnav_is_dark": false,
     "important_links": true,
     "squar_photo_bg_image_size": "contain",
     "vertical_fixed_products": false,
     "is_more_button_enabled": false,
-    "footer_is_dark": true,
+    "footer_is_dark": false,
     "product_show_breadcrumbs": true,
     "product_index_show_breadcrumbs": true,
     "enable_add_product_toast": true,
     "notify_when_available_in_card": true,
     "sticky_add_to_cart": true,
     "product_options_collapsible": true,
-    "show_tags": false,
     "slider_background_size": "contain",
     "imageZoom": false,
     "show_whatsapp": true,
     "whatsapp_number": 0,
     "footer_logo": "",
-    "footer_description": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع."
+    "footer_description": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع.",
+    "show_tags": false
   },
   "layout": [
     {
@@ -169,6 +169,34 @@
         "follow_btn": "",
         "posts": [],
         "showing-btn": ""
+      }
+    },
+    {
+      "id": "b-21804809e691",
+      "path": "product-usage-gallery",
+      "fields": {
+        "key": "3916cf61-6bbb-4b24-ac07-d5bcfee0d123",
+        "title_section": "",
+        "items": [
+          {
+            "key": "swedish-ladder",
+            "image": "/__twilight/preview/image/39646d5ac559c87b.png",
+            "title": "سلالم التسلق",
+            "desc": "تطوير القوة والتنسيق الحركي"
+          },
+          {
+            "key": "swedish-ladder",
+            "image": "/__twilight/preview/image/39e625a07c669e29.png",
+            "title": "حلقات الجمباز",
+            "desc": "تقوية عضلات الذراعين والكتفين"
+          },
+          {
+            "key": "swedish-ladder",
+            "image": "/__twilight/preview/image/c89ee808f52a016e.png",
+            "title": "أرجوحة القراءة",
+            "desc": "مساحة هادئة للاسترخاء والقراءة"
+          }
+        ]
       }
     }
   ]

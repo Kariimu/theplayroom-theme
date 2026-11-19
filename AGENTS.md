@@ -28,24 +28,6 @@ Do not write an engine API from memory. Look it up first:
 | Keep it fast, or lint it                               | `/guide/performance`, `/guide/lint-your-theme`                                       |
 | Use a `<salla-*>` web component                        | `/web-components` (index), then `/web-components/<tag>` for its props, events, slots |
 
-## Layout
-
-```text
-app/start.ts          request middleware. Rarely edited.
-app/router.tsx        createRouter(), registerHomeComponents(), registerThemeHooks()
-app/routes.ts         EDIT: manifest of custom or overriding routes
-app/routes/__root.tsx EDIT: the only hand-maintained route file
-app/routes/*          your route files (declared in routes.ts); the rest are generated
-app/routeTree.gen.ts  GENERATED. Never edit.
-app/components/       EDIT: your components and overrides
-app/hooks/            EDIT: React hooks (useX.ts) + hook-slot registrations (index.tsx)
-app/lib/              EDIT: non-React helpers and constants
-app/styles/           Tailwind + SCSS
-FORKS.md              EDIT: engine components copied into this theme; update on engine upgrades
-locales/{ar,en}.json  EDIT: theme translations
-twilight.json         EDIT: merchant settings, home blocks, features
-```
-
 ## Rules that prevent the usual mistakes
 
 **Routes**
@@ -58,7 +40,7 @@ twilight.json         EDIT: merchant settings, home blocks, features
 
 **Components and registry**
 
-- Only these registry keys are resolved: `product:card`, `product:list-page`, the `home:*` blocks, `account:layout-pending`. Overriding any other name does nothing. For anything else use a hook slot or fork the route.
+- Only these registry keys are resolved: `product:card`, `product:list-page`, the `home:*` blocks, `account:layout-pending`. Overriding any other name does nothing. For anything else use a hook slot (registered in `app/hooks/index.tsx`) or fork the route.
 - To replace the product card call `registry.register('product:card', X)` and then `registry.override('product:card', X)`. `override()` alone is silently ignored.
 - Home blocks are bound by key in `registerHomeComponents({ ...DefaultHomeComponents, key: MyComponent })`. Keep the spread, or you lose the defaults.
 - A block with a `view_style` is looked up as `key:styleN` before `key`. Register both when you replace it.
