@@ -1,341 +1,128 @@
 /* =========================================================================
-   Product reviews — restyle of the engine `<salla-comments>` web component
-   (light DOM, `.s-*` classes) to the legacy theme's photo-card grid
-   (`pages/product/single.twig` §7's custom `#reviews-container`):
+   Product reviews: text-first cards (reference: the Loox widget on
+   avenlur.com product pages). Restyles the engine `<salla-comments>` web
+   component (light DOM, `.s-*` classes) without changing its markup.
 
-     · header: a rectangular "Add Review" button (live's exact class list,
-       verbatim, see `ProductReviews.tsx`) + a borderless rating badge
-       (brand `accent`/`primary` colours), replacing the engine's own
-       heading and always-visible summary band — except live opens a
-       centered modal for "Add Review" where this still reveals the
-       engine's own form inline (a known, deliberate deviation — the
-       documented `comment.add` SDK call has no rating parameter, so
-       there's no supported way to submit the stars outside that form)
-     · summary: the engine's own `<salla-reviews-summary>`, physically
-       reparented into the badge's wrapper div (it isn't rendered there to
-       begin with) so a plain CSS `group-hover`/`group-focus-within` can
-       show/hide it exactly like live — no click, no JS-computed position.
-       Restyled from live's full static band into live's own *compact
-       dropdown* layout: two columns (average+stars | breakdown bars), the
-       "recommended %" block hidden (not part of the compact dropdown)
-     · write form: hidden until "Add Review" is clicked — but renders empty
-       regardless unless the current customer is allowed to comment on this
-       product (a Salla eligibility rule, not a theme bug)
-     · reviews: a responsive card grid (2 / 3 / 4 / 6 columns), each card a
-       square "photo" on top — the review's own attached photo, falling
-       back to the product image, never the reviewer's avatar — then name,
-       star row, and date only (no time, no text, no "helpful" button —
-       live's text/photos are reachable by clicking a card, which opens a
-       `BottomSheet`; live's own `cursor-pointer` there is a dead affordance,
-       this theme gives it one), inside a flat (unrounded) bordered tile
+     · title: centred, same size as the in-use gallery heading
+     · toolbar: average + stars + count (hover/focus opens the engine's own
+       `<salla-reviews-summary>` breakdown as a dropdown) at the inline start,
+       an outlined "Write a review" button at the inline end
+     · write form: hidden until "Write a review" is pressed
+       (`.reviews-is-writing`)
+     · cards: 1 column on mobile, 2 from `md`, top-aligned. Each card shows
+       name + verified-purchase tick, date (no time), stars, full text, then
+       any attached photos as small thumbnails (no "helpful" button)
+     · "load more": an outlined, transparent, content-width button, centred
 
-   Nothing here changes the component's own markup — it's all overrides on
-   the classes it renders, plus the `.reviews-wrapper` state class
-   (`reviews-is-writing`) that `ProductReviews.tsx` toggles (same
-   light-DOM-class-toggle pattern as `ProductMetadata`). Scoped to
-   `.s-comments-product` so the account-page / blog comment lists keep the
-   engine look — except the rating-summary rules further down, which live
-   under a separate top-level `.reviews-wrapper` block: `ProductReviews.tsx`
-   physically reparents `<salla-reviews-summary>` out of the engine's own
-   subtree into the badge's wrapper div, so a `.s-comments-product …` rule
-   would stop matching it after the move. Mounted from
-   `app/components/product/ProductReviews.tsx`.
+   Mounted from `app/components/product/ProductReviews.tsx`. Rules that touch
+   the card list are scoped to `.s-comments-product`, so the account-page /
+   blog comment lists keep the engine look. The summary dropdown rules live
+   under `.reviews-wrapper` because `ProductReviews.tsx` moves
+   `<salla-reviews-summary>` out of `.s-comments-product` into the toolbar.
    ========================================================================= */
 
-.s-comments-product {
-  /* Matches the Tailwind `accent` token (`#f5a623`, see tailwind.config.js) —
-     the live site's `fill-accent`/`text-accent` on review stars and badges.
-     Kept as a local custom property (not `theme('colors.accent')`) so every
-     existing `var(--rev-accent)` reference below inherits the fix. */
+.reviews-wrapper {
+  /* Tailwind `accent` (#f5a623). Declared on the outer wrapper so both the
+     card list and the moved summary panel inherit it. */
   --rev-accent: #f5a623;
-  --rev-line: #e5e7eb;
-  --rev-muted: #9ca3af;
+  --rev-muted: #6b7280;
   --rev-ink: #1f2937;
 
-  /* ---- section heading + comment form ----------------------------------
-     the custom header (`.reviews-wrapper__head`) replaces both: the heading
-     with the "Add Review" + rating-badge row, the form by staying hidden
-     until that button opens it (`.reviews-is-writing` below). Hidden on the
-     `<salla-comment-form>` tag itself, confirmed against the real DOM —
-     NOT its internal markup, which we can't see: it renders empty unless
-     the current customer is allowed to comment (`user.can_comment`, per
-     Salla's docs — in practice this needs a verified purchase, not just
-     being logged in), so there's nothing inside to inspect for most test
-     accounts. Toggling the whole element works regardless of what it
-     renders once that condition is met. */
-  .s-comments-title {
-    @apply hidden;
+  /* space above the section; no divider lines anywhere in it */
+  @apply pt-10 md:pt-14;
+
+  &__title {
+    @apply mb-6 text-center font-black text-gray-900 md:mb-8;
+    font-size: 32px;
+    line-height: 1.25;
   }
 
-  salla-comment-form {
-    @apply hidden;
+  /* toolbar and grid share one centred column, so two cards stay a readable
+     width instead of stretching across a wide screen */
+  &__head,
+  .s-comments-product {
+    @apply mx-auto max-w-5xl;
   }
 
-  .s-comment-form-input {
-    @apply w-full rounded border border-gray-200 px-4 py-3 text-sm;
+  /* `relative`: the summary panel anchors here on mobile (full width under
+     the toolbar). Mobile: rating badge on top, "Write a review" full width
+     under it. From `md`: one row, badge at the inline start, button at the
+     inline end, both edges flush with the cards below. */
+  &__head {
+    @apply relative mb-4 flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between;
 
-    &:focus {
-      @apply outline-none;
-      border-color: var(--rev-accent);
+    /* the spacer that keeps the button at the inline end on desktop when
+       there is no rating yet */
+    > span:empty {
+      @apply hidden md:block;
     }
   }
 
-  .s-comment-form-action {
-    @apply mt-3;
+  &__badge {
+    @apply inline-flex items-center gap-2 py-2 text-base transition hover:opacity-80;
+    color: var(--rev-ink);
   }
 
-  /* ---- list header ("N تعليقات" + sort) ----------------------------- */
-  /* not on the live site: the theme's own header (`.reviews-wrapper__head` —
-     "Add Review" + rating badge) replaces this entirely. `.has-total` is the
-     engine's own modifier that forces it visible when there's a count to
-     show — still has to lose to `!important` or it would win on specificity
-     (one extra class) over the bare `.s-comments-header` hide below it. */
-  .s-comments-header,
-  .s-comments-header.has-total,
-  .s-comments-filter-wrapper {
-    @apply hidden !important;
-  }
+  /* same look as the "load more" button below the cards (full width on
+     mobile, content width from `md`) */
+  &__write {
+    @apply inline-flex h-auto w-full items-center justify-center border px-6 py-2 font-bold transition-colors md:w-auto;
+    font-size: 18px;
+    line-height: 1.4;
+    border-radius: 0.5rem;
+    border-color: #d1d5db;
+    background: transparent;
+    color: #222222;
 
-  .s-translate-all-wrap {
-    @apply mb-3 text-xs;
-  }
-
-  /* ---- one review, as a flat photo card ------------------------------
-     `ProductReviews.tsx` adds `role="button"` / `tabindex="0"` and a click
-     delegate that opens the full review in a `BottomSheet`. */
-  .s-comments-item {
-    @apply block cursor-pointer overflow-hidden rounded-none border bg-slate-100 transition-shadow duration-200;
-    border-color: var(--rev-line);
+    &:hover,
+    &[aria-expanded='true'] {
+      border-color: var(--rev-ink);
+    }
 
     &:focus-visible {
       outline: 2px solid var(--rev-accent);
       outline-offset: 2px;
     }
-
-    &:hover {
-      @apply shadow-lg;
-    }
   }
 
-  .s-comments-item-wrapper {
-    @apply flex h-full flex-col;
-  }
+  /* ---- rating summary: the engine's block as a dropdown under the badge */
 
-  .s-comments-item-inner {
-    @apply flex flex-1 flex-col items-stretch gap-0;
-  }
+  /* `<salla-reviews-summary>` is itself the panel (the engine puts
+     `.s-reviews-summary-wrapper` on the host).
 
-  /* the card's "photo" slot — square, full width, on top, at every breakpoint
-     (the live site never crops to 3:4). `ProductReviews.tsx` swaps the `img`
-     src here to the review's own attached photo, falling back to the product
-     image when the review has none — never the reviewer's avatar. */
-  .s-comments-item-inner > .s-comments-item-avatar {
-    @apply block aspect-square w-full shrink-0 overflow-hidden;
-  }
-
-  .s-comments-item-avatar-img {
-    @apply h-full w-full rounded-none object-cover;
-  }
-
-  /* the padded text column under the photo. Card face shows exactly three
-     things, in this order: name, stars, date — nothing else (the verified-
-     purchase badge, review text and "helpful" button are hidden below; the
-     `BottomSheet` opened on click still has the full text/photos). `gap`
-     here is the only spacing between them, now that the wrapper below is
-     unboxed. */
-  .s-comments-item-inner > .s-comments-flex-1 {
-    @apply flex flex-1 flex-col gap-1.5 p-3 text-start;
-  }
-
-  /* `display: contents` drops this element's own box so its children —
-     `.s-comments-item-user-info` (name) and `.s-comments-item-timestamp`
-     (date) — become direct flex items of `.s-comments-flex-1` above,
-     sitting alongside the stars row (a sibling the engine renders outside
-     this wrapper) instead of being stuck together inside it. That's what
-     makes the `order` values below able to interleave stars between them. */
-  .s-comments-item-user-wrapper {
-    @apply contents;
-  }
-
-  .s-comments-item-user-info {
-    @apply order-1 flex flex-col items-start;
-  }
-
-  .s-comments-item-user-info-name-with-margin,
-  .s-comments-item-user-info-name {
-    @apply m-0 text-sm font-bold leading-tight;
-    color: var(--rev-ink);
-  }
-
-  /* the verified-purchase badge ("تم التقييم") — not one of the three fields
-     the card face shows. */
-  .s-comments-item-user-info .s-comments-flex {
-    @apply hidden;
-  }
-
-  .s-comments-item-has-order-check-icon {
-    @apply inline-flex h-3.5 w-3.5;
-
-    svg {
-      @apply h-[80%];
-    }
-  }
-
-  .s-comments-item-rated-widget {
-    color: var(--rev-muted);
-  }
-
-  /* compact star row, between the name and the date (not pinned/absolute —
-     the card is narrow, so a floating pill would overlap the text). The
-     engine's own utility-class wrapper around <salla-rating-stars>; already
-     a direct child of `.s-comments-flex-1`, so `order` places it without
-     needing the `contents` trick above. */
-  .s-comments-item-inner > .s-comments-flex-1 > div[class~='flex-row'] {
-    /* `m-0` zeroes the engine's own `mt-2 mb-4` on this element so the
-       `gap-1.5` on `.s-comments-flex-1` is the only spacing, not an addition
-       to it. */
-    @apply order-2 m-0 items-center gap-1;
-  }
-
-  .s-comments-item salla-rating-stars {
-    .s-rating-stars-wrapper {
-      gap: 1px;
-    }
-
-    .s-rating-stars-btn-star {
-      padding-inline: 0;
-
-      svg {
-        /* 18x18 on the live site. */
-        @apply h-[18px] w-[18px];
-      }
-    }
-
-    .s-rating-stars-btn-star.s-rating-stars-selected {
-      fill: var(--rev-accent);
-    }
-  }
-
-  /* the factors toggle ("التفاصيل ⌃"), when a review has rating factors */
-  .s-comments-item-review-factors-toggle {
-    @apply text-xs;
-    color: var(--rev-muted);
-  }
-
-  /* body text — a rating-only review renders an empty <p>, drop it so it
-     doesn't reserve a blank line. Unclamped: the live site shows the full
-     review text, growing the card. */
-  .s-comments-item-content-container p {
-    @apply mb-0 text-sm leading-relaxed;
-    color: #4b5563;
-
-    &:empty {
-      @apply hidden;
-    }
-  }
-
-  /* always hidden: `ProductReviews.tsx` promotes the first attached photo (if
-     any) to the card's top "photo" slot, so showing it again here would
-     duplicate it. The `img`s stay in the DOM — the `BottomSheet` detail view
-     still reads them. */
-  .s-comments-item-images {
-    @apply hidden;
-  }
-
-  /* review text + the "helpful" button — not one of the three fields the
-     card face shows (the `BottomSheet` opened on click still has the full
-     text/photos; it reads these nodes by `textContent`/`querySelectorAll`,
-     which still works on a hidden element). */
-  .s-comments-item-content {
-    @apply hidden;
-  }
-
-  /* date — the last of the three fields, date only (no "- HH:MM" time; see
-     `.s-comments-item-time` below), at 16px gray instead of the engine's
-     default muted caption size. The engine marks this `.s-ltr` to keep the
-     date's digits left-to-right, which also flips its own `text-align` to
-     the left — visually stranded on the wrong side against the
-     right-aligned name/stars above it in Arabic. With the time hidden, the
-     content is a single numeral run ("18/6/2026"), which the Unicode bidi
-     algorithm renders left-to-right either way — so resetting
-     direction/alignment back to the page's own flow is safe and only moves
-     the block, not the digits inside it. (With the time still shown, this
-     would be unsafe: two numeral runs around "-" reorder under RTL into
-     "21:26 - 18/6/2026" — which is exactly why the engine stamped `.s-ltr`
-     on it to begin with.) */
-  .s-comments-item-timestamp {
-    @apply order-3 m-0 text-base text-gray-500;
-
-    &.s-ltr {
-      direction: inherit;
-      text-align: start;
-    }
-  }
-
-  /* "- HH:MM" tail — dropped per the "date only" field list; the date alone
-     is enough. */
-  .s-comments-item-time {
-    @apply hidden;
-  }
-
-  /* admin replies keep the engine treatment, just tint the accent */
-  .s-comments-item-admin {
-    .s-comments-item-reply-icon {
-      color: var(--rev-accent);
-      fill: var(--rev-accent);
-    }
-  }
-}
-
-/* ---- rating summary — the engine's own block, turned into a dropdown
-   panel under the rating badge instead of a static band.
-   `ProductReviews.tsx` physically moves `<salla-reviews-summary>` inside
-   the badge's own `.group` wrapper (in `.reviews-wrapper__head`) once it
-   mounts — the engine doesn't render it there to begin with — so position
-   and hover/unhover visibility can both be plain CSS, exactly like live's
-   `group-hover`, with no JS state or measurement involved.
-
-   NOT scoped under `.s-comments-product` like the rest of this file: after
-   the move, the panel physically lives outside that subtree (inside
-   `.reviews-wrapper__head`, a sibling), so a `.s-comments-product …` rule
-   would never match it again. `--rev-accent` is redeclared here for the
-   same reason — custom properties only inherit through the DOM the element
-   actually sits in, not the DOM it used to sit in. */
-.reviews-wrapper {
-  --rev-accent: #f5a623;
-
-  /* `inset-inline-start-0` is the logical form of live's hard-coded
-     `right-0` (that page is Arabic-only; this theme serves `/en` too). */
+     The engine makes this host a size container (`container: reviews-summary
+     / inline-size`). Inline-size containment means the box ignores its
+     content when sizing, so `w-max` collapsed to just the padding (~50px)
+     and the stars and bars spilled out past the white background.
+     `container-type: normal` lets the panel grow to fit its content. */
   .s-reviews-summary-wrapper {
-    @apply invisible absolute top-full z-50 mt-2 w-max max-w-[calc(100vw-2rem)] rounded-2xl border border-gray-200 bg-white p-6 opacity-0 shadow-xl transition-all duration-300;
+    @apply invisible absolute top-full z-50 mt-2 block w-max max-w-[calc(100vw-2rem)] rounded-2xl border border-gray-200 p-6 opacity-0 shadow-xl transition-all duration-300;
+    container-type: normal;
     inset-inline-start: 0;
+    background-color: #fff;
   }
 
   .group:hover .s-reviews-summary-wrapper,
-  .group:focus-within .s-reviews-summary-wrapper {
+  .group:focus-within .s-reviews-summary-wrapper,
+  .group.is-open .s-reviews-summary-wrapper {
     @apply visible opacity-100;
   }
 
-  /* mobile: near-full-width and no longer anchored under the badge — same
-     adaptation live makes (`max-md:!fixed max-md:!inset-x-[15px]
-     max-md:!top-auto max-md:!w-auto max-md:!max-w-none`), in logical form. */
+  /* mobile: full toolbar width, directly under it (the toolbar is the
+     containing block below `md`) */
   @media (max-width: 767px) {
     .s-reviews-summary-wrapper {
-      position: fixed !important;
-      inset-inline: 15px !important;
-      top: auto !important;
-      width: auto !important;
-      max-width: none !important;
+      inset-inline: 0;
+      width: auto;
+      max-width: none;
     }
   }
 
-  /* live's dropdown is two columns: the average+stars on one side, the
-     breakdown bars on the other (`flex flex-col md:flex-row gap-6
-     items-center`) — the engine's fixed markup already splits into exactly
-     these two pieces (`.s-reviews-summary-header` /`.s-reviews-summary-rows`,
-     direct siblings), so this is a restyle, not a restructure. */
+  /* average/stars and the bars: side by side from `md`, stacked on mobile.
+     Newer engine builds wrap both in `.s-reviews-summary-layout`. */
   .s-reviews-summary-layout {
     @apply flex flex-col items-center gap-6 md:flex-row;
+    flex-wrap: nowrap;
   }
 
   .s-reviews-summary-header {
@@ -346,8 +133,8 @@
     @apply flex flex-col items-center gap-2 p-0 text-center;
   }
 
-  /* "التقييم العام" label — the number + stars speak for themselves */
-  .s-reviews-summary-overall-label {
+  .s-reviews-summary-overall-label,
+  .s-reviews-summary-header-section {
     @apply hidden;
   }
 
@@ -361,10 +148,12 @@
     salla-rating-stars {
       @apply leading-none;
     }
+
+    .s-rating-stars-btn-star.s-rating-stars-selected {
+      fill: var(--rev-accent);
+    }
   }
 
-  /* the live site's big average is the store's brand `primary` colour
-     (`text-primary`), not plain ink. */
   .s-reviews-summary-average {
     @apply m-0 text-4xl font-black leading-none;
     color: var(--color-primary);
@@ -374,18 +163,14 @@
     @apply m-0 text-sm text-gray-500;
   }
 
-  /* "%100 أوصوا بالمنتج" (recommended %) — not part of live's compact
-     dropdown, only its full static band; dropped here to match. */
-  .s-reviews-summary-header-section {
-    @apply hidden;
-  }
-
-  /* star-breakdown bars: "★ N" (inline-end) · bar · "NN%" (inline-start).
-     Fixed width (live: `w-48`), not a max-width — this is what actually
-     narrows the whole panel, since the two columns now size to their
-     content instead of stretching. */
+  /* breakdown bars: "★ N" · bar · "NN%" */
+  /* fixed width instead of the engine's `width: 54%`, a percentage of a
+     shrink-to-fit panel. `!important` matches the engine's own `!important`
+     rules. */
   .s-reviews-summary-rows {
-    @apply flex w-48 shrink-0 flex-col gap-2.5;
+    @apply flex shrink-0 grow-0 flex-col;
+    width: 12rem !important;
+    gap: 0.625rem !important;
   }
 
   .s-reviews-summary-row {
@@ -395,7 +180,7 @@
   .s-reviews-summary-row-rate {
     @apply inline-flex shrink-0 items-center justify-end gap-1 text-xs;
     min-width: 2.4ch;
-    color: #6b7280;
+    color: var(--rev-muted);
 
     span {
       @apply inline-flex h-3 w-3;
@@ -415,8 +200,7 @@
   .s-reviews-summary-progress {
     @apply block flex-1;
 
-    /* "هدف الحملة" — salla-progress-bar's donation/campaign header, force-set by
-       its lang-subscribe callback; it has no meaning here. */
+    /* salla-progress-bar's campaign header, meaningless here */
     .s-progress-bar-header {
       @apply hidden;
     }
@@ -426,8 +210,7 @@
     }
 
     .s-progress-bar-wrapper {
-      /* the engine sets an inline `height: 20px` on this element — confirmed
-         against the real DOM — which beats a plain declaration here. */
+      /* beats the engine's inline `height: 20px` */
       height: 7px !important;
       border-radius: 9999px;
       background: #ededed;
@@ -440,58 +223,265 @@
       background: var(--rev-accent) !important; /* engine paints it black */
     }
   }
+}
 
-  /* brown stars in the summary's big rating */
-  .s-reviews-summary-overall-row .s-rating-stars-btn-star.s-rating-stars-selected {
-    fill: var(--rev-accent);
+/* ---- the card list -------------------------------------------------------- */
+
+.s-comments-product {
+  /* the engine pads the list 56px top and bottom and draws a line on both
+     edges; the toolbar above already spaces it */
+  @apply border-0 p-0;
+
+  /* the engine pads the inner container (32px a side on desktop), which
+     pulled the cards in from the toolbar's edges */
+  .s-comments-container {
+    @apply px-0;
+  }
+
+  /* replaced by the theme title/toolbar; the summary is hidden only where the
+     engine first renders it (once moved into the toolbar it is no longer
+     inside `.s-comments-product`) */
+  .s-comments-title,
+  salla-reviews-summary,
+  salla-comment-form {
+    @apply hidden;
+  }
+
+  /* `.has-total` is the engine's modifier that forces this row visible */
+  .s-comments-header,
+  .s-comments-header.has-total,
+  .s-comments-filter-wrapper {
+    @apply hidden !important;
+  }
+
+  .s-comment-form-input {
+    @apply w-full rounded-md border border-gray-200 px-4 py-3 text-sm;
+
+    &:focus {
+      @apply outline-none;
+      border-color: var(--rev-accent);
+    }
+  }
+
+  .s-comment-form-action {
+    @apply mt-3;
+  }
+
+  .s-translate-all-wrap {
+    @apply mb-3 text-xs;
+  }
+
+  /* no reviews yet */
+  .s-comments-placeholder {
+    @apply flex flex-col items-center gap-2 py-10 text-center text-sm;
+    color: var(--rev-muted);
+
+    svg {
+      @apply h-10 w-10 opacity-60;
+    }
+  }
+
+  /* ---- one review card ---------------------------------------------- */
+
+  /* soft shadow instead of a border. Replaces the engine's divider under
+     each item (dropped on the last one) and its 2rem bottom margin; the
+     grid gap spaces the cards. */
+  .s-comments-item,
+  .s-comments-item:last-child {
+    @apply m-0 block border-0 p-4 md:p-5;
+    border-radius: 8px;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
+    background: #f9fafb;
+    color: #000000;
+  }
+
+  .s-comments-item-wrapper,
+  .s-comments-item-inner {
+    @apply block;
+  }
+
+  /* reviewer avatars are generic placeholders; the name carries the card */
+  .s-comments-item-inner > .s-comments-item-avatar {
+    @apply hidden;
+  }
+
+  .s-comments-item-inner > .s-comments-flex-1 {
+    @apply flex flex-col text-start;
+  }
+
+  /* name and date sit at the inline start (right in RTL, left in LTR). The
+     engine makes this row `align-items: center; justify-content:
+     space-between`, which centres both once it is a column. */
+  .s-comments-item-user-wrapper {
+    @apply flex flex-col items-start justify-start gap-0.5 text-start;
+  }
+
+  .s-comments-item-user-info {
+    @apply flex flex-wrap items-center justify-start gap-1.5;
+  }
+
+  .s-comments-item-user-info-name-with-margin,
+  .s-comments-item-user-info-name {
+    @apply m-0 text-base font-bold leading-tight;
+    color: var(--rev-ink);
+  }
+
+  /* verified purchase: keep the tick, hide the words visually ("اشترى
+     المنتج، تم التقييم") but leave them for screen readers */
+  .s-comments-item-user-info .s-comments-flex {
+    @apply inline-flex items-center;
+  }
+
+  .s-comments-item-has-order-check-icon {
+    @apply inline-flex h-4 w-4 items-center justify-center rounded-full;
+    background: var(--rev-ink);
+    color: #fff;
+
+    svg {
+      @apply h-2.5 w-2.5;
+      fill: currentColor;
+    }
+  }
+
+  .s-comments-item-has-order-check-text {
+    @apply sr-only;
+  }
+
+  .s-comments-item-pinned-icon-with-margin {
+    @apply inline-flex h-4 w-4;
+    color: var(--rev-accent);
+  }
+
+  /* date only (the time is hidden below). The engine's `.s-ltr` flips the
+     block to the left; with a single numeral run the digits stay
+     left-to-right under either direction, so following the page is safe. */
+  .s-comments-item-timestamp {
+    @apply m-0 justify-start text-xs;
+    color: var(--rev-muted);
+
+    &.s-ltr {
+      direction: inherit;
+      text-align: start;
+    }
+  }
+
+  .s-comments-item-time {
+    @apply hidden;
+  }
+
+  /* the engine's stars row (`flex flex-row gap-4 mt-2 mb-4`) */
+  .s-comments-item-inner > .s-comments-flex-1 > div[class~='flex-row'] {
+    @apply mb-2 mt-2 items-center gap-3;
+  }
+
+  .s-comments-item salla-rating-stars {
+    .s-rating-stars-wrapper {
+      gap: 1px;
+    }
+
+    .s-rating-stars-btn-star {
+      padding-inline: 0;
+
+      svg {
+        @apply h-4 w-4;
+      }
+    }
+
+    .s-rating-stars-btn-star.s-rating-stars-selected {
+      fill: var(--rev-accent);
+    }
+  }
+
+  .s-comments-item-review-factors-toggle {
+    @apply text-xs;
+    color: var(--rev-muted);
+  }
+
+  /* full review text; a rating-only review renders an empty <p> */
+  .s-comments-item-content-container p {
+    @apply mb-0 text-sm leading-relaxed;
+    color: #374151;
+    overflow-wrap: anywhere;
+
+    &:empty {
+      @apply hidden;
+    }
+  }
+
+  /* attached photos: the engine wraps `<salla-attachments>` in `mt-6 mb-4` */
+  .s-comments-item-content > div:has(> salla-attachments) {
+    @apply mb-0 mt-3;
+  }
+
+  salla-attachments {
+    img,
+    video {
+      @apply h-20 w-20 rounded-md object-cover;
+    }
+  }
+
+  /* no "helpful" (like) button on cards */
+  .s-comments-item-like-btn {
+    @apply hidden;
+  }
+
+  .s-comments-item-pending-text {
+    @apply mt-2 block text-xs;
+    color: var(--rev-muted);
+  }
+
+  /* store replies, nested inside the reviewer's card */
+  .s-comments-item-admin {
+    @apply mt-4 block rounded-md p-3;
+    background: #f1f5f9;
+
+    .s-comments-item-avatar {
+      @apply hidden;
+    }
+
+    .s-comments-item-reply-icon {
+      color: var(--rev-accent);
+      fill: var(--rev-accent);
+    }
+  }
+
+  /* ---- "load more" ---------------------------------------------------- */
+
+  .s-infinite-scroll-wrapper {
+    @apply mt-8 flex justify-center;
+  }
+
+  /* the engine's `.s-button-btn` is `flex: 1 1 0%` (full width) and
+     `.s-button-primary` fills it; doubled class to beat both. Fits its
+     label, transparent, 0.5rem corners. */
+  .s-infinite-scroll-btn.s-button-btn {
+    @apply h-auto w-fit flex-none border px-6 py-2 font-bold;
+    font-size: 18px;
+    line-height: 1.4;
+    border-radius: 0.5rem;
+    border-color: #d1d5db;
+    background: transparent;
+    color: #222222;
+
+    &:hover {
+      border-color: var(--rev-ink);
+      background: transparent;
+    }
   }
 }
 
-/* ---- the review grid --------------------------------------------------
-   The items' parent is an unclassed element the component populates
-   imperatively, with no stable selector to reach from CSS alone — prior
-   guesses at its position from inside `.s-comments-product` (sibling of the
-   header; `:has(> …)` for an assumed tag/nesting) all matched the wrong
-   element live (including, possibly, never matching at all if the parent
-   turns out to *be* `.s-comments-product` itself) and left every card
-   stacking full-width, one per row. `ProductReviews.tsx` reads the real
-   parent directly off the DOM (every item's own `parentElement`, which is
-   unambiguous by construction) and marks it with this class — deliberately
-   NOT nested under `.s-comments-product` (that would make it a descendant
-   selector, which fails exactly if the parent *is* that element). The class
-   is theme-invented; only this rule and `ProductReviews.tsx` reference it. */
+/* ---- the card grid ----------------------------------------------------------
+   Theme-invented class that `ProductReviews.tsx` puts on the cards' real
+   parent element. Not nested under `.s-comments-product`, since that parent
+   could be the same element. A grid (not CSS columns) keeps reading order
+   row by row and stops cards from jumping between columns when "load more"
+   appends a page; `items-start` lets short cards stay short. */
 .reviews-wrapper__grid {
-  @apply grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6;
+  @apply grid grid-cols-1 items-start gap-4 md:grid-cols-2;
 }
 
-/* ---- compact header: "Add Review" + rating badge ------------------------
-   Rendered by `ProductReviews.tsx` above `<SallaComments>`, inside the same
-   `.reviews-wrapper` root the state class below toggles. */
-.reviews-wrapper__head {
-  @apply mb-6 flex flex-wrap items-center gap-4;
-}
-
-/* The "Add Review" button's exact class list now lives inline in
-   `ProductReviews.tsx` (copied verbatim from live, with the two
-   substitutions noted there) — no theme class needed for it. */
-
-/* no pill, no border — the live badge is bare text + icons. */
-.reviews-wrapper__badge {
-  @apply inline-flex items-center gap-2 px-4 py-2 text-sm transition hover:opacity-80;
-  color: #1f2937;
-}
-
-/* reveal the write-review form once "Add Review" is clicked. Toggled on the
-   `<salla-comment-form>` tag itself — see the hide rule in `.s-comments-product`
-   for why. Higher specificity (two classes) than the bare-tag hide above, so
-   it wins regardless of source order. */
+/* reveal the form once "Write a review" is pressed (two classes + tag beat
+   the bare hide above) */
 .reviews-wrapper.reviews-is-writing salla-comment-form {
-  @apply block;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .s-comments-product .s-comments-item {
-    transition: none !important;
-    animation: none !important;
-  }
+  @apply mb-6 block;
 }

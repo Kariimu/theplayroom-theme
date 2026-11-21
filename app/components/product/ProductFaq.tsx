@@ -22,8 +22,10 @@ export function ProductFaq({ components }: { components?: HomeComponentData[] })
   if (!questions.length) return null;
 
   return (
-    <div className="container">
-      <h2 className="s-block__title mb-8 text-3xl font-black text-gray-900 md:mb-10">
+    // `product-faq`: 18px question and answer text, product page only (the
+    // home FAQ block shares `FaqAccordion`). `pt-*` spaces it from the reviews.
+    <div className="product-faq container pt-10 md:pt-14">
+      <h2 className="mb-8 text-center text-3xl font-black text-gray-900 md:mb-10">
         {t('pages.products.faq_title', 'Frequently Asked Questions')}
       </h2>
       <FaqAccordion questions={questions} />

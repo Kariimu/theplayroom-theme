@@ -81,11 +81,11 @@ function RelatedProducts({ productId, title }: { productId: number; title: strin
  * `whatsapp`-tagged product (06 §7) gets {@link ProductWhatsAppEnquiry} instead
  * of `<AddToCartForm>` — same convention as the product card. Also adds what
  * the engine route doesn't render at all: trust/payment badges beside the
- * form, {@link SuggestedGames} (a `set:` tag companion list) between the info
- * and the reviews, the product's own in-use photos ({@link
- * ProductUsageGallery}, §5A row 70), and the store-wide {@link UniversalFeatures} / {@link
- * ProductFaq} between the reviews and related products (06 §7, §5A rows
- * 71/72/80, D2).
+ * form, then between the info and the reviews {@link SuggestedGames} (a `set:`
+ * tag companion list), the product's own in-use photos ({@link
+ * ProductUsageGallery}, §5A row 70) and the store-wide {@link UniversalFeatures},
+ * and the store-wide {@link ProductFaq} between the reviews and related products
+ * (06 §7, §5A rows 71/72/80, D2).
  *
  * Upgrade notes: `FORKS.md`.
  */
@@ -240,10 +240,18 @@ export function ProductPage({
         <ProductFeatures tags={initialProduct.tags} library={featureLibrary} />
       </div>
 
-      {/* "Suggested games" (06 §7.5, §5A row 71) — between the info and the reviews */}
+      {/* "Suggested games" (06 §7.5, §5A row 71) — under the product info */}
       <SuggestedGames productId={product.id} tags={product.tags} />
 
-      {/* App-block hook `product.single.before_customer_reviews` — between the info and the reviews */}
+      {/* The product in use (06 §7.6, §5A row 70): cards from the
+          `product-usage-gallery` home block matched by `inuse-<key>` tags —
+          directly above the store-wide features. */}
+      <ProductUsageGallery components={faqComponents} tags={initialProduct.tags} />
+
+      {/* Store-wide features (06 §7.8, §5A row 72) — directly above the reviews */}
+      <UniversalFeatures />
+
+      {/* App-block hook `product.single.before_customer_reviews` — kept directly above the reviews */}
       <BlockHookSlot
         name="product.single.before_customer_reviews"
         wrapper="s-before-reviews"
@@ -259,16 +267,8 @@ export function ProductPage({
         </RenderWhenVisible>
       )}
 
-      {/* The product in use (06 §7.6, §5A row 70): cards from the
-          `product-usage-gallery` home block matched by `inuse-<key>` tags —
-          directly above the store-wide features. */}
-      <ProductUsageGallery components={faqComponents} tags={initialProduct.tags} />
-
-      {/* Store-wide features (06 §7.8, §5A row 72) — between the reviews and related */}
-      <UniversalFeatures />
-
       {/* Store-wide FAQ, same content as the home block (06 §7.8, D2) — between
-          the features and related */}
+          the reviews and related */}
       <ProductFaq components={faqComponents} />
 
       {/* App-block hook `product.single.before_product_recommendations` — between the reviews and related */}

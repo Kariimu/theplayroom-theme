@@ -1258,3 +1258,12 @@ salla-gifting {
     }
   }
 }
+
+/* Product-page FAQ (`ProductFaq.tsx`): 18px questions and answers. Scoped to
+   `.product-faq` because the home FAQ block uses the same `FaqAccordion`. */
+.product-faq {
+  .common-questions__question,
+  .common-questions__answer {
+    font-size: 18px;
+  }
+}
