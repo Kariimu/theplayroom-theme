@@ -2,11 +2,9 @@
 /**
  * Product specs (`product.has_metadata`) are client-only (docs/MIGRATION-PLAN.md
  * §5B) and section/field names are free text the merchant types in the
- * dashboard. The generic accordion (`ProductMetadata`) renders whichever
- * groups exist, whatever they're named. This one group gets a *second*,
- * purpose-built rendering on top of that — the "facts" row (`ProductFacts`)
- * — so Stage 7 data entry must use these names verbatim; anything else
- * still shows in the generic accordion, just not in the dedicated UI.
+ * dashboard. `ProductInfo` shows every group, whatever it's named; these
+ * names only decide which of its four sections a group lands in, so Stage 7
+ * data entry should use them verbatim.
  */
 
 export interface SpecField {
@@ -20,25 +18,16 @@ export interface SpecSection {
   fields?: SpecField[];
 }
 
-/** §5A row 65: "one group (e.g. 'تفاصيل المنتج') with three fields". */
+/** §5A row 65: the for-who / material / box-contents group ("one group with three fields"); shows under Specifications. */
 export const FACTS_SECTION_NAMES = ['تفاصيل المنتج', 'Product Details'] as const;
 
-/** `for_who` / `material` / `inner_box` (§5A row 65), by their canonical field label. */
-export const FACTS_FIELD_NAMES = {
-  forWho: ['مناسب لـ', 'Suitable for'],
-  material: ['الخامة', 'Material'],
-  boxContents: ['محتويات الصندوق', 'Box contents'],
-} as const;
-
-export type FactKey = keyof typeof FACTS_FIELD_NAMES;
-
 /**
- * The generic specs accordion's (`ProductMetadata`) other groups, in the
- * fixed display order the storefront enforces — the merchant/dashboard's own
- * group order isn't under our control, only the storefront rendering is.
- * Names are the exact live group headers (both locales, theplayroom.sa), not
- * invented labels — a group with none of these names keeps its original
- * position, appended after every known group.
+ * The store's other custom-field groups, in the fixed order they show in
+ * within their product-info section (`app/lib/productInfo.ts` maps each to
+ * one of the four sections). The merchant/dashboard's own group order isn't
+ * honoured. Names are the exact live group headers (both locales,
+ * theplayroom.sa), not invented labels; a group with none of these names
+ * shows under Specifications, after the known groups.
  */
 export const METADATA_GROUPS = [
   { key: 'features', names: ['مميزات المنتج', 'Product Features'] },
@@ -59,27 +48,6 @@ export function matchesName(name: string | undefined, candidates: readonly strin
   if (!name?.trim()) return false;
   const normalized = normalize(name);
   return candidates.some((candidate) => normalize(candidate) === normalized);
-}
-
-/** The first section whose name matches one of `candidates`. */
-export function findSection(
-  sections: readonly SpecSection[] | undefined,
-  candidates: readonly string[]
-): SpecSection | undefined {
-  return sections?.find((section) => matchesName(section.name, candidates));
-}
-
-/** `for_who` / `material` / `inner_box`, read from the facts section's fields by their canonical label. */
-export function extractFacts(section: SpecSection | undefined): Partial<Record<FactKey, string>> {
-  const facts: Partial<Record<FactKey, string>> = {};
-  for (const field of section?.fields ?? []) {
-    const value = field.value?.trim();
-    if (!value) continue;
-    for (const key of Object.keys(FACTS_FIELD_NAMES) as FactKey[]) {
-      if (matchesName(field.name, FACTS_FIELD_NAMES[key])) facts[key] = value;
-    }
-  }
-  return facts;
 }
 
 /**

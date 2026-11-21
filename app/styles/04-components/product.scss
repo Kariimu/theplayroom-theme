@@ -1267,3 +1267,42 @@ salla-gifting {
     font-size: 18px;
   }
 }
+
+/* Tamara's installment box (inside the engine's `<salla-installment>`),
+   compacted to match the Tabby box under it: one short row, 62px tall, 6px
+   corners, light border, logo centred at the inline end. Tamara's script sets
+   inline styles and the engine's CSS uses `!important` (with an `.ltr`
+   variant at 0,2,0 / 0,3,0), so these need `!important` and the doubled
+   class to win. Logical sides keep it right in both `/ar` and `/en`. */
+salla-installment .tamara-product-widget.tamara-product-widget {
+  min-height: 0 !important;
+  margin-bottom: 20px;
+  padding: 19px 16px !important;
+  padding-inline-end: 110px !important;
+  border: 1px solid #e5e5e5 !important;
+  border-radius: 6px !important;
+  /* Tabby's text size; the engine sets the spans to `--font-sm` */
+  font-size: 15px !important;
+  line-height: 22px !important;
+  box-shadow: none !important;
+
+  span {
+    font-size: 15px !important;
+  }
+
+  .tamara-logo {
+    top: 50% !important;
+    left: auto !important;
+    right: auto !important;
+    inset-inline-end: 16px !important;
+    transform: translateY(-50%);
+    height: 24px !important;
+  }
+
+  /* the "learn more" link: on the same line, not a block of its own */
+  span:last-child {
+    display: inline !important;
+    margin-top: 0 !important;
+    margin-inline-start: 4px;
+  }
+}

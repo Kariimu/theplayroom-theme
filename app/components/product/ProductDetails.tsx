@@ -194,19 +194,22 @@ function lazyIframes(html: string): string {
 
 interface ProductDescriptionProps {
   product: Product;
-  /** Extra classes on the wrapper (used for the responsive show/hide). */
+  /** Extra classes on the wrapper. */
   className?: string;
+  /**
+   * Always the full text, ignoring the store's "read more" setting. Set
+   * inside the "Product Details" section of `ProductInfo`, which is already
+   * a collapsed panel, so a second click to read it would be redundant.
+   */
+  expanded?: boolean;
 }
 
 /**
- * Rendered under the gallery images on `md`+, after the metadata
- * ({@link ProductGallery}), and under the payment badges on mobile
- * ({@link ProductPage}) — same hydration-gated dual mount as {@link
- * ProductMetadata}. `useId` keeps the "read more" ids unique between the two
- * copies: both render pre-hydration (CSS-gated via `className`), so two
- * literal `id="more-content"`s would collide and cross-wire `aria-controls`.
+ * The product's description (merchant HTML). Rendered inside the "Product
+ * Details" section of {@link ProductInfo}. `useId` keeps the "read more" ids
+ * unique if more than one copy is ever on the page.
  */
-export function ProductDescription({ product, className }: ProductDescriptionProps) {
+export function ProductDescription({ product, className, expanded }: ProductDescriptionProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const articleRef = useRef<HTMLElement>(null);
@@ -230,7 +233,7 @@ export function ProductDescription({ product, className }: ProductDescriptionPro
     setPlayingVideos((current) => new Set(current).add(index));
   };
 
-  if (product.has_read_more) {
+  if (product.has_read_more && !expanded) {
     return (
       <div className={`product__description leading-7 mb-3${className ? ` ${className}` : ''}`}>
         <article

@@ -31,10 +31,19 @@ doesn't match exactly, it's the nearest tab/button, not a different page.
 
 Only these three products have `for_who` / `material` / `inner_box` text captured
 from the live site. Enter them as **specs** on the matching product in the
-dashboard, using these exact group and field names — `app/lib/specs.ts` matches
-them verbatim (case/whitespace-insensitive) to render the dedicated "facts" row
-on the product page; any other spelling only shows in the generic specs
-accordion, not the dedicated UI.
+dashboard, using these exact group and field names. The product page shows
+every custom-field group in one of four sections (Product Details,
+Specifications, Assembly, Shipping & Returns); `app/lib/specs.ts` matches the
+group names verbatim (case/whitespace-insensitive) to pick the section, and
+this group goes under **Specifications** as label/value rows. A group with
+any other name still shows, under Specifications.
+
+| Dashboard group | Product page section |
+|---|---|
+| `مميزات المنتج`, `إستخدامات المنتج` | Product Details (after the description) |
+| `تفاصيل المنتج`, `ملاحظة`, any other group | Specifications |
+| `دليل التركيب`, `خدمة التركيب` | Assembly |
+| `تفاصيل الشحن`, `آلية الإسترجاع و الإستبدال` | Shipping & Returns |
 
 - Spec group name: **`تفاصيل المنتج`** (or `Product Details` on the English spec set)
 - Field names: **`مناسب لـ`** (`Suitable for`) · **`الخامة`** (`Material`) · **`محتويات الصندوق`** (`Box contents`)
@@ -50,8 +59,7 @@ A value with no `|` just renders as a normal sentence, so `مناسب لـ` /
 > `هيكل بيت الالعاب | حبال سميكة | أدوات التجميع | دليل التركيب`
 
 renders as four checked lines, not one. (This applies to any spec field, not
-just the three facts above — the generic specs accordion splits on `|` the
-same way.)
+just the three facts above — every section splits on `|` the same way.)
 
 **Where:** these are Salla's "Custom fields" (`product.has_metadata`/specs), not a
 plain text box. One-time setup, then per-product entry:

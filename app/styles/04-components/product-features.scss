@@ -40,7 +40,6 @@
     display: block;
     width: 80px;
     height: 80px;
-    transition: transform 0.25s ease;
 
     img {
       width: 100%;
@@ -49,29 +48,10 @@
     }
   }
 
-  &__link:hover &__icon {
-    transform: scale(1.08);
-  }
-
   &__title {
     font-size: 1.125rem;
     font-weight: 700;
     line-height: 1.75rem;
     color: #111827;
-  }
-
-  a.product-features__link:hover &__title,
-  a.product-features__link:focus-visible &__title {
-    color: var(--color-primary);
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    &__icon {
-      transition: none;
-    }
-
-    &__link:hover &__icon {
-      transform: none;
-    }
   }
 }

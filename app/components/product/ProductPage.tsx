@@ -12,12 +12,11 @@ import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import type { ProductPageProps } from '@salla.sa/twilight-theme-engine/routes/product';
 import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
 import { ProductGallery } from './ProductGallery';
-import { ProductDetails, ProductDescription } from './ProductDetails';
-import { ProductFacts } from './ProductFacts';
+import { ProductDetails } from './ProductDetails';
+import { ProductInfo } from './ProductInfo';
 import { ProductAddOns } from './ProductAddOns';
 import { ProductFeatures } from './ProductFeatures';
 import type { ProductFeature } from '../../lib/productFeatures';
-import { ProductMetadata } from './ProductMetadata';
 import { AddToCartForm } from './AddToCartForm';
 import { ProductWhatsAppEnquiry } from './ProductWhatsAppEnquiry';
 import { UniversalFeatures } from './UniversalFeatures';
@@ -29,8 +28,6 @@ import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home/ProductsSlider';
 import { isWhatsappProduct } from '../../lib/tags';
 import { cleanWhatsappNumber } from '../../lib/whatsapp';
-import { useHydrated } from '../../hooks/useHydrated';
-import { useMobileViewport } from '../../hooks/useMobileViewport';
 
 /**
  * "Similar products" slider. A separate component (not inline in
@@ -105,8 +102,6 @@ export function ProductPage({
   const { t } = useTranslation();
   const { product } = useProduct(initialProduct);
   const { commentsKey } = useComments();
-  const hydrated = useHydrated();
-  const isMobile = useMobileViewport();
   const blockScope = useMemo(() => ({ product_id: product.id }), [product.id]);
 
   // Products tagged `whatsapp` can't be bought online (06 §7): the add-to-cart
@@ -188,17 +183,16 @@ export function ProductPage({
               <SallaPayments />
             </div>
 
-            {/* for-who / material / box-contents (§5A row 65) — under the
-                payment badges. `initialProduct.has_metadata`, not the live
-                `product` from `useProduct`: a variant-options reload replaces
-                that object wholesale from `getDetails(id, ["images",
-                "category"])`, whose response doesn't carry `has_metadata` —
-                it would go from true to undefined the moment a shopper
-                touches an option. */}
-            <ProductFacts
-              productId={Number(product.id)}
-              hasMetadata={initialProduct.has_metadata}
-            />
+            {/* Product information in four collapsible sections (details,
+                specifications, assembly, shipping & returns): the description
+                plus every custom-field group, including for-who / material /
+                box contents (§5A row 65). Same place on mobile and desktop.
+                `initialProduct`, not the live `product` from `useProduct`: a
+                variant-options reload replaces that object wholesale from
+                `getDetails(id, ["images", "category"])`, whose response
+                doesn't carry `has_metadata` — it would go from true to
+                undefined the moment a shopper touches an option. */}
+            <ProductInfo product={initialProduct} />
 
             {/* Accessory products sold alongside this one — also under the
                 payment badges, each with its own catalog entry and one-click
@@ -206,22 +200,8 @@ export function ProductPage({
                 an `addons-p<id>` group (`ProductAddOns`); an accessory's own
                 page renders nothing. `initialProduct.tags`, not the live
                 `product` from `useProduct`, for the same variant-reload
-                reason as `ProductFacts` above. */}
+                reason as `ProductInfo` above. */}
             <ProductAddOns productId={product.id} tags={initialProduct.tags} />
-
-            {/* Metadata / specs and description — mobile only, under the payment
-                badges. On `md`+ they render under the gallery slider instead
-                (`ProductGallery`) — same hydration-gated dual mount there, so
-                together the two never run two `<SallaMetadata>` instances at
-                once past first paint. `initialProduct`, not the live `product`
-                from `useProduct`, for the same variant-reload reason as
-                `ProductFacts` above. */}
-            {initialProduct.has_metadata && (!hydrated || isMobile) && (
-              <ProductMetadata className="mb-3 md:hidden" />
-            )}
-            {(!hydrated || isMobile) && (
-              <ProductDescription product={initialProduct} className="md:hidden" />
-            )}
 
             <HookSlot name="product:single.form.end" />
             {/* Twig renders this hook and its merchant blocks after the form */}

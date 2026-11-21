@@ -12,14 +12,6 @@ vi.mock('@salla.sa/twilight-theme-engine/utils/cdn-image', () => ({
   getCdnImageUrl: (url: string) => url,
 }));
 
-vi.mock('@salla.sa/twilight-theme-engine/common', () => ({
-  Link: ({ to, children, ...rest }: { to: string; children?: React.ReactNode }) => (
-    <a href={to} {...rest}>
-      {children}
-    </a>
-  ),
-}));
-
 const tags = (...names: string[]) => names.map((name) => ({ name, url: '' })) as ProductTag[];
 
 const LIBRARY: ProductFeature[] = [
@@ -28,15 +20,13 @@ const LIBRARY: ProductFeature[] = [
 ];
 
 describe('ProductFeatures', () => {
-  it('renders the product features in tag order, linked to their articles', () => {
-    const { container, getAllByRole } = render(
+  it('renders the product features in tag order, not linked to their articles', () => {
+    const { container, queryAllByRole } = render(
       <ProductFeatures tags={tags('feature-handmade', 'whatsapp', 'feature-montessori')} library={LIBRARY} />
     );
     const titles = [...container.querySelectorAll('.product-features__title')].map((el) => el.textContent);
     expect(titles).toEqual(['Handmade', 'Montessori']);
-    const links = getAllByRole('link');
-    expect(links).toHaveLength(1);
-    expect(links[0].getAttribute('href')).toBe('https://s/blog/m');
+    expect(queryAllByRole('link')).toHaveLength(0);
     expect(container.querySelector('img')?.getAttribute('src')).toBe('https://cdn/m.png');
   });
 
