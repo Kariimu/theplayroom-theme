@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "settings": {
     "product_card_layout": "vertical",
     "product_card_img_ratio": "auto",
@@ -286,6 +286,20 @@
         ],
         "videos_title": "",
         "videos": []
+      }
+    },
+    {
+      "id": "b-fcbd259b93e1",
+      "path": "product-faq",
+      "fields": {
+        "key": "2fd43f1f-9734-47fc-870c-0372d0e01542",
+        "items": [
+          {
+            "key": "",
+            "question": "",
+            "answer": ""
+          }
+        ]
       }
     }
   ]
