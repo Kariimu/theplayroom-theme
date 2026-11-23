@@ -83,6 +83,7 @@ describe('ShoppingSection', () => {
     );
     const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
     expect(titleEl.className).toContain('text-[20px]');
+    expect(titleEl.className).toContain('text-[#111827]');
     expect(subtitleEl.className).toContain('text-[20px]');
     expect(subtitleEl.className).toContain('text-[#f47e4d]');
   });

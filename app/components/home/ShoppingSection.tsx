@@ -53,8 +53,8 @@ function ShoppingCard({ item, className = '' }: { item: ShoppingItem; className?
             <p
               className={
                 item.title_type
-                  ? 'mb-2 text-[20px] font-bold text-primary'
-                  : 'text-[20px] font-black text-gray-900'
+                  ? 'mb-2 text-[20px] font-bold text-[#111827]'
+                  : 'text-[20px] font-black text-[#111827]'
               }
             >
               {item.title}
