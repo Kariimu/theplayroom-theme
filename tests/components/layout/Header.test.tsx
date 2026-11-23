@@ -20,12 +20,14 @@ const state = {
 
 type RouterStateStub = {
   matches: { routeId: string }[];
+  location: { pathname: string; searchStr: string };
 };
 
 vi.mock('@tanstack/react-router', () => ({
   useRouterState: ({ select }: { select: (s: RouterStateStub) => unknown }) =>
     select({
       matches: state.routeIds.map((routeId) => ({ routeId })),
+      location: { pathname: '/ar', searchStr: '' },
     }),
 }));
 

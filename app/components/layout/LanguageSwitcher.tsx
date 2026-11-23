@@ -47,9 +47,9 @@ function LanguagesGlyph() {
 export function LanguageSwitcher() {
   const { t, locale } = useTranslation();
   const { store } = useTwilight();
-  const { pathname, search } = useRouterState({
-    select: (state) => ({ pathname: state.location.pathname, search: state.location.searchStr }),
-  });
+  // Two plain-string selects, so the switcher re-renders only when one changes.
+  const pathname = useRouterState({ select: (state) => state.location.pathname });
+  const search = useRouterState({ select: (state) => state.location.searchStr });
 
   if (!store?.settings?.is_multilingual) return null;
 
