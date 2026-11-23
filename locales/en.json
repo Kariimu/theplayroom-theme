@@ -166,5 +166,7 @@
   "pages.gallery.open_photo": "Open photo",
   "pages.gallery.play_video": "Play video",
   "pages.gallery.empty": "Photos and videos are coming soon.",
-  "pages.products.verified_buyer": "Verified buyer"
+  "pages.products.verified_buyer": "Verified buyer",
+  "pages.products.review_not_eligible": "You can review this product after you buy it.",
+  "pages.products.review_limit": "You have reached today's review limit."
 }

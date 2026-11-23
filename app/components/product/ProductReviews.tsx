@@ -1,12 +1,39 @@
 import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { SallaComments } from '@salla.sa/twilight-components-react/comments';
+import { SallaRatingModal } from '@salla.sa/twilight-components-react/rating-modal';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { StarIcon, ChevronDownIcon } from '../icons';
+import { initial } from '../../lib/reviewSnippets';
 
 interface ProductReviewsProps {
   product: Product;
 }
+
+/** Salla's rating popup: `setOrder` and `open` are its public methods. */
+type RatingModalElement = HTMLElement & {
+  componentOnReady?: () => Promise<unknown>;
+  setOrder?: (orderId: number | string | null, productId?: number | string) => Promise<void>;
+  open?: () => Promise<void>;
+};
+
+/** What `rating.api.productEligibility` answers (`data`). */
+interface ReviewEligibility {
+  eligible?: boolean;
+  order_id?: number | null;
+  code?: string;
+  message?: string;
+}
+
+/** The SDK pieces this uses; not all are in the engine's `window.salla` type. */
+type ReviewSdk = {
+  onReady?: () => Promise<unknown>;
+  config?: { isGuest?: () => boolean };
+  event?: { dispatch?: (name: string, ...args: unknown[]) => void };
+  notify?: { info?: (message: string) => void; error?: (message: string) => void };
+  api?: { withoutNotifier?: <T>(fn: () => Promise<T>) => Promise<T> };
+  rating?: { api?: { productEligibility?: (id: number | string) => Promise<{ data?: ReviewEligibility }> } };
+};
 
 const STAR_POSITIONS = [1, 2, 3, 4, 5];
 
@@ -17,9 +44,10 @@ const STAR_POSITIONS = [1, 2, 3, 4, 5];
 const GRID_CLASS = 'reviews-wrapper__grid';
 
 /**
- * Product reviews as text-first cards: name, verified-purchase tick, date,
- * stars, and the full review text, in a two-column grid on desktop (one
- * column on mobile). The store has no review photos yet, so photos are not
+ * Product reviews as cards in the review snippets' look (the strip under the
+ * payment list): a tinted rounded card, the reviewer's initial on a 60px
+ * tile, name and stars on one line, date, and the full review text, in a
+ * two-column grid on desktop (one column on mobile). The store has no review photos yet, so photos are not
  * the main element of a card. Any photos a review does have show as small
  * thumbnails under its text (the engine's own `<salla-attachments>`, which
  * has its own lightbox).
@@ -43,7 +71,9 @@ export function ProductReviews({ product }: ProductReviewsProps) {
   const { t } = useTranslation();
   const rootRef = useRef<HTMLDivElement>(null);
   const summaryGroupRef = useRef<HTMLDivElement>(null);
-  const [writeOpen, setWriteOpen] = useState(false);
+  const ratingModalRef = useRef<RatingModalElement>(null);
+  // While the eligibility check runs, so a double tap doesn't open two popups.
+  const [checking, setChecking] = useState(false);
   // Tap/click toggle for the summary dropdown. Hover and focus-within open it
   // on desktop, but iOS Safari does not focus a tapped <button>, so on touch
   // screens the dropdown needs this explicit state.
@@ -73,6 +103,17 @@ export function ProductReviews({ product }: ProductReviewsProps) {
       root.querySelectorAll<HTMLElement>('.s-comments-item').forEach((item) => {
         const parent = item.parentElement;
         if (parent && !parent.closest('.s-comments-item')) parent.classList.add(GRID_CLASS);
+
+        // The card's photo tile shows the reviewer's first letter (the
+        // engine's avatars are generic placeholders), as the review snippets
+        // under the payment list do. Read by `reviews.scss` (`attr()`); an
+        // attribute change doesn't retrigger this childList observer.
+        const avatar = item.querySelector<HTMLElement>(
+          ':scope > .s-comments-item-wrapper > .s-comments-item-inner > .s-comments-item-avatar'
+        );
+        const name = item.querySelector('.s-comments-item-inner h3')?.textContent ?? '';
+        const letter = initial(name);
+        if (avatar && avatar.dataset.initial !== letter) avatar.dataset.initial = letter;
       });
     };
 
@@ -100,21 +141,70 @@ export function ProductReviews({ product }: ProductReviewsProps) {
     };
   }, [summaryOpen]);
 
+  /**
+   * "Write a review", the same flow as Salla's `<salla-verified-review>`:
+   * a guest gets the login popup; a signed-in customer's eligibility for this
+   * product is checked (a purchase, or the store's community reviews); if
+   * eligible, Salla's rating popup opens for the product (with the order when
+   * it was a purchase) and sends the stars and text to the store, where they
+   * wait for approval. Salla's inline comment form was the old target: it
+   * renders nothing unless `user.can_comment`, which the React engine never
+   * sets, so the button opened nothing.
+   */
+  const writeReview = async () => {
+    const sdk = window.salla as (typeof window.salla & ReviewSdk) | undefined;
+    if (!sdk || checking) return;
+    await sdk.onReady?.();
+    if (sdk.config?.isGuest?.()) {
+      sdk.event?.dispatch?.('login::open');
+      return;
+    }
+    setChecking(true);
+    try {
+      const request = () =>
+        sdk.rating?.api?.productEligibility?.(product.id) ?? Promise.resolve(undefined);
+      const response = await (sdk.api?.withoutNotifier ? sdk.api.withoutNotifier(request) : request());
+      const eligibility = response?.data;
+      if (eligibility?.code === 'community_review_daily_limit') {
+        sdk.notify?.error?.(
+          eligibility.message || t('pages.products.review_limit', "You have reached today's review limit.")
+        );
+        return;
+      }
+      if (!eligibility?.eligible) {
+        sdk.notify?.info?.(
+          t('pages.products.review_not_eligible', 'You can review this product after you buy it.')
+        );
+        return;
+      }
+      const modal = ratingModalRef.current;
+      await modal?.componentOnReady?.();
+      await modal?.setOrder?.(eligibility.order_id ?? null, product.id);
+      await modal?.open?.();
+    } catch {
+      sdk.notify?.error?.(t('common.errors.error_occurred', 'Something went wrong'));
+    } finally {
+      setChecking(false);
+    }
+  };
+
   // "5" or "4.3", never "5.0".
+  const hasReviews = !!rating && rating.count > 0;
   const ratingDisplay = rating ? Number(rating.stars).toFixed(1).replace(/\.0$/, '') : '';
   const filledStars = rating ? Math.round(Number(rating.stars)) : 0;
 
   return (
     <div
       ref={rootRef}
-      className={`reviews-wrapper container${writeOpen ? ' reviews-is-writing' : ''}`}
+      className="reviews-wrapper container"
     >
       <h2 className="reviews-wrapper__title">
         {t('pages.products.reviews_heading', 'Customer Reviews')}
       </h2>
 
-      <div className="reviews-wrapper__head">
-        {rating && rating.count > 0 ? (
+      {/* No reviews yet: only the "Write a review" button, centred under the title. */}
+      <div className={`reviews-wrapper__head${hasReviews ? '' : ' reviews-wrapper__head--empty'}`}>
+        {hasReviews ? (
           // From `md`, `relative` makes this the containing block for the
           // summary panel `setUp()` moves in here; below `md` the panel anchors
           // to the full-width toolbar instead. `group` is the hover/focus
@@ -136,7 +226,7 @@ export function ProductReviews({ product }: ProductReviewsProps) {
                 {STAR_POSITIONS.map((position) => (
                   <StarIcon
                     key={position}
-                    className={`h-5 w-5 ${position <= filledStars ? 'fill-accent text-accent' : 'fill-gray-200 text-gray-200'}`}
+                    className={`reviews-wrapper__star h-5 w-5${position <= filledStars ? ' is-filled' : ''}`}
                   />
                 ))}
               </span>
@@ -155,20 +245,23 @@ export function ProductReviews({ product }: ProductReviewsProps) {
               />
             </button>
           </div>
-        ) : (
-          // keeps the write button at the inline end when there is no badge
-          <span />
-        )}
+        ) : null}
 
         <button
           type="button"
           className="reviews-wrapper__write"
-          aria-expanded={writeOpen}
-          onClick={() => setWriteOpen((open) => !open)}
+          aria-haspopup="dialog"
+          aria-busy={checking}
+          disabled={checking}
+          onClick={writeReview}
         >
           {t('pages.products.add_review', 'Write a review')}
         </button>
       </div>
+
+      {/* Salla's own rating popup (stars + comment), opened by `writeReview`. */}
+      {/* The wrapper types its ref as its own element class; ours lists the methods used. */}
+      <SallaRatingModal ref={ratingModalRef as never} />
 
       <SallaComments
         itemId={product.id}

@@ -7,11 +7,13 @@
      · toolbar: average + stars + count (hover/focus opens the engine's own
        `<salla-reviews-summary>` breakdown as a dropdown) at the inline start,
        an outlined "Write a review" button at the inline end
-     · write form: hidden until "Write a review" is pressed
-       (`.reviews-is-writing`)
-     · cards: 1 column on mobile, 2 from `md`, top-aligned. Each card shows
-       name + verified-purchase tick, date (no time), stars, full text, then
-       any attached photos as small thumbnails (no "helpful" button)
+     · "Write a review" opens Salla's own rating popup (`<salla-rating-modal>`,
+       ProductReviews.tsx); the engine's inline comment form stays hidden
+     · cards: 1 column on mobile, 2 from `md`, top-aligned, in the review
+       snippets' look (#fff4ee, 16px corners): the reviewer's initial on a
+       60px tile, name + verified tick + 18px #ffdf20 stars on one line, date
+       (no time), full 18px text, then any attached photos as small
+       thumbnails (no "helpful" button)
      · "load more": an outlined, transparent, content-width button, centred
 
    Mounted from `app/components/product/ProductReviews.tsx`. Rules that touch
@@ -25,6 +27,8 @@
   /* Tailwind `accent` (#f5a623). Declared on the outer wrapper so both the
      card list and the moved summary panel inherit it. */
   --rev-accent: #f5a623;
+  /* every review star (cards, toolbar badge, summary) and the summary bars */
+  --rev-star: #ffdf20;
   --rev-muted: #6b7280;
   --rev-ink: #1f2937;
 
@@ -51,10 +55,25 @@
   &__head {
     @apply relative mb-4 flex flex-col items-stretch gap-3 md:flex-row md:items-center md:justify-between;
 
-    /* the spacer that keeps the button at the inline end on desktop when
-       there is no rating yet */
-    > span:empty {
-      @apply hidden md:block;
+    /* No reviews yet: just the "Write a review" button, centred under the
+       title (content width, also on phones). */
+    &--empty {
+      @apply items-center justify-center md:justify-center;
+
+      .reviews-wrapper__write {
+        @apply w-auto;
+      }
+    }
+  }
+
+  /* the toolbar's own five stars (ProductReviews.tsx) */
+  &__star {
+    fill: #e5e7eb;
+    color: #e5e7eb;
+
+    &.is-filled {
+      fill: var(--rev-star);
+      color: var(--rev-star);
     }
   }
 
@@ -150,7 +169,7 @@
     }
 
     .s-rating-stars-btn-star.s-rating-stars-selected {
-      fill: var(--rev-accent);
+      fill: var(--rev-star);
     }
   }
 
@@ -184,7 +203,7 @@
 
     span {
       @apply inline-flex h-3 w-3;
-      fill: var(--rev-accent);
+      fill: var(--rev-star);
 
       svg {
         @apply h-full w-full;
@@ -220,7 +239,7 @@
     .s-progress-bar-progress {
       height: 100%;
       border-radius: 9999px;
-      background: var(--rev-accent) !important; /* engine paints it black */
+      background: var(--rev-star) !important; /* engine paints it black */
     }
   }
 }
@@ -283,37 +302,91 @@
 
   /* ---- one review card ---------------------------------------------- */
 
-  /* soft shadow instead of a border. Replaces the engine's divider under
-     each item (dropped on the last one) and its 2rem bottom margin; the
-     grid gap spaces the cards. */
+  /* The review snippets' card (`review-snippets.scss`): #fff4ee, 16px
+     corners, no shadow or border. Replaces the engine's divider under each
+     item and its 2rem bottom margin; the grid gap spaces the cards. */
   .s-comments-item,
   .s-comments-item:last-child {
-    @apply m-0 block border-0 p-4 md:p-5;
-    border-radius: 8px;
-    box-shadow: 0 0 3px rgba(0, 0, 0, 0.2);
-    background: #f9fafb;
-    color: #000000;
+    @apply m-0 block border-0;
+    padding: 12px 16px;
+    border-radius: 16px;
+    box-shadow: none;
+    background: #fff4ee;
+    color: #222222;
   }
 
-  .s-comments-item-wrapper,
-  .s-comments-item-inner {
+  .s-comments-item-wrapper {
     @apply block;
   }
 
-  /* reviewer avatars are generic placeholders; the name carries the card */
+  /* the 60px tile at the inline start, then the text column */
+  .s-comments-item-inner {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  /* The engine's avatars are generic placeholders: the tile shows the
+     reviewer's initial instead (`data-initial`, set by ProductReviews.tsx),
+     white-on-tint like the snippets. */
   .s-comments-item-inner > .s-comments-item-avatar {
-    @apply hidden;
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    margin: 0;
+    border-radius: 11px;
+    background-color: color-mix(in oklab, var(--color-primary) 15%, white);
+    color: var(--color-primary);
+    font-size: 24px;
+    font-weight: 800;
+    line-height: 1;
+
+    img {
+      display: none;
+    }
+
+    &::after {
+      content: attr(data-initial);
+    }
   }
 
+  /* Text column as a small grid: name (+ tick) and stars on the first line
+     (the name may wrap, the stars never move under it), the date under them,
+     then the review. */
   .s-comments-item-inner > .s-comments-flex-1 {
-    @apply flex flex-col text-start;
+    display: grid;
+    flex: 1;
+    grid-template-columns: minmax(0, max-content) auto;
+    justify-content: start;
+    align-items: center;
+    column-gap: 8px;
+    min-width: 0;
+    text-align: start;
   }
 
-  /* name and date sit at the inline start (right in RTL, left in LTR). The
-     engine makes this row `align-items: center; justify-content:
-     space-between`, which centres both once it is a column. */
+  /* its children (name row, date) join the grid above */
   .s-comments-item-user-wrapper {
-    @apply flex flex-col items-start justify-start gap-0.5 text-start;
+    display: contents;
+  }
+
+  .s-comments-item-inner > .s-comments-flex-1 .s-comments-item-user-info {
+    grid-column: 1;
+    grid-row: 1;
+    align-self: start;
+  }
+
+  .s-comments-item-inner > .s-comments-flex-1 .s-comments-item-timestamp {
+    grid-column: 1 / -1;
+    grid-row: 2;
+  }
+
+  .s-comments-item-inner > .s-comments-flex-1 > .s-comments-item-content {
+    grid-column: 1 / -1;
+    grid-row: 3;
+    margin-top: 4px;
   }
 
   .s-comments-item-user-info {
@@ -322,8 +395,12 @@
 
   .s-comments-item-user-info-name-with-margin,
   .s-comments-item-user-info-name {
-    @apply m-0 text-base font-bold leading-tight;
-    color: var(--rev-ink);
+    @apply m-0 font-bold;
+    font-size: 18px;
+    line-height: 27px;
+    color: #222222;
+    /* the engine nudges the name up 2px, off the stars' line */
+    transform: none;
   }
 
   /* verified purchase: keep the tick, hide the words visually ("اشترى
@@ -356,7 +433,8 @@
      block to the left; with a single numeral run the digits stay
      left-to-right under either direction, so following the page is safe. */
   .s-comments-item-timestamp {
-    @apply m-0 justify-start text-xs;
+    @apply m-0 justify-start;
+    font-size: 13px;
     color: var(--rev-muted);
 
     &.s-ltr {
@@ -369,26 +447,54 @@
     @apply hidden;
   }
 
-  /* the engine's stars row (`flex flex-row gap-4 mt-2 mb-4`) */
+  /* the engine's stars row (`flex flex-row gap-4 mt-2 mb-4`): beside the
+     name on its line, vertically centred on it */
   .s-comments-item-inner > .s-comments-flex-1 > div[class~='flex-row'] {
-    @apply mb-2 mt-2 items-center gap-3;
+    grid-column: 2;
+    grid-row: 1;
+    /* pinned to the line's top and centred on the 27px name line:
+       (27px - 18px stars) / 2 */
+    align-self: start;
+    justify-self: start;
+    align-items: center;
+    flex-wrap: nowrap;
+    gap: 8px;
+    margin: 4.5px 0 0;
+    white-space: nowrap;
+    line-height: 1;
   }
 
+  /* #ffdf20 stars as tall as the 18px name, centred on its line */
   .s-comments-item salla-rating-stars {
+    display: inline-flex;
+    align-items: center;
+    line-height: 1;
+
+    /* the engine gives the medium stars a 28px box, which sat them 4px
+       below the name's centre; fit it to the stars */
     .s-rating-stars-wrapper {
-      gap: 1px;
+      display: inline-flex;
+      align-items: center;
+      gap: 2px;
+      height: auto;
+      min-height: 0;
     }
 
     .s-rating-stars-btn-star {
-      padding-inline: 0;
+      display: inline-flex;
+      align-items: center;
+      height: 18px;
+      padding: 0;
+      line-height: 1;
 
       svg {
-        @apply h-4 w-4;
+        width: 18px;
+        height: 18px;
       }
     }
 
     .s-rating-stars-btn-star.s-rating-stars-selected {
-      fill: var(--rev-accent);
+      fill: var(--rev-star, #ffdf20);
     }
   }
 
@@ -399,8 +505,10 @@
 
   /* full review text; a rating-only review renders an empty <p> */
   .s-comments-item-content-container p {
-    @apply mb-0 text-sm leading-relaxed;
-    color: #374151;
+    @apply mb-0;
+    font-size: 18px;
+    line-height: 1.5;
+    color: #4b5563;
     overflow-wrap: anywhere;
 
     &:empty {
@@ -480,8 +588,3 @@
   @apply grid grid-cols-1 items-start gap-4 md:grid-cols-2;
 }
 
-/* reveal the form once "Write a review" is pressed (two classes + tag beat
-   the bare hide above) */
-.reviews-wrapper.reviews-is-writing salla-comment-form {
-  @apply mb-6 block;
-}

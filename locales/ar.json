@@ -166,5 +166,7 @@
   "pages.gallery.open_photo": "عرض الصورة",
   "pages.gallery.play_video": "تشغيل الفيديو",
   "pages.gallery.empty": "الصور والفيديوهات قادمة قريبًا.",
-  "pages.products.verified_buyer": "مشتري موثّق"
+  "pages.products.verified_buyer": "مشتري موثّق",
+  "pages.products.review_not_eligible": "يمكنك تقييم هذا المنتج بعد شرائه.",
+  "pages.products.review_limit": "وصلت للحد المسموح من التقييمات اليوم."
 }

@@ -2,7 +2,7 @@
   Quick reviews under the product page's payment list
   (`app/components/product/ProductReviewSnippets.tsx`), after the reviews
   "snippets" strip on akwan.me: a tinted 16px-rounded strip, one review per
-  slide (60px photo, bold name + 13px gold stars, two-line 14px quote), small
+  slide (60px photo, bold name + 13px gold stars, two-line 18px quote), small
   side arrows, and the whole review in a popup.
 */
 .review-snippets {
@@ -116,7 +116,7 @@
       fill: #e5e7eb;
 
       &.is-filled {
-        fill: #ebbc4e;
+        fill: #ffdf20;
       }
     }
   }
