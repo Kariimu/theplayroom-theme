@@ -516,7 +516,8 @@ salla-gifting {
   }
 
   &__title {
-    @apply line-clamp-2 text-base font-black text-gray-900;
+    @apply line-clamp-2 font-black text-gray-900;
+    font-size: 20px;
   }
 
   &__rating {
@@ -541,7 +542,8 @@ salla-gifting {
   }
 
   &__price-now {
-    @apply text-lg font-black text-primary;
+    @apply font-black text-primary;
+    font-size: 22px;
   }
 
   &__price-was {
