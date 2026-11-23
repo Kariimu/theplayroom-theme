@@ -26,6 +26,13 @@ export interface ReelsSectionProps {
   };
 }
 
+/** The video URL with a `#t=0.1` media fragment, so a video with no poster
+ *  paints a frame from its start (not frame 0, often black) once its
+ *  metadata loads. Left alone if the URL already has a fragment. */
+export function firstFrameSrc(url: string): string {
+  return url.includes('#') ? url : `${url}#t=0.1`;
+}
+
 function PlayIcon() {
   return (
     <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
@@ -130,13 +137,16 @@ function ReelCard({ reel, item, autoPlay }: { reel: ReelItem; item?: Product; au
         {reel.video_url && (
           <video
             ref={videoRef}
-            src={reel.video_url}
+            src={reel.poster ? reel.video_url : firstFrameSrc(reel.video_url)}
             poster={reel.poster ? getCdnImageUrl(reel.poster, { width: 400 }) ?? reel.poster : undefined}
             className="h-full w-full object-cover"
             playsInline
             loop
             muted
-            preload="none"
+            // No cover image: load just enough of the video to show a frame of
+            // it (`#t=0.1`) instead of a black box. With a cover, nothing loads
+            // until it plays.
+            preload={reel.poster ? 'none' : 'metadata'}
             onPlay={() => setPlaying(true)}
             onPause={() => setPlaying(false)}
           />
@@ -200,6 +210,7 @@ export function ReelsSection({ data }: ReelsSectionProps) {
       )}
 
       <ScrollCarousel
+        arrows="sides"
         prevLabel={t('blocks.home.reviews_prev', 'Previous')}
         nextLabel={t('blocks.home.reviews_next', 'Next')}
       >

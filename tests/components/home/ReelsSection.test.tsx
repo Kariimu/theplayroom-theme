@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, fireEvent, waitFor } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ReelsSection } from '../../../app/components/home/ReelsSection';
+import { ReelsSection, firstFrameSrc } from '../../../app/components/home/ReelsSection';
 
 const listMock = vi.fn();
 const motionAllowed = { value: true };
@@ -11,7 +11,9 @@ vi.mock('../../../app/hooks/useMotionAllowed', () => ({
 }));
 
 vi.mock('../../../app/components/common', () => ({
-  ScrollCarousel: ({ children }: { children?: React.ReactNode }) => <div>{children}</div>,
+  ScrollCarousel: ({ children, arrows }: { children?: React.ReactNode; arrows?: string }) => (
+    <div data-arrows={arrows}>{children}</div>
+  ),
 }));
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
@@ -113,5 +115,35 @@ describe('ReelsSection', () => {
     motionAllowed.value = false;
     renderWithClient(<ReelsSection data={{ reels: [{ video_url: 'a.mp4' }] }} />);
     expect(HTMLMediaElement.prototype.play).not.toHaveBeenCalled();
+  });
+
+  it('shows a frame of the video, not a black box, when the reel has no cover image', () => {
+    const { container } = renderWithClient(
+      <ReelsSection data={{ reels: [{ video_url: 'https://x.test/a.mp4', poster: '' }] }} />
+    );
+    const video = container.querySelector('video')!;
+    expect(video.getAttribute('src')).toBe('https://x.test/a.mp4#t=0.1');
+    expect(video.getAttribute('preload')).toBe('metadata');
+    expect(video.getAttribute('poster')).toBeNull();
+  });
+
+  it('loads nothing before play when the reel has a cover image', () => {
+    const { container } = renderWithClient(
+      <ReelsSection data={{ reels: [{ video_url: 'https://x.test/a.mp4', poster: 'https://x.test/p.jpg' }] }} />
+    );
+    const video = container.querySelector('video')!;
+    expect(video.getAttribute('src')).toBe('https://x.test/a.mp4');
+    expect(video.getAttribute('preload')).toBe('none');
+  });
+
+  it('keeps a URL that already has a media fragment', () => {
+    expect(firstFrameSrc('https://x.test/a.mp4#t=2')).toBe('https://x.test/a.mp4#t=2');
+  });
+
+  it('puts the arrows on the left and right of the row', () => {
+    const { container } = renderWithClient(
+      <ReelsSection data={{ reels: [{ video_url: 'https://x.test/a.mp4' }] }} />
+    );
+    expect(container.querySelector('[data-arrows="sides"]')).toBeTruthy();
   });
 });

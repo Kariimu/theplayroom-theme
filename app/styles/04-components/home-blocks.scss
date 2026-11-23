@@ -1467,6 +1467,33 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   and the product page's "similar products". Each block sets its slide widths. On
   phones the row runs on past the container to the screen's edge.
 */
+
+/* `ScrollCarousel` with `arrows="sides"`: round white buttons over the row's
+   left and right edges, vertically centred on it. */
+.scroll-carousel__stage {
+  @apply relative;
+}
+
+.scroll-carousel__side-arrow {
+  @apply absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-primary shadow-lg transition-opacity;
+
+  svg {
+    @apply h-6 w-6;
+  }
+
+  &--left {
+    @apply left-2;
+  }
+
+  &--right {
+    @apply right-2;
+  }
+
+  &:disabled {
+    @apply cursor-default opacity-40;
+  }
+}
+
 .scroll-carousel {
   &__head {
     @apply mb-4 flex items-center gap-4 lg:mb-6;
