@@ -4462,6 +4462,98 @@
                     "maxLength": 20
                 }
             ]
+        },
+        {
+            "key": "2fd43f1f-9734-47fc-870c-0372d0e01542",
+            "title": {
+                "en": "Product FAQ (product page only)",
+                "ar": "أسئلة المنتجات (صفحة المنتج فقط)"
+            },
+            "icon": "sicon-store",
+            "path": "home.product-faq",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div><p>هذا القسم لا يظهر في الصفحة الرئيسية. يحفظ الأسئلة الشائعة الخاصة بكل منتج وتظهر في صفحة المنتج.</p><p>لكل سؤال اكتب «مفتاح المجموعة» (مثال: swedish-ladder)، ثم أضف للمنتج الوسم <b>faq-swedish-ladder</b>. المنتج يعرض أسئلة مجموعته فقط؛ المنتج بدون وسم يعرض الأسئلة العامة من قسم «الأسئلة الشائعة».</p><p>This block is not shown on the home page. Give each question a group key (e.g. swedish-ladder) and tag the product faq-swedish-ladder. A product with no faq- tag shows the store-wide FAQ.</p></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "items",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": {
+                        "ar": "الأسئلة",
+                        "en": "Questions"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": "سؤال",
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "items.key",
+                            "type": "string",
+                            "format": "text",
+                            "label": {
+                                "ar": "مفتاح المجموعة",
+                                "en": "Group key"
+                            },
+                            "description": "حروف إنجليزية صغيرة وشرطات فقط. يطابق وسم المنتج faq-<المفتاح>",
+                            "placeholder": "swedish-ladder",
+                            "icon": "sicon-tag",
+                            "value": null,
+                            "multilanguage": false,
+                            "required": true,
+                            "minLength": 1,
+                            "maxLength": 60
+                        },
+                        {
+                            "id": "items.question",
+                            "type": "string",
+                            "format": "text",
+                            "label": {
+                                "ar": "السؤال",
+                                "en": "Question"
+                            },
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "ما العمر المناسب لهذه اللعبة؟",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": true,
+                            "minLength": 1,
+                            "maxLength": 200
+                        },
+                        {
+                            "id": "items.answer",
+                            "type": "string",
+                            "format": "textarea",
+                            "label": {
+                                "ar": "الإجابة",
+                                "en": "Answer"
+                            },
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "من سنة إلى 5 سنوات",
+                            "icon": "sicon-typography",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": true,
+                            "minLength": 1,
+                            "maxLength": 1000
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 0,
+                    "maxLength": 100
+                }
+            ]
         }
     ],
     "support_url": null,

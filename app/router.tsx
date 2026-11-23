@@ -189,6 +189,8 @@ registerHomeComponents({
   // Data-only block: the gallery category page's photos and videos
   // (`app/lib/galleryPage.ts`); draws nothing on the home page.
   'gallery-page': () => null,
+  // Data-only block: per-product FAQ questions (`app/lib/productFaq.ts`).
+  'product-faq': () => null,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
@@ -198,6 +200,7 @@ registerHomeComponentConfig({
   // engine's lazy wrapper doesn't reserve its default 400px on the home page.
   'product-usage-gallery': { className: 'hidden', height: '0px', placeholder: null },
   'gallery-page': { className: 'hidden', height: '0px', placeholder: null },
+  'product-faq': { className: 'hidden', height: '0px', placeholder: null },
   'featured-products': featuredProductsConfig,
   'featured-products-special-offer': featuredProductsConfig,
   'featured-products-special-product': featuredProductsConfig,

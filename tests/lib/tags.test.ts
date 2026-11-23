@@ -110,6 +110,7 @@ describe('convention literals', () => {
     expect(TAG_PREFIX).toEqual({
       feature: 'feature-',
       inUse: 'inuse-',
+    faq: 'faq-',
       set: 'set:',
       addOn: 'addons-p',
     });

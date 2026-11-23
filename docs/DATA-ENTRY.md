@@ -83,7 +83,7 @@ Arabic-only if the dashboard allows it.
 
 ---
 
-## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`, `feature-<key>`, `inuse-<key>`)
+## B. Tags (`whatsapp`, `cart-upsell`, `set:<name>`, `addons-p<id>`, `feature-<key>`, `inuse-<key>`, `faq-<key>`)
 
 **Where:** open the product → **Product details** tab → the **tags** field →
 type the exact tag text (`whatsapp`, `cart-upsell`, `set:<name>`, or
@@ -229,6 +229,38 @@ tags are listed.
 - Not yet verified on the real store: what English pages show when an
   article has no English version. Check this during the first test.
 - The articles also appear in the store's blog list, by design.
+
+### `faq-<key>`: Product FAQ (replaces the per-product `products_questions`)
+
+Each product can have its own questions, shown in the FAQ section near the
+end of the product page (and sent to Google as FAQ data). A product with no
+`faq-` tag keeps showing the store-wide questions from the
+**"الأسئلة الشائعة"** home block. Code: `app/lib/productFaq.ts`.
+
+**1. Add the block (once).** Store Design → Customize → home page → add
+**"أسئلة المنتجات (صفحة المنتج فقط)"**. It shows **nothing** on the home page;
+it only holds the questions. Keep it in the layout and switched on.
+
+**2. Add the questions.** One item per question:
+- **مفتاح المجموعة / Group key**: lower-case Latin with hyphens, e.g.
+  `swedish-ladder`. All questions for one product (or product family) share it.
+- **Question** and **Answer** (AR + EN).
+
+They show in the block's order, at most 15 per product.
+
+**3. Tag the product.** Product → tags → `faq-<key>`, e.g. `faq-swedish-ladder`.
+Several products can share a key (sizes, colours); a product with two `faq-`
+tags shows both groups.
+
+- [ ] Open the live theme's `products_questions` setting and copy each product's questions into the block
+- [ ] Tag each of those products `faq-<key>`
+- [ ] Write the English question and answer for each
+
+**Things that will surprise you:** a tag with no matching question falls back
+to the store-wide FAQ; a question with no answer is skipped; removing the
+block from the home layout makes every product fall back to the store-wide FAQ.
+
+---
 
 ### `inuse-<key>`: Product in-use gallery (replaces `slider_in_products`)
 

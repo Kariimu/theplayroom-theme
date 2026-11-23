@@ -5,7 +5,8 @@ import { withHead, getTwilightContext } from '@salla.sa/twilight-theme-engine/ta
 import { home } from '@salla.sa/twilight-theme-engine/api/home';
 import { ProductPage, type ProductPageWithFaq } from '../components/product/ProductPage';
 import { redirectHomeIfNotFound } from '../lib/productNotFound';
-import { buildFaqJsonLd } from '../lib/faqJsonLd';
+import { faqJsonLdFromQuestions } from '../lib/faqJsonLd';
+import { resolveProductFaq } from '../lib/productFaq';
 import { devPreviewBlocks } from '../lib/homeBlocks';
 import { hasFeatureTags, productFeatures, type ProductFeature } from '../lib/productFeatures';
 
@@ -53,7 +54,12 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
         ? [result.jsonLd]
         : [];
     const faq = result.canonical
-      ? buildFaqJsonLd(data.faqComponents, ctx.locale, result.canonical)
+      ? faqJsonLdFromQuestions(
+          // The same questions ProductFaq shows: the product's own, else the store-wide list.
+          resolveProductFaq(data.faqComponents, data.product.tags).questions,
+          ctx.locale,
+          result.canonical
+        )
       : undefined;
     return faq ? { ...result, jsonLd: [...existing, faq] } : result;
   }),

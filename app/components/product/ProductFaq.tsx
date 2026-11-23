@@ -1,23 +1,26 @@
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
-import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
-import { FaqAccordion, type FaqQuestionItem } from '../common/FaqAccordion';
-import { findHomeBlock } from '../../lib/homeBlocks';
-
-const COMMON_QUESTIONS_PATH = 'common-questions-section';
+import type { HomeComponentData, Product } from '@salla.sa/twilight-theme-engine/types';
+import { FaqAccordion } from '../common/FaqAccordion';
+import { resolveProductFaq } from '../../lib/productFaq';
 
 /**
- * The same store-wide, dashboard-editable FAQ as the home `common-questions-section`
- * block — D2 (docs/MIGRATION-PLAN.md §5A/5B) resolved the FAQ to live there, not a
- * per-product specs group or hard-coded `locales`. `components` comes from the product
- * route's own loader (`home.queries.components()`, fetched server-side via
- * `queryClient.ensureQueryData` — same cache key the home page's own query uses), so the
- * question text is in the SSR HTML instead of only appearing after a client-side query
- * (SEO audit #1). Renders nothing until the block actually has questions.
+ * The product page FAQ: the product's own questions (its `faq-<key>` tags
+ * matched against the `product-faq` block), else the store-wide
+ * `common-questions-section` list (`app/lib/productFaq.ts`). `components`
+ * comes from the product route's own loader (`home.queries.components()`,
+ * fetched server-side), so the question text is in the SSR HTML (SEO audit
+ * #1) and matches the FAQPage JSON-LD built in the route's `head`. Renders
+ * nothing when there are no questions at all.
  */
-export function ProductFaq({ components }: { components?: HomeComponentData[] }) {
+export function ProductFaq({
+  components,
+  tags,
+}: {
+  components?: HomeComponentData[];
+  tags?: Product['tags'];
+}) {
   const { t } = useTranslation();
-  const questions =
-    (findHomeBlock(components, COMMON_QUESTIONS_PATH)?.questions as FaqQuestionItem[] | undefined) ?? [];
+  const { questions } = resolveProductFaq(components, tags);
 
   if (!questions.length) return null;
 

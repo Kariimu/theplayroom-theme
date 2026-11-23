@@ -21,6 +21,18 @@ export function buildFaqJsonLd(
   const questions = (findHomeBlock(components, COMMON_QUESTIONS_PATH)?.questions as
     | QuestionItem[]
     | undefined) ?? [];
+  return faqJsonLdFromQuestions(questions, locale, pageUrl);
+}
+
+/**
+ * FAQPage schema from a list of questions already resolved for the page (the
+ * product page's own or store-wide FAQ, `app/lib/productFaq.ts`).
+ */
+export function faqJsonLdFromQuestions(
+  questions: readonly QuestionItem[],
+  locale: string,
+  pageUrl: string
+): Record<string, unknown> | undefined {
   const mainEntity = questions
     .filter((q): q is Required<QuestionItem> => Boolean(q.title?.trim() && q.desc?.trim()))
     .map((q) => ({

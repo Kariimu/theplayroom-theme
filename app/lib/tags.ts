@@ -34,6 +34,12 @@ export const TAG_PREFIX = {
    * in tag names (see `addOn` below).
    */
   inUse: 'inuse-',
+  /**
+   * Product FAQ group (replaces the per-product `products_questions` rows);
+   * key → the questions with the same group key in the `product-faq` home
+   * block (`app/lib/productFaq.ts`). Hyphen, not colon (Salla rejects colons).
+   */
+  faq: 'faq-',
   /** Companion "set"; products sharing a set are suggested together (replaces `products_play_games`). */
   set: 'set:',
   /**

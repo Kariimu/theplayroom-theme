@@ -47,4 +47,30 @@ describe('ProductFaq', () => {
     const { container } = render(<ProductFaq />);
     expect(container.firstChild).toBeNull();
   });
+
+  it("shows the product's own questions instead of the store-wide ones when it carries a matching faq- tag", () => {
+    const { container, getByText, queryByText } = render(
+      <ProductFaq
+        tags={[{ name: 'faq-pikler', url: '' }]}
+        components={[
+          {
+            path: 'common-questions-section',
+            component: { questions: [{ title: 'Do you ship internationally?', desc: 'Yes.' }] },
+          },
+          {
+            path: 'product-faq',
+            component: {
+              items: [
+                { key: 'pikler', question: 'Does it fold flat?', answer: 'Yes, in seconds.' },
+                { key: 'other', question: 'Not this one', answer: 'No.' },
+              ],
+            },
+          },
+        ]}
+      />
+    );
+    expect(container.querySelectorAll('details')).toHaveLength(1);
+    expect(getByText('Does it fold flat?')).toBeTruthy();
+    expect(queryByText('Do you ship internationally?')).toBeNull();
+  });
 });
