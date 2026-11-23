@@ -110,14 +110,18 @@ describe('ProductsSection', () => {
     expect(container.querySelector('a')).toBeNull();
   });
 
-  it('renders the selected products as vertical-card slides, a slider at every breakpoint', async () => {
+  it('renders the selected products as vertical cards: a slider on phones, a grid from md up', async () => {
     const { container, getAllByTestId } = renderWithClient(
       <ProductsSection data={{ products: [{ id: 1 }, { id: 2 }] }} />
     );
-    await waitFor(() => expect(getAllByTestId('product-card').length).toBe(2));
+    // Each product renders twice: once in the phone slider, once in the desktop grid.
+    await waitFor(() => expect(getAllByTestId('product-card').length).toBe(4));
     for (const card of getAllByTestId('product-card')) {
       expect(card.getAttribute('data-layout')).toBe('vertical');
     }
-    expect(container.querySelectorAll('.s-products-carousel__slide').length).toBe(2);
+    expect(container.querySelectorAll('[class~="md:hidden"] .s-products-carousel__slide').length).toBe(2);
+    const grid = container.querySelector('.s-products-list-vertical-cards');
+    expect(grid?.className).toContain('md:grid');
+    expect(grid?.querySelectorAll('[data-testid="product-card"]').length).toBe(2);
   });
 });

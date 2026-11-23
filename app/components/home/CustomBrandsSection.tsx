@@ -65,6 +65,7 @@ export const CustomBrandsSection = memo(function CustomBrandsSection({
 
   if (asGrid) {
     return (
+      <div className="bg-white py-8">
       <div className="container mx-auto px-4">
         {/* A real grid, not flex-wrap: a logo's own width no longer decides how many
             land in a row — reliably 3 on mobile, matching the reference site. */}
@@ -76,6 +77,7 @@ export const CustomBrandsSection = memo(function CustomBrandsSection({
           ))}
         </div>
       </div>
+      </div>
     );
   }
 
@@ -83,7 +85,7 @@ export const CustomBrandsSection = memo(function CustomBrandsSection({
   const track = motionAllowed ? [...withImages, ...withImages] : withImages;
 
   return (
-    <div className="custom-brands-marquee overflow-x-auto hide-scroll">
+    <div className="custom-brands-marquee overflow-x-auto bg-white py-8 hide-scroll">
       <div
         className={`custom-brands-marquee__track flex items-center gap-10 ${
           motionAllowed ? 'custom-brands-marquee__track--animated' : ''

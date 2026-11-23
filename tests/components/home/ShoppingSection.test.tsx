@@ -72,7 +72,18 @@ describe('ShoppingSection', () => {
       />
     );
     const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
-    expect(titleEl.className).toContain('text-sm');
-    expect(subtitleEl.className).toContain('text-sm');
+    // Both "normal" variants are the plainer weight (no font-black).
+    expect(titleEl.className).not.toContain('font-black');
+    expect(subtitleEl.className).not.toContain('font-black');
+  });
+
+  it('sets card text at 20px and the subtitle in the brand orange', () => {
+    const { container } = render(
+      <ShoppingSection data={{ items: [{ title: 'Title', subtitle: 'Subtitle' }] }} />
+    );
+    const [titleEl, subtitleEl] = container.querySelectorAll('.group p');
+    expect(titleEl.className).toContain('text-[20px]');
+    expect(subtitleEl.className).toContain('text-[20px]');
+    expect(subtitleEl.className).toContain('text-[#f47e4d]');
   });
 });

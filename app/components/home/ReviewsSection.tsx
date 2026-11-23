@@ -37,7 +37,7 @@ export const ReviewsSection = memo(function ReviewsSection({ data }: ReviewsSect
     <div className="px-5 py-[50px] text-center">
       <div className="container max-w-[900px]">
         {title && (
-          <h2 className="mb-5 text-[40px] font-black leading-[1.25] text-primary-dark max-md:text-[28px]">
+          <h2 className="mb-5 text-[40px] font-black leading-[1.25] text-[#f47e4d] max-md:text-[28px]">
             {title}
           </h2>
         )}
@@ -50,7 +50,7 @@ export const ReviewsSection = memo(function ReviewsSection({ data }: ReviewsSect
         {link && buttonText && (
           <Link
             to={link}
-            className="inline-block rounded-full bg-primary-dark px-10 py-4 text-[22px] font-bold text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition hover:scale-105 hover:opacity-90 max-md:px-[30px] max-md:py-[14px] max-md:text-[18px]"
+            className="inline-block rounded-full bg-[#f47e4d] px-10 py-4 text-[22px] font-bold text-white shadow-[0_8px_20px_rgba(0,0,0,0.15)] transition hover:scale-105 hover:opacity-90 max-md:px-[30px] max-md:py-[14px] max-md:text-[18px]"
           >
             {buttonText}
           </Link>

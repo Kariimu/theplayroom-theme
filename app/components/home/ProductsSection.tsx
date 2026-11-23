@@ -25,11 +25,10 @@ export interface ProductsSectionProps {
 
 /**
  * `products-section` home block — a row of merchant-chosen products (up to 24,
- * no tabs) in the shared {@link ScrollCarousel}, with an optional header, a
- * footer blurb and a "view all" button. Matches the reference site's own
- * version of this block, which is a slider on every breakpoint, not a grid —
- * same convention as {@link ProductsSlider}: cards are always vertical, the
- * store's `product_card_layout` applies to grids and lists only. Simpler than
+ * no tabs): the shared {@link ScrollCarousel} on phones and a product grid
+ * from `md` up, as the old theme (`products-section.twig`), with an optional
+ * header, a footer blurb and a "view all" button. Cards are always vertical.
+ * Simpler than
  * `featured-products`: one fixed selection, no category/tag/latest sources.
  */
 export const ProductsSection = memo(function ProductsSection({ data }: ProductsSectionProps) {
@@ -66,16 +65,26 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
       {!isSuccess ? (
         <ProductsListSkeleton />
       ) : (
-        <ScrollCarousel
-          prevLabel={t('blocks.home.reviews_prev', 'Previous')}
-          nextLabel={t('blocks.home.reviews_next', 'Next')}
-        >
-          {(items ?? []).map((item) => (
-            <div key={item.id} className="s-products-carousel__slide">
-              <ProductCard product={item} layout="vertical" />
-            </div>
-          ))}
-        </ScrollCarousel>
+        <>
+          {/* As the old theme: a slider on phones, a product grid from `md` up. */}
+          <div className="md:hidden">
+            <ScrollCarousel
+              prevLabel={t('blocks.home.reviews_prev', 'Previous')}
+              nextLabel={t('blocks.home.reviews_next', 'Next')}
+            >
+              {(items ?? []).map((item) => (
+                <div key={item.id} className="s-products-carousel__slide">
+                  <ProductCard product={item} layout="vertical" />
+                </div>
+              ))}
+            </ScrollCarousel>
+          </div>
+          <div className="s-products-list-wrapper s-products-list-vertical-cards hidden md:grid">
+            {(items ?? []).map((item) => (
+              <ProductCard key={item.id} product={item} layout="vertical" />
+            ))}
+          </div>
+        </>
       )}
 
       {((link && buttonText) || footerText) && (

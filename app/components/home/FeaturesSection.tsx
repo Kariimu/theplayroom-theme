@@ -26,7 +26,7 @@ export const FeaturesSection = memo(function FeaturesSection({ data }: FeaturesS
   if (!features.length) return null;
 
   return (
-    <div className="bg-brand-blue-light py-10 md:py-14">
+    <div className="py-10 md:py-14">
       <div className="container">
         {title && (
           <h2 className="mb-12 text-center text-3xl font-black text-primary md:text-4xl">

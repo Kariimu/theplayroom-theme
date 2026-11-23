@@ -53,8 +53,8 @@ function ShoppingCard({ item, className = '' }: { item: ShoppingItem; className?
             <p
               className={
                 item.title_type
-                  ? 'mb-2 text-sm font-bold text-primary md:text-base'
-                  : 'text-lg font-black text-gray-900 md:text-xl'
+                  ? 'mb-2 text-[20px] font-bold text-primary'
+                  : 'text-[20px] font-black text-gray-900'
               }
             >
               {item.title}
@@ -64,8 +64,8 @@ function ShoppingCard({ item, className = '' }: { item: ShoppingItem; className?
             <p
               className={
                 item.subtitle_type
-                  ? 'mt-1 text-sm text-gray-500'
-                  : 'text-lg font-black text-gray-900 md:text-xl'
+                  ? 'mt-1 text-[20px] text-[#f47e4d]'
+                  : 'text-[20px] font-black text-[#f47e4d]'
               }
             >
               {item.subtitle}

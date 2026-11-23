@@ -27,7 +27,7 @@ export const Features2Section = memo(function Features2Section({ data }: Feature
   if (!features.length) return null;
 
   return (
-    <div className="relative overflow-hidden bg-brand-orange-light px-4 py-10 md:py-14">
+    <div className="relative overflow-hidden px-4 py-10 md:py-14">
       <div className="container relative z-10">
         {/* Phones: a horizontal-scroll row of cards. */}
         <div className="-mx-4 overflow-x-auto px-4 pb-4 scrollbar-hide md:hidden">

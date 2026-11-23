@@ -208,14 +208,13 @@ registerHomeComponentConfig({
   'banner-section': {
     height: 'clamp(140px, 30vw, 427px)',
   },
-  // A row of up to 4 icon+title items, 2 per row on phones, on a tinted band
-  // (`bg-brand-blue-light`) with a section heading above it.
+  // A row of up to 4 icon+title items, 2 per row on phones, on the page
+  // background, with a section heading above it.
   'features-section': {
     height: 'clamp(280px, 34vw, 400px)',
   },
-  // Up to 3 larger feature cards (icon, title, description), on a tinted band
-  // (`bg-brand-orange-light`) — a horizontal-scroll row on phones, a 3-col
-  // grid on desktop.
+  // Up to 3 larger feature cards (icon, title, description), on the page
+  // background — a horizontal-scroll row on phones, a 3-col grid on desktop.
   'features2-section': {
     height: 'clamp(300px, 36vw, 440px)',
   },
