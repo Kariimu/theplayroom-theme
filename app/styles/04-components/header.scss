@@ -155,6 +155,17 @@ $header-user-icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
   .header-btn__icon {
     @apply flex h-10 w-10 items-center justify-center text-xl text-gray-700;
   }
+
+  /* The count sits on the glyph's top-start corner, touching it (the 20px
+     glyph spans 10–30px of the 40px box; the 20px badge spans 2–22px), not
+     15px outside the box where the plugin puts it. The plugin anchors it with
+     `left` (LTR) / `right` (RTL); both are reset, then the logical side set. */
+  .s-cart-summary-count {
+    top: 2px;
+    left: auto;
+    right: auto;
+    inset-inline-start: 2px;
+  }
 }
 
 /* Phones: the logo at the old theme's 48px height. Below 380px the cart
@@ -670,8 +681,8 @@ $header-user-icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
   @apply h-4 w-px shrink-0 bg-gray-200;
 }
 
-/* Cart summary bubble — as the old theme: a 20px orange count on the cart's
-   top corner (the plugin's own size and anchor). */
+/* Cart summary bubble — as the old theme: a 20px orange count (the plugin's
+   own size); the header places it on the cart glyph above. */
 .s-cart-summary-total {
   @apply hidden;
 }
