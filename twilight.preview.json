@@ -1,5 +1,5 @@
 {
-  "enabled": true,
+  "enabled": false,
   "settings": {
     "product_card_layout": "vertical",
     "product_card_img_ratio": "auto",
@@ -26,6 +26,7 @@
     "whatsapp_number": 0,
     "footer_logo": "",
     "footer_description": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع.",
+    "gallery_page_category": [],
     "show_tags": false
   },
   "layout": [
@@ -91,10 +92,81 @@
       "path": "reels-section",
       "fields": {
         "key": "0729141b-3274-41c7-97b5-5fa034835270",
-        "title_section": "",
-        "desc_section": "",
+        "title_section": "لحظات من اللعب",
+        "desc_section": "شاهد لحظات سعيدة من أطفالنا الرائعين",
         "all_products": [],
-        "reels": []
+        "reels": [
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video4%20(1).mp4",
+            "poster": "",
+            "product": [
+              {
+                "id": 752899893,
+                "name": "بيت التسلق",
+                "url": "https://theplayroom.sa/ar/بيت-التسلق/p752899893",
+                "image": "https://cdn.salla.sa/pOONr/d23fa797-48b6-4fd7-863b-99cd99e29484-500x500-Y8dfym63WN98HjGj528bSJC4roxuJeCMW9AndjaS.jpg"
+              }
+            ]
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video1.mp4",
+            "poster": "",
+            "product": [
+              {
+                "id": 1407685868,
+                "name": "مثلث بيكلر",
+                "url": "https://theplayroom.sa/ar/مثلث-بيكلر/p1407685868",
+                "image": "https://cdn.salla.sa/pOONr/93ca127e-852b-443d-8c24-e68fa0e51757-500x500-i7tSaSPqj32WD9RBAsF8THpLJPsgxbZRBe3Qp4oM.jpg"
+              }
+            ]
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video2%20(1).mp4",
+            "poster": "",
+            "product": [
+              {
+                "id": 1326209715,
+                "name": "سلم التسلق (إكسسوار فقط)",
+                "url": "https://theplayroom.sa/ar/سلم-التسلق-إكسسوار-فقط/p1326209715",
+                "image": "https://cdn.salla.sa/pOONr/5d506492-3788-4acc-a534-32e84719cc12-500x500-P1UgVaXppjP3Dd8wc7QOu8UfMmzikrOFBUdSKftF.jpg"
+              }
+            ]
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video3.mp4",
+            "poster": "",
+            "product": [
+              {
+                "id": 1049262094,
+                "name": "خيمة (إكسسوار فقط)",
+                "url": "https://theplayroom.sa/ar/خيمة-إكسسوار-فقط/p1049262094",
+                "image": "https://cdn.salla.sa/pOONr/d76c6058-ec73-4050-91b7-277f081d52c3-500x500-gLR7kw58ce5086a7qqyFdKehi6gRqWrGMJ5iXUry.jpg"
+              }
+            ]
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video5%20(1).mp4",
+            "poster": "",
+            "product": [
+              {
+                "id": 943684463,
+                "name": "لوح التوازن",
+                "url": "https://theplayroom.sa/ar/لوح-التوازن/p943684463",
+                "image": "https://cdn.salla.sa/pOONr/c71e88b6-cd4f-4c5d-9079-ae13cdc35cfc-500x500-BGPKZwtMO3DWdU4muNaYS2j2Fkjl9Pcc3YaoA3LT.jpg"
+              }
+            ]
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video6.mp4",
+            "poster": "",
+            "product": []
+          },
+          {
+            "video_url": "https://reels.theplayroom.silverback.sa/video7.mp4",
+            "poster": "",
+            "product": []
+          }
+        ]
       }
     },
     {
@@ -197,6 +269,23 @@
             "desc": "مساحة هادئة للاسترخاء والقراءة"
           }
         ]
+      }
+    },
+    {
+      "id": "b-2d71049dfef0",
+      "path": "gallery-page",
+      "fields": {
+        "key": "959c0897-8925-4f4f-b42e-287df441283c",
+        "title_section": "غرف ألعابنا السعيدة",
+        "desc_section": "لحظات حقيقية من الفرح من عائلات تحب ألعابنا ❤️",
+        "images": [
+          {
+            "img": "",
+            "product": []
+          }
+        ],
+        "videos_title": "",
+        "videos": []
       }
     }
   ]
