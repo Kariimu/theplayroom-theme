@@ -88,7 +88,7 @@ function VerticalProductCard(props: ProductCardProps) {
 
   return (
     <div
-      className="product-card group"
+      className={`product-card group${product.is_out_of_stock ? ' product-card--out-of-stock' : ''}`}
       data-image-placeholder={isPlaceholder ? 'true' : undefined}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}

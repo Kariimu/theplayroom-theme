@@ -34,7 +34,7 @@ export const ReviewsSection = memo(function ReviewsSection({ data }: ReviewsSect
   if (!title && !description && !rating && !total) return null;
 
   return (
-    <div className="px-5 py-[50px] text-center">
+    <div className="px-5 text-center">
       <div className="container max-w-[900px]">
         {title && (
           <h2 className="mb-5 text-[40px] font-black leading-[1.25] text-[#f47e4d] max-md:text-[28px]">

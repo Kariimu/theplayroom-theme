@@ -464,6 +464,10 @@ salla-gifting {
        comes from its grid column, so the photo scales with it and only the
        shape (not the pixel size) is pinned. */
     @apply relative aspect-[246.13/307.66] overflow-hidden rounded-3xl bg-gray-100 shadow-xl;
+    /* The photo box is positioned, so it stacks above the stretched
+       `__link`: let clicks on the photo fall through to that link (the
+       product page, same as the title). The action button opts back in. */
+    pointer-events: none;
   }
 
   &__image {
@@ -490,6 +494,7 @@ salla-gifting {
      merchant picks — the button's own background, never body text, carries
      the color. */
   &__quick-action {
+    pointer-events: auto;
     @apply absolute bottom-3 z-[1] flex h-11 w-11 items-center justify-center rounded-full bg-primary text-primary-reverse shadow-lg transition-all duration-300 rtl:left-3 ltr:right-3 md:translate-y-4 md:opacity-0 md:group-hover:translate-y-0 md:group-hover:opacity-100;
 
     &:hover {
@@ -545,6 +550,35 @@ salla-gifting {
 
   &__oos-label {
     @apply absolute top-3 z-[1] rounded-full bg-gray-800 px-3 py-1 text-[11px] font-bold leading-none text-white rtl:right-3 ltr:left-3;
+  }
+
+  /* Out of stock: a grayed-out card — photo in grayscale and faded, text in
+     muted gray, price no longer in the brand colour. Still a link to the
+     product page (the "notify me" option lives there). */
+  &--out-of-stock {
+    .product-card__image {
+      filter: grayscale(1);
+      opacity: 0.6;
+    }
+
+    .product-card__title,
+    .product-card__price-now {
+      @apply text-gray-400;
+    }
+  }
+}
+
+/* The engine-rendered cards (list / horizontal layouts): the same gray style. */
+.s-product-card-out-of-stock {
+  .s-product-card-image img {
+    filter: grayscale(1);
+    opacity: 0.6;
+  }
+
+  .s-product-card-content-title,
+  .s-product-card-content-title a,
+  .s-product-card-price {
+    @apply text-gray-400;
   }
 }
 

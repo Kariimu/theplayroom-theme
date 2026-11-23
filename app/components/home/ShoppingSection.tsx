@@ -99,7 +99,7 @@ export const ShoppingSection = memo(function ShoppingSection({ data }: ShoppingS
   return (
     <div className="container">
       {(title || subtitle) && (
-        <div className="mb-10 text-center md:mb-16">
+        <div className="mb-8 text-center md:mb-10">
           {title && (
             <h2 className="mb-4 text-3xl font-black text-brand-navy">{title}</h2>
           )}

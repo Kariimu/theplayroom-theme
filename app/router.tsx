@@ -211,12 +211,12 @@ registerHomeComponentConfig({
   // A row of up to 4 icon+title items, 2 per row on phones, on the page
   // background, with a section heading above it.
   'features-section': {
-    height: 'clamp(280px, 34vw, 400px)',
+    height: 'clamp(200px, 26vw, 300px)',
   },
   // Up to 3 larger feature cards (icon, title, description), on the page
   // background — a horizontal-scroll row on phones, a 3-col grid on desktop.
   'features2-section': {
-    height: 'clamp(300px, 36vw, 440px)',
+    height: 'clamp(240px, 28vw, 330px)',
   },
   // A collapsed accordion of up to 15 Q&As; closed-row height × a handful visible.
   'common-questions-section': {

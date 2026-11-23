@@ -241,6 +241,14 @@ describe('ProductCard (default/vertical layout, custom card)', () => {
     expect(container.querySelector('button.product-card__quick-action')).toBeNull();
   });
 
+  it('marks an out-of-stock card for the grayed-out style, and only that card', () => {
+    const out = render(<ProductCard product={{ ...product, is_out_of_stock: true } as never} />);
+    expect(out.container.querySelector('.product-card--out-of-stock')).toBeTruthy();
+    out.unmount();
+    const { container } = render(<ProductCard product={product as never} />);
+    expect(container.querySelector('.product-card--out-of-stock')).toBeNull();
+  });
+
   it('shows a WhatsApp enquiry link and no cart button for a whatsapp-tagged product', () => {
     const p = {
       ...product,
