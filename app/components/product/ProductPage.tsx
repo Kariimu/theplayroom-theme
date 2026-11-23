@@ -24,6 +24,7 @@ import { ProductUsageGallery } from './ProductUsageGallery';
 import { ProductFaq } from './ProductFaq';
 import { SuggestedGames } from './SuggestedGames';
 import { ProductReviews } from './ProductReviews';
+import { ProductReviewSnippets } from './ProductReviewSnippets';
 import { BlockHookSlot } from '../common';
 import { ProductsSlider } from '../home/ProductsSlider';
 import { isWhatsappProduct } from '../../lib/tags';
@@ -182,6 +183,8 @@ export function ProductPage({
             <div className="product-payments mt-5">
               <SallaPayments />
             </div>
+            {/* Quick reviews: one good review per slide, the whole review on tap. */}
+            <ProductReviewSnippets product={initialProduct} />
 
             {/* Product information in four collapsible sections (details,
                 specifications, assembly, shipping & returns): the description
@@ -249,7 +252,7 @@ export function ProductPage({
 
       {/* Store-wide FAQ, same content as the home block (06 §7.8, D2) — between
           the reviews and related */}
-      <ProductFaq components={faqComponents} />
+      <ProductFaq components={faqComponents} tags={initialProduct.tags} />
 
       {/* App-block hook `product.single.before_product_recommendations` — between the reviews and related */}
       <BlockHookSlot

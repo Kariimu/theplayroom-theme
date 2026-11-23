@@ -1,0 +1,288 @@
+/*
+  Quick reviews under the product page's payment list
+  (`app/components/product/ProductReviewSnippets.tsx`), after the reviews
+  "snippets" strip on akwan.me: a tinted 16px-rounded strip, one review per
+  slide (60px photo, bold name + 13px gold stars, two-line 14px quote), small
+  side arrows, and the whole review in a popup.
+*/
+.review-snippets {
+  @apply mt-4;
+
+  .scroll-carousel__stage {
+    position: relative;
+    border-radius: 16px;
+    background-color: #fff4ee;
+  }
+
+  /* One slide per view, edge to edge inside the strip. */
+  .scroll-carousel__track.review-snippets__track {
+    gap: 0;
+    margin-inline: 0;
+    padding: 0;
+    scroll-padding-inline: 0;
+  }
+
+  /* Small arrows at the strip's edges, as on the reference. */
+  .scroll-carousel__side-arrow {
+    width: 24px;
+    height: 24px;
+    background-color: rgb(255 255 255 / 0.85);
+    box-shadow: 0 1px 4px rgb(0 0 0 / 0.12);
+
+    svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    &--left {
+      left: 6px;
+    }
+
+    &--right {
+      right: 6px;
+    }
+  }
+
+  /* One slide: the dots would only repeat the arrows. */
+  .carousel-dots {
+    display: none;
+  }
+}
+
+.review-snippet {
+  display: flex;
+  flex: 0 0 100%;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+  /* Room on both sides for the arrows. */
+  padding: 12px 36px;
+  color: #222222;
+  font-size: 18px; // name and quote (owner request; the reference uses 14px)
+  line-height: 1.5;
+  text-align: start;
+  scroll-snap-align: start;
+  cursor: pointer;
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: -4px;
+    border-radius: 16px;
+  }
+
+  &__image {
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    border-radius: 11px;
+    background-color: rgb(218 221 224 / 0.47);
+    object-fit: cover;
+
+    &--initial {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: color-mix(in oklab, var(--color-primary) 15%, white);
+      color: var(--color-primary);
+      font-size: 24px;
+      font-weight: 800;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__title {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 4px;
+  }
+
+  &__name {
+    font-weight: 700;
+  }
+
+  &__stars {
+    display: inline-flex;
+    gap: 2px;
+
+    svg {
+      fill: #e5e7eb;
+
+      &.is-filled {
+        fill: #ebbc4e;
+      }
+    }
+  }
+
+  &__text {
+    display: -webkit-box;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    color: #4b5563;
+  }
+}
+
+/* The popup: photo beside the review (stacked on phones); text only when the review has no photo. */
+.review-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: review-modal-fade 0.25s ease;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgb(10 15 30 / 0.7);
+    cursor: pointer;
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    width: 100%;
+    max-width: 760px;
+    max-height: 90vh;
+    overflow: hidden;
+    border-radius: 16px;
+    background: #fff;
+    box-shadow: 0 24px 60px rgb(0 0 0 / 0.35);
+
+    &:focus {
+      outline: none;
+    }
+
+    &--text {
+      grid-template-columns: minmax(0, 1fr);
+      max-width: 480px;
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: minmax(0, 1fr);
+      grid-template-rows: auto minmax(0, 1fr);
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 10px;
+    inset-inline-end: 10px;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.9);
+    color: #2d3e50;
+    box-shadow: 0 2px 8px rgb(0 0 0 / 0.15);
+
+    svg {
+      width: 18px;
+      height: 18px;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 0;
+    background: #f5f5f5;
+
+    img {
+      width: 100%;
+      height: 100%;
+      max-height: 90vh;
+      object-fit: contain;
+    }
+
+    @media (max-width: 640px) {
+      max-height: 50vh;
+    }
+  }
+
+  &__body {
+    overflow-y: auto;
+    padding: 1.5rem;
+    color: #222222;
+  }
+
+  &__head {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    padding-inline-end: 36px; // clear of the close button
+  }
+
+  &__name {
+    font-size: 16px;
+    font-weight: 700;
+  }
+
+  &__verified {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    color: #4b5563;
+    font-size: 13px;
+
+    svg {
+      fill: var(--color-primary);
+
+      path {
+        fill: none;
+        stroke: #fff;
+        stroke-width: 2.5;
+        stroke-linecap: round;
+        stroke-linejoin: round;
+      }
+    }
+  }
+
+  &__date {
+    margin: 2px 0 6px;
+    color: #6b7280;
+    font-size: 13px;
+  }
+
+  &__text {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 1.7;
+    white-space: pre-line;
+  }
+}
+
+@keyframes review-modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .review-modal {
+    animation: none;
+  }
+}
