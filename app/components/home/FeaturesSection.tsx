@@ -28,7 +28,7 @@ export const FeaturesSection = memo(function FeaturesSection({ data }: FeaturesS
   return (
     <div className="container">
       {title && (
-        <h2 className="mb-8 text-center text-3xl font-black text-primary md:mb-10 md:text-4xl">
+        <h2 className="mb-8 text-center text-[30px] font-black text-primary md:mb-10 md:text-[36px]">
           {title}
         </h2>
       )}

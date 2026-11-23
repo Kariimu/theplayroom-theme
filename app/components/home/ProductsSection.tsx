@@ -53,8 +53,8 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
     <div className="container">
       {(title || description) && (
         <div className="mb-8 md:mb-10">
-          {title && <h2 className="mb-2 text-3xl font-black text-brand-navy">{title}</h2>}
-          {description && <p className="text-lg font-medium text-gray-500">{description}</p>}
+          {title && <h2 className="mb-2 text-[30px] font-black text-brand-navy md:text-[36px]">{title}</h2>}
+          {description && <p className="text-lg font-medium text-gray-500 md:text-xl">{description}</p>}
         </div>
       )}
 

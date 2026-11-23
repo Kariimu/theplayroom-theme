@@ -101,9 +101,9 @@ export const ShoppingSection = memo(function ShoppingSection({ data }: ShoppingS
       {(title || subtitle) && (
         <div className="mb-8 text-center md:mb-10">
           {title && (
-            <h2 className="mb-4 text-3xl font-black text-brand-navy">{title}</h2>
+            <h2 className="mb-4 text-[30px] font-black text-brand-navy md:text-[36px]">{title}</h2>
           )}
-          {subtitle && <p className="text-lg font-medium text-gray-500">{subtitle}</p>}
+          {subtitle && <p className="text-lg font-medium text-gray-500 md:text-xl">{subtitle}</p>}
         </div>
       )}
 

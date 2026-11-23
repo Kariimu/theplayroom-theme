@@ -9,6 +9,7 @@ import { getCdnImageUrl } from '@salla.sa/twilight-theme-engine/utils/cdn-image'
 import { ScrollCarousel } from '../common';
 import { useMotionAllowed } from '../../hooks/useMotionAllowed';
 import { toIds } from '../../lib/pickerValue';
+import { firstFrameSrc } from '../../lib/videoFrame';
 
 interface ReelItem {
   video_url?: string;
@@ -26,12 +27,7 @@ export interface ReelsSectionProps {
   };
 }
 
-/** The video URL with a `#t=0.1` media fragment, so a video with no poster
- *  paints a frame from its start (not frame 0, often black) once its
- *  metadata loads. Left alone if the URL already has a fragment. */
-export function firstFrameSrc(url: string): string {
-  return url.includes('#') ? url : `${url}#t=0.1`;
-}
+export { firstFrameSrc };
 
 function PlayIcon() {
   return (
@@ -204,8 +200,20 @@ export function ReelsSection({ data }: ReelsSectionProps) {
     <div className="container">
       {(title || description) && (
         <div className="mb-8 text-center">
-          {title && <h2 className="text-3xl font-black">{title}</h2>}
-          {description && <p className="text-lg opacity-70">{description}</p>}
+          {title && (
+            <div className="flex items-center justify-center gap-3">
+              <span
+                className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-yellow-400 via-pink-500 to-purple-600"
+                aria-hidden="true"
+              >
+                <svg className="h-6 w-6 text-white" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 2c5.514 0 10 4.486 10 10s-4.486 10-10 10-10-4.486-10-10 4.486-10 10-10zm0-2c-6.627 0-12 5.373-12 12s5.373 12 12 12 12-5.373 12-12-5.373-12-12-12zm-3 17v-10l9 5.146-9 4.854z" />
+                </svg>
+              </span>
+              <h2 className="text-[30px] font-black md:text-[36px]">{title}</h2>
+            </div>
+          )}
+          {description && <p className="text-lg opacity-70 md:text-xl">{description}</p>}
         </div>
       )}
 

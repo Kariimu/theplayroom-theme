@@ -5,6 +5,7 @@ import { HomeSkeleton } from '@salla.sa/twilight-theme-engine/skeleton';
 import { withHead } from '@salla.sa/twilight-theme-engine/tanstack';
 import { storePageUrl } from '@salla.sa/twilight-theme-engine/utils/baseHead';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
+import { useDocumentClass } from '@salla.sa/twilight-theme-engine/hooks/useDocumentClass';
 import { buildHomeJsonLd } from '../lib/homeJsonLd';
 
 /**
@@ -38,6 +39,8 @@ export const Route = createFileRoute('/{-$locale}/')({
 function HomeComponent() {
   const data: HomeLoaderData = Route.useLoaderData();
   const { t } = useTranslation();
+  // Scopes home-only styles (e.g. the bigger product card text in product.scss).
+  useDocumentClass({ body: { class: 'page-home' } });
   return (
     <>
       {/* Visually hidden: the home blocks already carry the page's visible heading

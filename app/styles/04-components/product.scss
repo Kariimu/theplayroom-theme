@@ -568,6 +568,18 @@ salla-gifting {
   }
 }
 
+/* Home page cards: bigger name (18px) and price (20px). `page-home` is set on
+   <body> by the home route (app/routes/index.tsx). */
+.page-home .product-card {
+  .product-card__title {
+    font-size: 18px;
+  }
+
+  .product-card__price-now {
+    font-size: 20px;
+  }
+}
+
 /* The engine-rendered cards (list / horizontal layouts): the same gray style. */
 .s-product-card-out-of-stock {
   .s-product-card-image img {
