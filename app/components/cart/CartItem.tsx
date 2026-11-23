@@ -35,10 +35,8 @@ function CartItemInfo({ item }: { item: CartItemType }) {
 
   return (
     <div className="space-y-1">
-      <div className="text-gray-900 leading-6 text-lg font-bold">
-        <Link to={item.url} className="text-base">
-          {item.product_name}
-        </Link>
+      <div className="cart-item__name">
+        <Link to={item.url}>{item.product_name}</Link>
       </div>
 
       <div className="flex items-center gap-2 flex-wrap">
@@ -208,12 +206,13 @@ export function CartItem({ item, isFirst = false, onMutated }: CartItemProps) {
 
         <div className="md:flex rtl:space-x-reverse md:space-x-12 items-start justify-between mb-4 last:mb-0">
           <div className="flex flex-1 rtl:space-x-reverse space-x-4">
-            <Link to={item.url} className="relative overflow-hidden shrink-0">
+            {/* A square photo in the product card's look (cart.scss `.cart-item__media`). */}
+            <Link to={item.url} className="cart-item__media">
               <Image
                 src={item.product_image}
                 alt={item.product_name}
-                className="flex-none w-24 h-20 object-center object-cover"
-                aspectRatio="6/5"
+                className="cart-item__image"
+                aspectRatio="1/1"
                 priority={isFirst}
               />
 
@@ -230,7 +229,7 @@ export function CartItem({ item, isFirst = false, onMutated }: CartItemProps) {
           <div className="cart-item__controls mt-5 md:mt-0 flex gap-6 md:gap-8 justify-between items-center md:items-start">
             <CartItemQuantity item={item} disabled={deleting} onChange={changeQuantity} />
 
-            <p className="flex-none font-bold">
+            <p className="cart-item__total flex-none font-bold">
               {/* label shows on mobile only — desktop has the column heading */}
               <span className="md:hidden">{t('blocks.cart.item_total', 'Total')}: </span>
               <span className="inline-block item-total">{cartItemTotalLabel(item, format, t)}</span>
