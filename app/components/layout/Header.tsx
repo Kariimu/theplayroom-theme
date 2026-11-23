@@ -8,7 +8,7 @@ import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { Image } from '@salla.sa/twilight-theme-engine/common';
-import { MapPinIcon, SearchIcon, ShoppingBagIcon } from '../icons';
+import { MapPinIcon } from '../icons';
 import { useAppSafeAreaTop } from '../../hooks/useAppSafeAreaTop';
 import { useNavHasContent } from '../../hooks/useNavHasContent';
 import { HOME_ROUTE_ID, PRODUCT_ROUTE_ID } from '../../lib/routeIds';
@@ -36,6 +36,44 @@ const openCartDrawer = () => window.salla?.event?.dispatch('theme::cart-drawer.o
 const hasSocialLinks = (social?: object) =>
   Object.entries(social ?? {}).some(([key, value]) => Boolean(value) && key !== 'whatsapp');
 
+/** The old theme's header icons (Lucide, 1px stroke). */
+function MenuIcon() {
+  return (
+    <svg
+      className="site-header__menu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}
+
+function SearchGlassIcon() {
+  return (
+    <svg
+      className="site-header__search-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
+
 /** Search trigger — opens the Salla search modal via the `search::open` event. */
 function SearchButton({ label }: { label: string }) {
   return (
@@ -45,7 +83,7 @@ function SearchButton({ label }: { label: string }) {
       aria-label={label}
       onClick={openSearch}
     >
-      <SearchIcon aria-hidden="true" />
+      <SearchGlassIcon />
     </button>
   );
 }
@@ -90,8 +128,9 @@ function CartSummaryTrigger() {
 
   return (
     <div className="header-action site-header__cart-trigger" onClick={handleClick}>
+      {/* The old theme's cart: Salla's own `sicon-cart` glyph. */}
       <SallaCartSummary>
-        <ShoppingBagIcon slot="icon" aria-hidden="true" />
+        <i slot="icon" className="header-btn__icon icon sicon-cart" aria-hidden="true" />
       </SallaCartSummary>
     </div>
   );
@@ -279,13 +318,7 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
                   aria-expanded={navOpen}
                   onClick={() => setNavOpen(true)}
                 >
-                  {/* CSS burger — staggered bars that even out on hover/focus
-                      (styles: header.scss `.site-header__burger`). */}
-                  <span className="site-header__burger" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
+                  <MenuIcon />
                 </button>
               )}
               <LanguageSwitcher />

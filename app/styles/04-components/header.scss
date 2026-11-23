@@ -44,7 +44,7 @@
    so when the bar switches to `fixed` (and leaves the flow) the content below
    it stays put instead of jumping up by a bar-height. */
 .site-header__bar-outer {
-  @apply min-h-[72px] lg:min-h-[88px];
+  @apply min-h-[88px];
 }
 
 .site-header__bar {
@@ -64,7 +64,8 @@
 /* Columns follow the document direction:
    LTR → actions | logo | menu   ·   RTL → menu | logo | actions */
 .site-header__bar-inner {
-  @apply grid grid-cols-[1fr_auto_1fr] items-center gap-4 min-h-[72px] lg:min-h-[88px];
+  /* 88px tall at every size and no gaps, as the old theme's header row. */
+  @apply grid grid-cols-[1fr_auto_1fr] items-center gap-0 min-h-[88px];
   transition: min-height 0.25s ease;
 }
 
@@ -73,39 +74,80 @@
 }
 
 .site-header__nav-toggle {
-  @apply flex items-center gap-1.5 lg:gap-4 justify-self-start;
+  @apply flex items-center justify-self-start;
 }
 
 .site-header__actions {
-  @apply flex items-center sm:gap-1.5 lg:gap-4 justify-self-end;
+  @apply flex items-center justify-self-end;
 }
 
-/* Phones get the same header as desktop, as the old theme: menu + language,
-   logo, then search / account / cart, on every page. There is no bottom bar.
-   Smaller buttons, gaps and logo so the row fits a 360px screen. */
+/* =========================================================================
+   Header icons and spacing — as the old theme (measured on the live site).
+   Each control carries its own padding and the rows have no gaps:
+     menu 40 (24px icon, p-2) · language 53 (16px icon + "EN", px-2)
+     search 36 / md 40 (20 / 24px icon, p-2) · account 60 (40px avatar,
+     px-2.5) · cart 56 (40px box, 20px glyph, p-2)
+   which leaves ~18px between the visible icons. Icons are #2d3e50 (the old
+   theme's foreground), the cart glyph gray-700.
+   ========================================================================= */
+.site-header__bar .header-action {
+  @apply h-auto w-auto p-2 text-[#2d3e50] hover:bg-white/50 hover:text-primary;
+}
+
+.site-header__bar .header-action svg.site-header__menu-icon {
+  @apply h-6 w-6 md:h-7 md:w-7;
+}
+
+.site-header__bar .header-action svg.site-header__search-icon {
+  @apply h-5 w-5 md:h-6 md:w-6;
+}
+
+/* Account: the 40px avatar in a 10px-padded trigger (60px wide). */
+.site-header__actions salla-user-menu.header-action {
+  @apply h-auto w-auto p-0;
+}
+
+.site-header__actions salla-user-menu .s-user-menu-trigger {
+  @apply px-2.5 py-3.5;
+}
+
+.site-header__actions salla-user-menu .s-user-menu-avatar-wrap,
+.site-header__actions salla-user-menu .s-user-menu-trigger-avatar {
+  @apply h-10 w-10 rounded-full;
+}
+
+/* Cart: Salla's `sicon-cart` glyph, 20px in a 40px box, padded 8px. */
+.site-header__bar .site-header__cart-trigger {
+  @apply relative;
+
+  .s-cart-summary-wrapper {
+    @apply relative flex h-10 w-10 items-center justify-center;
+  }
+
+  .header-btn__icon {
+    @apply flex h-10 w-10 items-center justify-center text-xl text-gray-700;
+  }
+}
+
+/* Phones: the logo at the old theme's 48px height. Below 380px the account
+   and cart padding tightens so the row still fits. */
 @media (max-width: 767px) {
-  .site-header__bar-inner {
-    @apply gap-2;
+  .site-header__brand img {
+    @apply h-12 max-w-[110px];
+  }
+}
+
+@media (max-width: 379px) {
+  .site-header__actions salla-user-menu .s-user-menu-trigger {
+    @apply px-1;
   }
 
-  .site-header__nav-toggle {
-    @apply gap-0.5;
-  }
-
-  .site-header__actions {
-    @apply gap-0;
-  }
-
-  .site-header__bar .header-action {
-    @apply h-9 w-9;
-
-    svg:not(.s-user-menu-dropdown-item *) {
-      @apply h-5 w-5;
-    }
+  .site-header__bar .site-header__cart-trigger {
+    @apply p-1;
   }
 
   .site-header__brand img {
-    @apply h-10 max-w-[120px];
+    @apply max-w-[96px];
   }
 }
 
@@ -119,61 +161,28 @@
   }
 }
 
-/* CSS burger — top bar hugs the inline-end at 3/4 width, bottom bar hugs the
-   inline-start at 3/4, middle bar full width. On hover or keyboard focus the
-   short bars grow inward to full width (staggered cascade). Colour follows
-   `currentColor`, so it picks up `.header-action:hover`. */
-.site-header__burger {
-  @apply relative block h-5 w-5;
-
-  span {
-    @apply absolute h-0.5 rounded-full;
-    /* `bg-opacity-*` needs a channel color; `currentColor` has no alpha slot,
-       so mix the transparency in (still follows `.header-action:hover`). */
-    background-color: color-mix(in srgb, currentColor 80%, transparent);
-    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  span:nth-child(1) {
-    top: 0;
-    inset-inline-end: 0;
-    width: 70%;
-    transition-delay: 0.06s;
-  }
-
-  span:nth-child(2) {
-    top: 7px;
-    inset-inline: 0;
-    width: 100%;
-    transition-delay: 0.03s;
-  }
-
-  span:nth-child(3) {
-    top: 14px;
-    inset-inline-start: 0;
-    width: 70%;
-    transition-delay: 0s;
-  }
-}
-
-.header-action:hover .site-header__burger span,
-.header-action:focus-visible .site-header__burger span {
-  width: 100%;
-}
-
-/* The user-menu web component wraps its avatar in a padded trigger button;
-   drop the padding so it lines up with the other 40px action icons. */
+/* The user-menu trigger: no background or border of its own (its padding is
+   set with the header icons above). */
 .site-header__actions .s-user-menu-trigger {
-  @apply p-0 bg-transparent border-none;
+  @apply bg-transparent border-none;
 }
 
-/* Language switcher — a pill next to the menu trigger, every breakpoint. */
+/* Language switcher — as the old theme: the languages icon and the other
+   language, "EN" on phones, "English" from `md` up. */
 .site-header__language-switcher {
-  @apply inline-flex items-center gap-1.5 rounded-full px-2.5 h-10 text-sm font-bold text-gray-700 transition-colors hover:bg-gray-100 hover:text-primary;
+  @apply inline-flex h-8 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full px-2 text-[#231f1e] transition-colors hover:bg-white/20 md:gap-2 md:px-3;
 
   svg {
-    @apply w-5 h-5;
+    @apply h-4 w-4 shrink-0;
   }
+}
+
+.site-header__language-code {
+  @apply text-[18px] font-bold md:hidden;
+}
+
+.site-header__language-name {
+  @apply hidden text-[18px] font-medium md:inline;
 }
 
 /* The user menu's hydration wrapper div, as a row: a button an app adds beside the menu stays on the line. */
@@ -271,7 +280,6 @@
   .site-header__bar,
   .site-header__bar-inner,
   .site-header__brand img,
-  .site-header__burger span,
   .site-nav-drawer,
   .site-nav-drawer__foot,
   .site-nav-drawer__back {
@@ -638,17 +646,14 @@
   @apply h-4 w-px shrink-0 bg-gray-200;
 }
 
-/* Cart summary bubble */
+/* Cart summary bubble — as the old theme: a 20px orange count on the cart's
+   top corner (the plugin's own size and anchor). */
 .s-cart-summary-total {
   @apply hidden;
 }
 
 .s-cart-summary-count {
-  /* Smaller than the plugin default (h-5 w-5, p-1) so it clears the bag icon;
-     `top/right: auto` cancel the plugin's corner anchor so the values below win. */
-  @apply h-4 w-4 p-0 text-[10px] leading-none -bottom-1.5 left-1/2 -translate-x-1/2 bg-red-700;
-  top: auto !important;
-  right: auto;
+  @apply bg-[#f47e4d] text-white;
 }
 
 /* =========================================================================
