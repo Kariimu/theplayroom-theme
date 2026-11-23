@@ -64,9 +64,17 @@
 /* Columns follow the document direction:
    LTR → actions | logo | menu   ·   RTL → menu | logo | actions */
 .site-header__bar-inner {
-  /* 88px tall at every size and no gaps, as the old theme's header row. */
-  @apply grid grid-cols-[1fr_auto_1fr] items-center gap-0 min-h-[88px];
+  /* 88px tall at every size and no gaps, as the old theme's header row; 16px
+     at the sides (not the container's 2rem). The two side columns are equal
+     and may shrink below their content (`minmax(0, 1fr)`), so the logo sits
+     exactly in the middle of the header whatever is on either side. */
+  @apply grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-0 min-h-[88px] px-4;
   transition: min-height 0.25s ease;
+}
+
+/* Beats the `.container` utility's own 2rem padding on the same element. */
+.site-header__bar .site-header__bar-inner {
+  padding-inline: 1rem;
 }
 
 .site-header__bar.is-scrolled .site-header__bar-inner {
@@ -85,8 +93,8 @@
    Header icons and spacing — as the old theme (measured on the live site).
    Each control carries its own padding and the rows have no gaps:
      menu 40 (24px icon, p-2) · language 53 (16px icon + "EN", px-2)
-     search 36 / md 40 (20 / 24px icon, p-2) · account 60 (40px avatar,
-     px-2.5) · cart 56 (40px box, 20px glyph, p-2)
+     search 36 / md 40 (20 / 24px icon, p-2) · account 36 / md 40 (the
+     same) · cart 56 (40px box, 20px glyph, p-2)
    which leaves ~18px between the visible icons. Icons are #2d3e50 (the old
    theme's foreground), the cart glyph gray-700.
    ========================================================================= */
@@ -102,18 +110,38 @@
   @apply h-5 w-5 md:h-6 md:w-6;
 }
 
-/* Account: the 40px avatar in a 10px-padded trigger (60px wide). */
+/* Account: our line user icon (Lucide `user`, 1px stroke, like the menu and
+   search icons) at the search icon's size, in place of Salla's avatar photo
+   (signed in) or user-circle (guest). `<salla-user-menu>` renders those
+   itself, so they are hidden and the icon is drawn with a CSS mask. */
+$header-user-icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
+
 .site-header__actions salla-user-menu.header-action {
   @apply h-auto w-auto p-0;
 }
 
-.site-header__actions salla-user-menu .s-user-menu-trigger {
-  @apply px-2.5 py-3.5;
-}
+.site-header__actions salla-user-menu {
+  .s-user-menu-trigger {
+    @apply p-0;
+  }
 
-.site-header__actions salla-user-menu .s-user-menu-avatar-wrap,
-.site-header__actions salla-user-menu .s-user-menu-trigger-avatar {
-  @apply h-10 w-10 rounded-full;
+  .s-user-menu-avatar-wrap,
+  .s-user-menu-login-btn {
+    @apply grid h-9 w-9 place-items-center rounded-full border-0 bg-transparent p-0 text-[#2d3e50] transition-colors hover:bg-white/50 hover:text-primary md:h-10 md:w-10;
+
+    &::before {
+      content: '';
+      @apply block h-5 w-5 md:h-6 md:w-6;
+      background-color: currentColor;
+      -webkit-mask: url($header-user-icon) center / contain no-repeat;
+      mask: url($header-user-icon) center / contain no-repeat;
+    }
+  }
+
+  .s-user-menu-trigger-avatar,
+  .s-user-menu-login-btn > svg {
+    display: none;
+  }
 }
 
 /* Cart: Salla's `sicon-cart` glyph, 20px in a 40px box, padded 8px. */
@@ -129,8 +157,8 @@
   }
 }
 
-/* Phones: the logo at the old theme's 48px height. Below 380px the account
-   and cart padding tightens so the row still fits. */
+/* Phones: the logo at the old theme's 48px height. Below 380px the cart
+   padding tightens so the row still fits. */
 @media (max-width: 767px) {
   .site-header__brand img {
     @apply h-12 max-w-[110px];
@@ -138,16 +166,12 @@
 }
 
 @media (max-width: 379px) {
-  .site-header__actions salla-user-menu .s-user-menu-trigger {
-    @apply px-1;
-  }
-
   .site-header__bar .site-header__cart-trigger {
     @apply p-1;
   }
 
   .site-header__brand img {
-    @apply max-w-[96px];
+    @apply max-w-[88px];
   }
 }
 
