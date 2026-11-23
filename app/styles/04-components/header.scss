@@ -156,15 +156,17 @@ $header-user-icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg'
     @apply flex h-10 w-10 items-center justify-center text-xl text-gray-700;
   }
 
-  /* The count sits on the glyph's top-start corner, touching it (the 20px
-     glyph spans 10–30px of the 40px box; the 20px badge spans 2–22px), not
-     15px outside the box where the plugin puts it. The plugin anchors it with
-     `left` (LTR) / `right` (RTL); both are reset, then the logical side set. */
+  /* The count's circle touches the edge of the cart: the basket's top-right
+     corner, measured from Salla's `sicon-cart` glyph at about (29px, 14px) of
+     the 40px box. A 20px circle centred ~7px up and right of that point (on
+     the diagonal) just meets it: right -6px, top -3px. Always on the right,
+     Arabic and English alike: the glyph is not mirrored, and on its left is
+     the handle, not the basket. Overrides the plugin's start-side anchor
+     (`left` in LTR, `right` in RTL). */
   .s-cart-summary-count {
-    top: 2px;
+    top: -3px;
+    right: -6px;
     left: auto;
-    right: auto;
-    inset-inline-start: 2px;
   }
 }
 
