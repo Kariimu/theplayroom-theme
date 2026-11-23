@@ -2,8 +2,8 @@ import { useState, useRef, useEffect, useMemo, useCallback, type ReactNode } fro
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { useStore } from '@salla.sa/twilight-theme-engine/hooks/useStore';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
-import { useNavigate, useLocation, useTwilight } from '@salla.sa/twilight-theme-engine/providers';
-import { sortOptions, onSallaEvent } from '@salla.sa/twilight-theme-engine/utils';
+import { useLocation, useTwilight } from '@salla.sa/twilight-theme-engine/providers';
+import { onSallaEvent } from '@salla.sa/twilight-theme-engine/utils';
 import {
   Breadcrumb,
   NoContent,
@@ -34,48 +34,12 @@ import { useAppSafeAreaTop } from '../../hooks/useAppSafeAreaTop';
 import { useProductCardLayout } from '../../hooks/useProductCardLayout';
 import { useScrollDirection } from '../../hooks/useScrollDirection';
 import { dispatchProductsFetched } from '../../lib/productsFetched';
-import {
-  ChevronDownIcon,
-  DashboardSquare01Icon,
-  FilterHorizontalIcon,
-  RightToLeftListBulletIcon,
-} from '../icons';
+import { FilterHorizontalIcon } from '../icons';
 
 type View = 'grid' | 'list';
 
-/** localStorage-backed toolbar preference, read after mount to avoid SSR mismatch. */
-function usePref<T extends string>(
-  key: string,
-  values: readonly T[],
-  initial: T
-): [T, (v: T) => void] {
-  const [value, setValue] = useState<T>(initial);
-  useEffect(() => {
-    try {
-      const stored = window.localStorage.getItem(key) as T | null;
-      // This fills the hook's own state from localStorage; no parent is
-      // involved: see .react-doctor/false-positives.md.
-      // react-doctor-disable-next-line react-doctor/no-pass-data-to-parent
-      // A new key (or default) with nothing stored goes back to the default.
-      setValue(stored && values.includes(stored) ? stored : initial);
-    } catch {
-      setValue(initial);
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [key, initial]);
-  const set = useCallback(
-    (v: T) => {
-      setValue(v);
-      try {
-        window.localStorage.setItem(key, v);
-      } catch {
-        /* private mode */
-      }
-    },
-    [key]
-  );
-  return [value, set];
-}
+/** Salla's native filter widgets on listing pages (off, see `showFilters`). */
+const NATIVE_FILTERS = false;
 
 /** `ItemsList`'s `loader` for infinite scroll - the route already loaded the
  * first page, so this fetches subsequent ones from `pagination.next`, which
@@ -204,101 +168,20 @@ function MobileStickyToolbar({ children }: { children: ReactNode }) {
   );
 }
 
-/** Filter show/hide (desktop toggle + mobile trigger) at the start, grid/list
- * switch + sort select at the end. */
-function CatalogToolbar({
-  showFilters,
-  filtersHidden,
-  onToggleFiltersHidden,
-  onOpenMobileFilters,
-  view,
-  onViewChange,
-  selectedSort,
-  sortOptionsWithTrans,
-  currentSortLabel,
-  onSortChange,
-}: {
-  showFilters: boolean;
-  filtersHidden: '0' | '1';
-  onToggleFiltersHidden: () => void;
-  onOpenMobileFilters: () => void;
-  view: View;
-  onViewChange: (view: View) => void;
-  selectedSort: string;
-  sortOptionsWithTrans: ReturnType<typeof sortOptions>;
-  currentSortLabel: string | undefined;
-  onSortChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
-}) {
+/**
+ * Phones only: the button that opens the filter sheet. The old toolbar (sort,
+ * grid/list switch, desktop "hide filters") was removed at the owner's
+ * request; from `md` up the filter column is always shown, so it needs none.
+ */
+function MobileFiltersButton({ onOpen }: { onOpen: () => void }) {
   const { t } = useTranslation();
-
   return (
-    <div className="s-catalog-toolbar">
-      {showFilters && (
-        <div className="s-catalog-toolbar__group s-catalog-toolbar__filters">
-          <button
-            type="button"
-            className="s-catalog-toolbar__filters-toggle hidden md:inline-flex"
-            aria-pressed={filtersHidden === '1'}
-            onClick={onToggleFiltersHidden}
-          >
-            <FilterHorizontalIcon aria-hidden="true" />
-            {filtersHidden === '1'
-              ? t('blocks.catalog.show_filters', 'Show filters')
-              : t('blocks.catalog.hide_filters', 'Hide filters')}
-          </button>
-
-          <button
-            type="button"
-            onClick={onOpenMobileFilters}
-            className="s-catalog-toolbar__filters-trigger md:hidden"
-            aria-label={t('pages.categories.filters', 'Filters')}
-          >
-            <FilterHorizontalIcon aria-hidden="true" />
-          </button>
-        </div>
-      )}
-
-      <div className="s-catalog-toolbar__group s-catalog-toolbar__options">
-        <div
-          className="s-catalog-toolbar__views"
-          role="group"
-          aria-label={t('blocks.catalog.view', 'View')}
-        >
-          <button
-            type="button"
-            aria-pressed={view === 'grid'}
-            aria-label={t('blocks.catalog.view_grid', 'Grid view')}
-            onClick={() => onViewChange('grid')}
-          >
-            <DashboardSquare01Icon aria-hidden="true" />
-          </button>
-          <button
-            type="button"
-            aria-pressed={view === 'list'}
-            aria-label={t('blocks.catalog.view_list', 'List view')}
-            onClick={() => onViewChange('list')}
-          >
-            <RightToLeftListBulletIcon aria-hidden="true" />
-          </button>
-        </div>
-
-        {sortOptionsWithTrans.length > 0 && (
-          <label className="s-catalog-toolbar__sort">
-            <span className="s-catalog-toolbar__sort-label">
-              {t('pages.categories.sorting', 'Sort By')}: <b>{currentSortLabel}</b>
-            </span>
-            <ChevronDownIcon aria-hidden="true" />
-            <select value={selectedSort} onChange={onSortChange}>
-              {sortOptionsWithTrans.map((option) => (
-                <option key={option.id} value={option.id}>
-                  {option.name}
-                </option>
-              ))}
-            </select>
-          </label>
-        )}
-      </div>
-    </div>
+    <button type="button" onClick={onOpen} className="s-catalog-filters-button md:hidden">
+      <span className="s-catalog-filters-button__icon" aria-hidden="true">
+        <FilterHorizontalIcon />
+      </span>
+      {t('pages.categories.filters', 'Filters')}
+    </button>
   );
 }
 
@@ -500,8 +383,6 @@ function CatalogListPage({
   const { t, locale } = useTranslation();
   const store = useStore();
   const { theme } = useTwilight();
-  const navigate = useNavigate();
-  const location = useLocation();
 
   const category = source.type === 'categories' ? (source.entity as Category | undefined) : undefined;
 
@@ -524,26 +405,18 @@ function CatalogListPage({
 
   const selectedSort = query.sort;
   const [filtersOpen, setFiltersOpen] = useState(false);
-  // The merchant's card layout picks the view until the visitor switches it.
-  // The visitor's choice is kept per layout, so changing the setting applies
-  // again, also live in the theme editor.
+  // The merchant's card layout picks the view (there is no grid/list switch).
   const cardLayout = useProductCardLayout();
-  const [view, setView] = usePref<View>(
-    `catalog-view-${cardLayout}`,
-    ['grid', 'list'],
-    cardLayout === 'horizontal' ? 'list' : 'grid'
-  );
-  const [filtersHidden, setFiltersHidden] = usePref<'0' | '1'>(
-    'catalog-filters-hidden',
-    ['0', '1'],
-    '0'
-  );
+  const view: View = cardLayout === 'horizontal' ? 'list' : 'grid';
 
-  const showFilters = !!(query.filters && store?.settings?.product?.filters);
+  // Salla's native `<salla-filters>` widgets are off at the owner's request
+  // (23 Nov 2026): with their titles hidden they showed as empty white boxes.
+  // Only the tag-group filter remains. Flip `NATIVE_FILTERS` to bring them back.
+  const showFilters = NATIVE_FILTERS && !!(query.filters && store?.settings?.product?.filters);
   // The tag-group filter stands on its own feet: a store with native filters
   // disabled (or none configured for this list) should still see it.
   const showAnyFilters = showFilters || tagFilterGroups.length > 0;
-  const filtersVisible = showAnyFilters && filtersHidden === '0';
+  const filtersVisible = showAnyFilters;
 
   // The selection made in `<salla-filters>` — re-queries the list (the route's
   // loader output was fetched without it).
@@ -592,29 +465,10 @@ function CatalogListPage({
   const isReorder = source.type === 'reorder';
   useReorderButtons(isReorder);
 
-  const sortOptionsWithTrans = useMemo(() => sortOptions(selectedSort, t), [selectedSort, t]);
-  const currentSortLabel =
-    sortOptionsWithTrans.find((o) => o.id === selectedSort)?.name ?? sortOptionsWithTrans[0]?.name;
-
   useEffect(() => {
     const handleFiltersChanged = () => setFiltersOpen(false);
     return onSallaEvent('salla-filters::changed', handleFiltersChanged);
   }, []);
-
-  const handleSortChange = useCallback(
-    (event: React.ChangeEvent<HTMLSelectElement>) => {
-      // `location.pathname` (not `window.location.pathname`) — the router
-      // already strips the store's username/locale base off it and re-adds
-      // its own when navigating, so passing the raw browser path here
-      // doubles it up (`/store/ar/store/ar/...`) and 404s.
-      const params = new URLSearchParams(location.searchStr);
-      params.set('sort', event.target.value);
-      params.delete('page');
-      const search = params.toString();
-      navigate(location.pathname + (search ? `?${search}` : ''));
-    },
-    [navigate, location.pathname, location.searchStr]
-  );
 
   const listKey = source.value ?? source.type;
   // Merchant blocks go on category pages only, as in Twig; offers, search and brands get none.
@@ -658,7 +512,7 @@ function CatalogListPage({
       {/* h2: MobilePageTitleBar already renders this page's one real <h1> with
           the same title, always in the HTML — not just below `md` (SEO audit #2).
           On a brand page this sits under BrandHeader's own (now h2) heading. */}
-      <h2 className="font-bold text-xl mb-4" id="page-main-title">
+      <h2 className="s-catalog-title" id="page-main-title">
         {isBrand ? t('common.titles.products') : page.title}
       </h2>
 
@@ -668,21 +522,12 @@ function CatalogListPage({
         </p>
       )}
 
-      {/* Toolbar — one bar: filter show/hide at the start, options at the end */}
-      <MobileStickyToolbar>
-        <CatalogToolbar
-          showFilters={showAnyFilters}
-          filtersHidden={filtersHidden}
-          onToggleFiltersHidden={() => setFiltersHidden(filtersHidden === '1' ? '0' : '1')}
-          onOpenMobileFilters={() => setFiltersOpen(true)}
-          view={view}
-          onViewChange={setView}
-          selectedSort={selectedSort}
-          sortOptionsWithTrans={sortOptionsWithTrans}
-          currentSortLabel={currentSortLabel}
-          onSortChange={handleSortChange}
-        />
-      </MobileStickyToolbar>
+      {/* Phones: the Filters button, pinned under the header while scrolling up */}
+      {showAnyFilters && (
+        <MobileStickyToolbar>
+          <MobileFiltersButton onOpen={() => setFiltersOpen(true)} />
+        </MobileStickyToolbar>
+      )}
 
       <CatalogGrid
         filtersVisible={filtersVisible}

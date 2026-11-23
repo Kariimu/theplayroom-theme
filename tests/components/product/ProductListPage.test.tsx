@@ -249,3 +249,49 @@ describe('ProductListPage — gallery category', () => {
     expect(queryByTestId('gallery-page')).toBeNull();
   });
 });
+
+describe('ProductListPage — toolbar removed', () => {
+  beforeEach(() => {
+    themeSettings = {};
+    locale = 'en';
+  });
+
+  it('has no sort, view switch or "hide filters" toggle', () => {
+    const { container, queryByText, queryByRole } = render(
+      <ProductListPage {...baseData({ products: [product(1, 'Swing', ['Age Range-5-8 years'])] })} />
+    );
+    expect(container.querySelector('.s-catalog-toolbar')).toBeNull();
+    expect(container.querySelector('select')).toBeNull();
+    expect(queryByText('Hide filters')).toBeNull();
+    expect(queryByRole('group', { name: 'View' })).toBeNull();
+  });
+
+  it('keeps a Filters button that opens the filter sheet on phones', () => {
+    const { getByRole, queryByRole } = render(
+      <ProductListPage {...baseData({ products: [product(1, 'Swing', ['Age Range-5-8 years'])] })} />
+    );
+    expect(queryByRole('dialog')).toBeNull();
+    fireEvent.click(getByRole('button', { name: 'Filters' }));
+    expect(getByRole('dialog')).toBeTruthy();
+  });
+
+  it('shows no Filters button when the list has no filters at all', () => {
+    storeSettings = { product: { filters: false } };
+    const { queryByRole } = render(<ProductListPage {...baseData({ products: [product(1, 'Swing')] })} />);
+    expect(queryByRole('button', { name: 'Filters' })).toBeNull();
+  });
+});
+
+describe('ProductListPage — native filters off', () => {
+  it('never renders the native salla-filters widgets, even when the store enables them', () => {
+    storeSettings = { product: { filters: true } };
+    locale = 'en';
+    const data = baseData({
+      query: { sort: 'ourSuggest', filters: true },
+      products: [product(1, 'Swing', ['Age Range-5-8 years'])],
+    });
+    const { queryByTestId, getByText } = render(<ProductListPage {...data} />);
+    expect(queryByTestId('salla-filters')).toBeNull();
+    expect(getByText('Age Range')).toBeTruthy();
+  });
+});
