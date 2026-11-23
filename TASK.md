@@ -25,7 +25,7 @@ Read first: `AGENTS.md` (engine rules + Playroom section) and `docs/MIGRATION-PL
 |---|---|---|
 | D1 | Salla's answers to the questions in plan section 2 (Twig end date for this store, saved-settings migration, framework accepted) | Stage 14 |
 | ~~D2~~ | **Resolved 12 Nov 2026: dashboard-editable** through the `common-questions-section` block (and/or product specs), not hard-coded in theme files | Stage 1 |
-| ~~D3~~ | **Resolved 13 Nov 2026: dropped.** No `/gallery` route; the home `gallery-section` and `reels-section` blocks (Stage 3) cover it | Stage 4 |
+| ~~D3~~ | **Resolved 13 Nov 2026: dropped.** No `/gallery` route; the home `gallery-section` and `reels-section` blocks (Stage 3) cover it. **Reversed 23 Nov 2026 (owner):** the gallery category page is rebuilt like the live one, at its own category URL (`c1241225104`), picked by the Tier-4 setting `gallery_page_category`, with its photos/videos in the data-only `gallery-page` home block (D2 pattern). Owner data entry: `docs/DATA-ENTRY.md` §B2 | Stage 4 |
 | ~~D4~~ | **Resolved 14 Nov 2026: build fresh.** `CartDrawer` (not a port of the dead `cart-drawer.js`/`.scss`, 09 §4) | Stage 6 |
 | D5 | Cloudflare: are AI crawlers allowed on theplayroom.sa? (needed for GEO) | Stage 10 |
 | D6 | The 29 sitemap products that redirect to the home page: delete, restore, or redirect each to a relevant category | Stage 9 |

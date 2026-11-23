@@ -186,6 +186,9 @@ registerHomeComponents({
   // (`app/lib/productUsageGallery.ts`) and draws nothing on the home page.
   // Registered so the engine doesn't show its "Unknown component" fallback.
   'product-usage-gallery': () => null,
+  // Data-only block: the gallery category page's photos and videos
+  // (`app/lib/galleryPage.ts`); draws nothing on the home page.
+  'gallery-page': () => null,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
@@ -194,6 +197,7 @@ registerHomeComponentConfig({
   // The data-only in-use gallery block: a hidden, zero-height shell, so the
   // engine's lazy wrapper doesn't reserve its default 400px on the home page.
   'product-usage-gallery': { className: 'hidden', height: '0px', placeholder: null },
+  'gallery-page': { className: 'hidden', height: '0px', placeholder: null },
   'featured-products': featuredProductsConfig,
   'featured-products-special-offer': featuredProductsConfig,
   'featured-products-special-product': featuredProductsConfig,

@@ -530,6 +530,33 @@
             "hide": false,
             "minLength": 1,
             "maxLength": 400
+        },
+        {
+            "type": "static",
+            "id": "static-line9",
+            "format": "line"
+        },
+        {
+            "type": "static",
+            "format": "title",
+            "id": "static-label10",
+            "value": "<div class='rounded-lg' style='background-color: #21636d; display: flex; justify-content: center; align-items: center;padding: 15px;margin-bottom: 20px !important; flex-direction: column;gap: 15px;'><h6 style='color: #ffffff;font-size: 15px; font-weight: bold;'> صفحة المعرض</h6></div>",
+            "variant": "h6"
+        },
+        {
+            "type": "items",
+            "icon": "sicon-keyboard_arrow_down",
+            "label": "تصنيف صفحة المعرض",
+            "description": "هذا التصنيف يعرض صفحة المعرض (صور وفيديوهات) بدل قائمة المنتجات. المحتوى يُضاف من قسم «صفحة المعرض (تصنيف المعرض فقط)» في الصفحة الرئيسية.",
+            "id": "gallery_page_category",
+            "format": "dropdown-list",
+            "selected": [],
+            "options": [],
+            "required": false,
+            "multichoice": false,
+            "source": "categories",
+            "searchable": true,
+            "value": []
         }
     ],
     "components": [
@@ -4216,6 +4243,223 @@
                     "value": [],
                     "minLength": 0,
                     "maxLength": 100
+                }
+            ]
+        },
+        {
+            "key": "959c0897-8925-4f4f-b42e-287df441283c",
+            "title": {
+                "en": "Gallery page (gallery category only)",
+                "ar": "صفحة المعرض (تصنيف المعرض فقط)"
+            },
+            "icon": "sicon-image",
+            "path": "home.gallery-page",
+            "fields": [
+                {
+                    "type": "static",
+                    "format": "description",
+                    "id": "static-desc",
+                    "value": "<div><p>هذا القسم لا يظهر في الصفحة الرئيسية. يحفظ محتوى صفحة المعرض (العنوان، الصور، الفيديوهات) وتظهر في التصنيف المختار في إعدادات الثيم: «تصنيف صفحة المعرض».</p><p>اربط كل صورة أو فيديو بمنتج ليظهر بجانبه عند فتحه مع زر «تسوق الآن».</p><p>This block is not shown on the home page. It holds the gallery page content, shown on the category picked in the theme setting \"Gallery page category\".</p></div>",
+                    "label": {
+                        "ar": "وصف القسم",
+                        "en": "Section Description"
+                    }
+                },
+                {
+                    "id": "title_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": {
+                        "ar": "عنوان صفحة المعرض",
+                        "en": "Gallery page title"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "غرف ألعابنا السعيدة",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 1,
+                    "maxLength": 100
+                },
+                {
+                    "id": "desc_section",
+                    "type": "string",
+                    "format": "text",
+                    "label": {
+                        "ar": "وصف صفحة المعرض",
+                        "en": "Gallery page description"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "لحظات حقيقية من الفرح من عائلات تحب ألعابنا",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 1,
+                    "maxLength": 400
+                },
+                {
+                    "id": "images",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": {
+                        "ar": "الصور",
+                        "en": "Photos"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": "صورة",
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "images.img",
+                            "type": "string",
+                            "format": "image",
+                            "label": {
+                                "ar": "الصورة (طولية، مثل 600×900)",
+                                "en": "Photo (portrait, e.g. 600×900)"
+                            },
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": null,
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": true
+                        },
+                        {
+                            "type": "items",
+                            "icon": "sicon-keyboard_arrow_down",
+                            "label": {
+                                "ar": "المنتج",
+                                "en": "Product"
+                            },
+                            "id": "images.product",
+                            "format": "dropdown-list",
+                            "description": null,
+                            "selected": [],
+                            "options": [],
+                            "required": false,
+                            "multichoice": false,
+                            "source": "products",
+                            "searchable": true,
+                            "maxLength": 1,
+                            "minLength": 0,
+                            "value": []
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 0,
+                    "maxLength": 20
+                },
+                {
+                    "id": "videos_title",
+                    "type": "string",
+                    "format": "text",
+                    "label": {
+                        "ar": "عنوان قسم الفيديوهات",
+                        "en": "Videos section title"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "placeholder": "لحظات من المرح",
+                    "icon": "sicon-format-text-alt",
+                    "value": null,
+                    "multilanguage": true,
+                    "required": false,
+                    "minLength": 1,
+                    "maxLength": 100
+                },
+                {
+                    "id": "videos",
+                    "type": "collection",
+                    "format": "collection",
+                    "label": {
+                        "ar": "الفيديوهات",
+                        "en": "Videos"
+                    },
+                    "description": null,
+                    "labelHTML": null,
+                    "item_label": "فيديو",
+                    "icon": "sicon-list-add",
+                    "fields": [
+                        {
+                            "id": "videos.video",
+                            "type": "string",
+                            "format": "url",
+                            "inputType": "url",
+                            "label": {
+                                "ar": "رابط الفيديو (ملف mp4 أو يوتيوب)",
+                                "en": "Video link (mp4 file or YouTube)"
+                            },
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "https://reels.silverback.sa/video.mp4",
+                            "icon": "sicon-link",
+                            "value": null,
+                            "required": true,
+                            "minLength": 2,
+                            "maxLength": 255
+                        },
+                        {
+                            "id": "videos.poster",
+                            "type": "string",
+                            "format": "image",
+                            "label": {
+                                "ar": "صورة الغلاف (اختياري)",
+                                "en": "Cover image (optional)"
+                            },
+                            "description": "بدون غلاف يظهر أول إطار من الفيديو",
+                            "labelHTML": null,
+                            "placeholder": null,
+                            "icon": "sicon-image",
+                            "value": null,
+                            "required": false
+                        },
+                        {
+                            "id": "videos.desc",
+                            "type": "string",
+                            "format": "text",
+                            "label": {
+                                "ar": "وصف الفيديو",
+                                "en": "Video caption"
+                            },
+                            "description": null,
+                            "labelHTML": null,
+                            "placeholder": "متعة اللعب مع السلم السويدي",
+                            "icon": "sicon-format-text-alt",
+                            "value": null,
+                            "multilanguage": true,
+                            "required": false,
+                            "minLength": 1,
+                            "maxLength": 400
+                        },
+                        {
+                            "type": "items",
+                            "icon": "sicon-keyboard_arrow_down",
+                            "label": {
+                                "ar": "المنتج",
+                                "en": "Product"
+                            },
+                            "id": "videos.product",
+                            "format": "dropdown-list",
+                            "description": null,
+                            "selected": [],
+                            "options": [],
+                            "required": false,
+                            "multichoice": false,
+                            "source": "products",
+                            "searchable": true,
+                            "maxLength": 1,
+                            "minLength": 0,
+                            "value": []
+                        }
+                    ],
+                    "value": [],
+                    "minLength": 0,
+                    "maxLength": 20
                 }
             ]
         }

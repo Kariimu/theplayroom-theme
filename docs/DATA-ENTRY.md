@@ -276,6 +276,52 @@ colours); a product can carry more than one `inuse-` tag.
 
 ---
 
+## B2. Gallery page "معرض الأعمال" (replaces the `gallery_*` settings)
+
+The gallery category (`c1241225104`, "معرض الأعمال") shows a hero, a row of
+photos and a row of videos instead of a product list, as on the live site.
+Clicking a photo or video opens it in a popup beside its linked product, with
+a "تسوق الآن" button. Code: `app/lib/galleryPage.ts`,
+`app/components/category/GalleryPage.tsx`.
+
+**1. Pick the category (once).** Store Design → Customize → Design Options →
+section **"صفحة المعرض"** → **"تصنيف صفحة المعرض"** → choose "معرض الأعمال".
+Any category picked here shows the gallery instead of its products.
+
+**2. Add the block (once).** Home page → add **"صفحة المعرض (تصنيف المعرض
+فقط)"**. It shows **nothing** on the home page; it only holds the content. Keep
+it in the home layout and switched on, or the gallery page is empty.
+
+**3. Fill it in** (from the live page, copy before switching themes):
+
+- [ ] Page title (AR + EN): "غرف ألعابنا السعيدة". Empty uses the category name.
+- [ ] Page description (AR + EN): "لحظات حقيقية من الفرح من عائلات تحب ألعابنا ❤️"
+- [ ] Videos section title (AR + EN): "لحظات من المرح"
+- [ ] Photos, in this order (image, linked product). Save each image from the URL
+  and upload it; the live files are 600×900:
+  - [ ] `…/1bc04e5e-f4a6-4aeb-bef5-14855bc9d818_600x900.webp` → product `p1949686711`
+  - [ ] `…/3d70ee70-c6a5-4c32-b567-517a3628232a_600x900.webp` → no product
+  - [ ] `…/a906d345-976e-433d-ba5d-73ef5e70d95d_600x900.webp` → no product
+  - [ ] `…/6810d93c-f08d-4f53-9b66-6b9cbd230cde_600x900.webp` → no product
+  - [ ] `…/45650f33-c141-4c87-8c65-e8d273c01161_600x900.webp` → no product
+  (all under `https://cdn.files.salla.network/homepage/1437537113/`)
+- [ ] Videos, in this order (link, caption, linked product):
+  - [ ] `https://reels.silverback.sa/theplayroom1.mp4`, "بيت التسلق أثناء اللعب", `p1049262094`
+  - [ ] `https://reels.silverback.sa/theplayroom3.mp4`, "اللعبة اللي كل مرة يستخدمها طفلك بطريقة مختلفة. ✨ بيت الطاحونة يعطيه مساحة يلعب، يبدع، ويعيش مغامراته بكل حرية", `p293573804`
+  - [ ] `https://reels.silverback.sa/theplayroom2.mp4`, "بس 10 دقايق كمان! الجملة اللي نسمعها دائمًا من الأطفال... لأن اللعب الممتع يخلي الوقت يطير بدون ما يحسوا", `p1407685868`
+  - [ ] `https://reels.silverback.sa/theplayroom4.mp4`, "من الصباح للمساء… مثلث بيكلر يرافق طفلك في كل لحظة!", `p1407685868`
+  - [ ] `https://reels.silverback.sa/theplayroom5.mp4`, "متعة اللعب مع السلم السويدي", `p1571449334`
+- [ ] Write the English captions and titles
+- [ ] Make sure "معرض الأعمال" is in the header menu (Menu Management), so visitors can reach it
+
+**Things that will surprise you:**
+- A video with no cover shows its own first frame; a YouTube link gets YouTube's thumbnail and plays in the popup.
+- A photo with no linked product still opens, with "لا يوجد منتج مرتبط" beside it.
+- Up to 20 photos and 20 videos.
+- The content loads in the visitor's browser, a moment after the page, so the rows show grey placeholders first.
+
+---
+
 ## C. Category images and descriptions
 
 **Where:** **Products → Categories & options → Categories →** open the

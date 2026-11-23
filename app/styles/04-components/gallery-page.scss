@@ -1,0 +1,632 @@
+/*
+  Gallery category page (`app/components/category/GalleryPage.tsx`)
+
+  Ported from the Twig gallery mode (`product/index.twig` + the gallery/reel
+  modal rules in the old 04-components/product.scss and 05-utilities). Hero
+  with floating doodles, a row of 9:16 photos, a row of 9:16 videos, and a
+  popup showing the photo/video beside its linked product.
+*/
+.gallery-page {
+  background-color: rgb(241, 245, 249);
+  padding-bottom: 3rem;
+
+  @media (min-width: 768px) {
+    padding-bottom: 4rem;
+  }
+}
+
+/* Hero */
+.gallery-hero {
+  position: relative;
+  overflow: hidden;
+  padding: 4rem 1rem;
+  background-color: rgb(254 236 229 / 0.3); // brand-orange-light/30
+
+  @media (min-width: 768px) {
+    padding-block: 6rem;
+  }
+
+  &__deco {
+    position: relative;
+    display: inline-block;
+
+    &::before,
+    &::after {
+      content: '';
+      position: absolute;
+      width: 1.5rem;
+      height: 1.5rem;
+      background-repeat: no-repeat;
+      background-size: contain;
+      animation: gallery-float 4s ease-in-out infinite;
+    }
+
+    // Physical sides, as in the Twig page: the star top-left, the monkey bottom-right.
+    &::before {
+      top: -10px;
+      left: -20px;
+      background-image: url('/gallery/star.webp');
+    }
+
+    &::after {
+      right: -20px;
+      bottom: -10px;
+      background-image: url('/gallery/monkey.webp');
+      animation-delay: 1s;
+    }
+  }
+
+  &__title {
+    margin-bottom: 1rem;
+    color: #2d3e50;
+    font-size: 2.25rem;
+    font-weight: 900;
+    line-height: 1.11;
+
+    @media (min-width: 768px) {
+      font-size: 3.75rem;
+      line-height: 1;
+    }
+  }
+
+  &__desc {
+    max-width: 42rem;
+    margin-inline: auto;
+    color: #64748b;
+    font-size: 1.125rem;
+    font-weight: 500;
+    line-height: 1.75rem;
+
+    @media (min-width: 768px) {
+      font-size: 1.25rem;
+    }
+  }
+
+  &__bars {
+    display: flex;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+
+    span {
+      height: 0.375rem;
+      border-radius: 9999px;
+    }
+  }
+}
+
+.gallery-doodle {
+  position: absolute;
+  z-index: 1;
+  height: auto;
+  opacity: 0.15;
+  pointer-events: none;
+  user-select: none;
+  animation: gallery-float 6s ease-in-out infinite;
+  will-change: transform;
+}
+
+@keyframes gallery-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+
+  25% {
+    transform: translateY(-10px) rotate(4deg);
+  }
+
+  50% {
+    transform: translateY(-18px) rotate(0deg);
+  }
+
+  75% {
+    transform: translateY(-10px) rotate(-4deg);
+  }
+}
+
+/* Rows: 236px tiles on small phones, then 2 / 3 / 4 / 5 across, 16px apart.
+   The vertical padding leaves room for the hover lift and shadow. */
+.scroll-carousel__track.gallery-track {
+  gap: 1rem;
+  padding-block: 20px;
+}
+
+.gallery-tile {
+  position: relative;
+  display: block;
+  flex: 0 0 236px;
+  overflow: hidden;
+  padding: 0;
+  border-radius: 1.2rem;
+  cursor: pointer;
+  scroll-snap-align: start;
+  transition:
+    transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1),
+    box-shadow 0.35s;
+
+  @media (min-width: 451px) {
+    flex-basis: calc((100% - 1rem) / 2);
+  }
+
+  @media (min-width: 768px) {
+    flex-basis: calc((100% - 2rem) / 3);
+  }
+
+  @media (min-width: 1024px) {
+    flex-basis: calc((100% - 3rem) / 4);
+  }
+
+  @media (min-width: 1280px) {
+    flex-basis: calc((100% - 4rem) / 5);
+  }
+
+  img,
+  video {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 9 / 16;
+    object-fit: cover;
+    background: #e2e8f0;
+  }
+
+  video {
+    pointer-events: none;
+  }
+
+  &:hover {
+    transform: translateY(-6px) scale(1.02);
+    box-shadow:
+      8px 8px rgba(244, 126, 77, 0.25),
+      0 20px 40px rgba(0, 0, 0, 0.1);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 3px;
+  }
+
+  &__play {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(0, 0, 0, 0.3);
+  }
+
+  &__play-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    transition: transform 0.3s ease;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      margin-left: 3px; // optical centre of the play triangle (physical, like the icon)
+      fill: #fff;
+    }
+  }
+
+  &:hover &__play-icon {
+    transform: scale(1.15);
+  }
+
+  &__caption {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 32px 14px 12px;
+    background: linear-gradient(to top, rgba(0, 0, 0, 0.6), transparent);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    line-height: 1.6;
+    text-align: start;
+  }
+}
+
+.gallery-videos {
+  padding-top: 3rem;
+
+  @media (min-width: 768px) {
+    padding-top: 4rem;
+  }
+
+  &__title {
+    margin-bottom: 0.25rem;
+    color: #2d3e50;
+    font-size: 1.5rem;
+    font-weight: 900;
+    text-align: center;
+
+    @media (min-width: 768px) {
+      font-size: 1.875rem;
+    }
+  }
+}
+
+/* Loading: five grey tiles where the photo row will be. */
+.gallery-row-skeleton {
+  display: flex;
+  gap: 1rem;
+  overflow: hidden;
+  padding-block: 20px;
+
+  &__tile {
+    flex: 0 0 236px;
+    aspect-ratio: 9 / 16;
+    border-radius: 1.2rem;
+    background: #e2e8f0;
+
+    @media (min-width: 451px) {
+      flex-basis: calc((100% - 1rem) / 2);
+    }
+
+    @media (min-width: 768px) {
+      flex-basis: calc((100% - 2rem) / 3);
+    }
+
+    @media (min-width: 1024px) {
+      flex-basis: calc((100% - 3rem) / 4);
+    }
+
+    @media (min-width: 1280px) {
+      flex-basis: calc((100% - 4rem) / 5);
+    }
+  }
+}
+
+/* Popup: the product column and the photo/video side by side; stacked on phones. */
+.gallery-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 9998;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  animation: gallery-modal-fade 0.3s ease;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(10, 15, 30, 0.8);
+    -webkit-backdrop-filter: blur(6px);
+    backdrop-filter: blur(6px);
+    cursor: pointer;
+  }
+
+  &__inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 320px 1fr;
+    width: 100%;
+    max-width: 840px;
+    max-height: 92vh;
+    overflow: hidden;
+    border-radius: 1.5rem;
+    background: #fff;
+    box-shadow:
+      0 32px 80px rgba(0, 0, 0, 0.5),
+      0 0 0 1px rgba(255, 255, 255, 0.07);
+    animation: gallery-modal-pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+    // Product on the left and the media on the right in both languages, as on the live site.
+    direction: ltr;
+
+    &:focus {
+      outline: none;
+    }
+
+    @media (max-width: 640px) {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto 1fr;
+      max-height: 95vh;
+      border-radius: 1.25rem;
+    }
+  }
+
+  &__close {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2d3e50;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.15);
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+    transition:
+      background 0.2s,
+      transform 0.2s;
+
+    svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    &:hover {
+      transform: rotate(90deg);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+  }
+
+  &__product-col {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 280px;
+    overflow-y: auto;
+    padding: 2rem 1.75rem;
+    background: #fff;
+    text-align: center;
+
+    // Text inside reads in the page's own direction again.
+    direction: var(--gallery-text-dir, rtl);
+
+    @media (max-width: 640px) {
+      min-height: auto;
+      padding: 3.5rem 1.25rem 1.5rem;
+    }
+  }
+
+  &__product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  &__product-img {
+    width: 170px;
+    height: 170px;
+    border-radius: 1.125rem;
+    object-fit: cover;
+    box-shadow: 0 8px 28px rgba(0, 0, 0, 0.14);
+
+    @media (max-width: 640px) {
+      width: 130px;
+      height: 130px;
+    }
+  }
+
+  &__product-name {
+    margin: 0;
+    color: #2d3e50;
+    font-size: 1.3rem;
+    font-weight: 800;
+    line-height: 1.45;
+  }
+
+  &__prices {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  &__price {
+    color: var(--color-primary);
+    font-size: 1.25rem;
+    font-weight: 800;
+  }
+
+  &__old-price {
+    color: #94a3b8;
+    font-size: 0.85rem;
+    text-decoration: line-through;
+  }
+
+  &__shop-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    padding: 0.8rem 1.5rem;
+    border-radius: 2rem;
+    background: var(--color-primary);
+    color: #fff;
+    font-size: 0.95rem;
+    font-weight: 700;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
+    transition:
+      opacity 0.2s ease,
+      transform 0.15s ease,
+      box-shadow 0.2s ease;
+
+    &:hover {
+      color: #fff;
+      opacity: 0.9;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.24);
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 3px;
+    }
+  }
+
+  &__no-product {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+    color: #94a3b8;
+    font-size: 0.875rem;
+
+    svg {
+      opacity: 0.35;
+    }
+  }
+
+  &__media {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    &--photo {
+      background: #f5f5f5;
+    }
+
+    &--video {
+      background: #000;
+    }
+
+    @media (max-width: 640px) {
+      min-height: 52vw;
+    }
+  }
+
+  &__photo {
+    width: 100%;
+    height: 100%;
+    max-height: 92vh;
+    object-fit: contain;
+  }
+
+  &__video {
+    display: block;
+    width: 100%;
+    max-height: 92vh;
+    object-fit: contain;
+
+    &--embed {
+      height: auto;
+      aspect-ratio: 9 / 16;
+      max-height: 80vh;
+      border: 0;
+    }
+
+    @media (max-width: 640px) {
+      max-height: 55vh;
+    }
+  }
+
+  &__skeleton {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.875rem;
+    width: 100%;
+  }
+
+  &__skeleton-img,
+  &__skeleton-line {
+    display: block;
+    border-radius: 0.5rem;
+    background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+    background-size: 400px 100%;
+    animation: gallery-shimmer 1.5s ease infinite;
+  }
+
+  &__skeleton-img {
+    width: 170px;
+    height: 170px;
+    border-radius: 1.125rem;
+
+    @media (max-width: 640px) {
+      width: 130px;
+      height: 130px;
+    }
+  }
+
+  &__skeleton-line {
+    &--title {
+      width: 72%;
+      height: 1.25rem;
+    }
+
+    &--price {
+      width: 44%;
+      height: 1rem;
+    }
+
+    &--btn {
+      width: 90%;
+      height: 2.75rem;
+      border-radius: 2rem;
+    }
+  }
+}
+
+[dir='ltr'] .gallery-modal {
+  --gallery-text-dir: ltr;
+}
+
+// Close button on the reading-end corner, as on the live site: top-left in Arabic, top-right in English.
+[dir='ltr'] .gallery-modal__close {
+  right: 12px;
+  left: auto;
+}
+
+@keyframes gallery-modal-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes gallery-modal-pop {
+  from {
+    opacity: 0;
+    transform: scale(0.9) translateY(28px);
+  }
+}
+
+@keyframes gallery-shimmer {
+  0% {
+    background-position: -400px 0;
+  }
+
+  100% {
+    background-position: calc(400px + 100%) 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gallery-doodle,
+  .gallery-hero__deco::before,
+  .gallery-hero__deco::after,
+  .gallery-modal,
+  .gallery-modal__inner,
+  .gallery-modal__skeleton-img,
+  .gallery-modal__skeleton-line {
+    animation: none;
+  }
+
+  .gallery-tile,
+  .gallery-tile__play-icon,
+  .gallery-modal__close,
+  .gallery-modal__shop-btn {
+    transition: none;
+  }
+
+  .gallery-tile:hover {
+    transform: none;
+  }
+}

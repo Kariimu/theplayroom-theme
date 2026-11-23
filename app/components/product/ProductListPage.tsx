@@ -26,6 +26,8 @@ import { useAppliedFilters } from '@salla.sa/twilight-theme-engine/routes/produc
 import type { ProductListFilters } from '@salla.sa/twilight-theme-engine/api/product';
 import { BlockHookSlot, BottomSheet } from '../common';
 import { CategoryHero } from '../category/CategoryHero';
+import { GalleryPage } from '../category/GalleryPage';
+import { isGalleryCategory } from '../../lib/galleryPage';
 import { TagGroupFilters } from './TagGroupFilters';
 import { buildTagFilterGroups, filterProductsByTags, type TagFilterGroup } from '../../lib/tagGroupFilters';
 import { useAppSafeAreaTop } from '../../hooks/useAppSafeAreaTop';
@@ -460,13 +462,34 @@ function CategoryTestimonials({ enabled }: { enabled: boolean }) {
  * Theme fork of the engine `ProductListPage`, registered as `product:list-page`
  * in `app/router.tsx` for every product listing.
  *
- * Same data flow as upstream; the toolbar is rebuilt as a pill with a product
- * count, a grid / list view switch and a styled sort control, plus a desktop
- * "hide filters" toggle that collapses the filter column. View + collapse state
- * persist in `localStorage`. Upgrade notes: `FORKS.md`.
+ * The category picked in the `gallery_page_category` setting shows the gallery
+ * page instead of a product list (`GalleryPage`, the Twig theme's gallery
+ * mode). Every other listing gets {@link CatalogListPage}.
  */
+export function ProductListPage(props: ProductListLoaderData) {
+  const { theme } = useTwilight();
+  const { source } = props;
+  if (
+    source.type === 'categories' &&
+    isGalleryCategory(theme?.settings as Record<string, unknown> | undefined, source.value)
+  ) {
+    return (
+      <GalleryPage
+        key={source.value}
+        category={source.entity as Category | undefined}
+      />
+    );
+  }
+  return <CatalogListPage {...props} />;
+}
 
-export function ProductListPage({
+/**
+ * The product list itself. Same data flow as upstream; the toolbar is rebuilt
+ * as a pill with a product count, a grid / list view switch and a styled sort
+ * control, plus a desktop "hide filters" toggle that collapses the filter
+ * column. View + collapse state persist in `localStorage`. Upgrade notes: `FORKS.md`.
+ */
+function CatalogListPage({
   page,
   source,
   query,

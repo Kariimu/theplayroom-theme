@@ -6,6 +6,7 @@ import type { ProductListLoaderData } from '@salla.sa/twilight-theme-engine/rout
 
 let storeSettings: { product?: { filters?: boolean }; category?: { testimonial_enabled?: boolean } } = {};
 let locale = 'ar';
+let themeSettings: Record<string, unknown> = {};
 
 vi.mock('@salla.sa/twilight-theme-engine/hooks', () => ({
   HookSlot: () => null,
@@ -19,7 +20,7 @@ vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
 vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
   useNavigate: () => vi.fn(),
   useLocation: () => ({ pathname: '/ar/c1', searchStr: '' }),
-  useTwilight: () => ({ theme: { settings: {} } }),
+  useTwilight: () => ({ theme: { settings: themeSettings } }),
 }));
 vi.mock('@salla.sa/twilight-theme-engine/utils', () => ({
   sortOptions: () => [{ id: 'ourSuggest', name: 'Our suggestion' }],
@@ -85,6 +86,11 @@ vi.mock('../../../app/hooks/useAppSafeAreaTop', () => ({ useAppSafeAreaTop: () =
 vi.mock('../../../app/hooks/useProductCardLayout', () => ({ useProductCardLayout: () => 'vertical' }));
 vi.mock('../../../app/hooks/useScrollDirection', () => ({ useScrollDirection: () => 'up' }));
 vi.mock('../../../app/lib/productsFetched', () => ({ dispatchProductsFetched: () => {} }));
+vi.mock('../../../app/components/category/GalleryPage', () => ({
+  GalleryPage: ({ category }: { category?: { name?: string } }) => (
+    <div data-testid="gallery-page">{category?.name}</div>
+  ),
+}));
 
 function product(id: number, name: string, tagNames: string[] = []) {
   return { id, name, url: `/p${id}`, tags: tagNames.map((n) => ({ name: n, url: '' })) };
@@ -210,5 +216,36 @@ describe('ProductListPage — tag-group filter', () => {
     fireEvent.click(getByLabelText('Natural wood'));
     expect(queryByTestId('product-card')).toBeNull();
     expect(getByTestId('no-content')).toBeTruthy();
+  });
+});
+
+describe('ProductListPage — gallery category', () => {
+  beforeEach(() => {
+    themeSettings = {};
+  });
+
+  it('shows the gallery page, not a product list, for the category picked in gallery_page_category', () => {
+    themeSettings = { gallery_page_category: [{ value: '1241225104' }] };
+    const data = baseData({
+      source: { type: 'categories', value: '1241225104', entity: { id: 1241225104, name: 'معرض الأعمال', url: '/c1241225104' } },
+      products: [product(1, 'Swing')],
+    });
+    const { getByTestId, queryByTestId } = render(<ProductListPage {...data} />);
+    expect(getByTestId('gallery-page').textContent).toBe('معرض الأعمال');
+    expect(queryByTestId('product-card')).toBeNull();
+  });
+
+  it('keeps the product list for every other category', () => {
+    themeSettings = { gallery_page_category: ['1241225104'] };
+    const { queryByTestId, getByTestId } = render(
+      <ProductListPage {...baseData({ products: [product(1, 'Swing')] })} />
+    );
+    expect(queryByTestId('gallery-page')).toBeNull();
+    expect(getByTestId('product-card').textContent).toBe('Swing');
+  });
+
+  it('keeps the product list when no gallery category is set', () => {
+    const { queryByTestId } = render(<ProductListPage {...baseData({ products: [product(1, 'Swing')] })} />);
+    expect(queryByTestId('gallery-page')).toBeNull();
   });
 });
