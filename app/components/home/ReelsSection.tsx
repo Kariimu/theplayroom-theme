@@ -67,9 +67,9 @@ function ReelProduct({ item }: { item: Product }) {
         )}
       </Link>
       <div className="min-w-0 flex-1">
-        <p className="line-clamp-2 text-sm font-bold leading-tight">{item.name}</p>
+        <p className="line-clamp-2 text-base font-bold leading-tight">{item.name}</p>
         <div className="mt-1 flex items-center gap-2">
-          <span className="text-sm font-bold text-primary">{format(item.price)}</span>
+          <span className="text-base font-bold text-primary">{format(item.price)}</span>
           {item.is_on_sale && (
             <span className="text-xs opacity-60 line-through">{format(item.regular_price)}</span>
           )}
