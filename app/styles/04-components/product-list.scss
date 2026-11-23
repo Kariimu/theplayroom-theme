@@ -84,8 +84,53 @@
     font-size: 16px;
     color: #222222;
 
+    /* A square checkbox in the store colour (the theme's `rounded` is 16px,
+       which made the old 16px box a circle): a tinted outline, filled with
+       a white tick when checked. */
     input {
-      @apply size-4 rounded border-2;
+      @apply relative m-0 shrink-0 cursor-pointer;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid color-mix(in oklab, var(--color-primary) 45%, transparent);
+      border-radius: 6px;
+      background-color: #fff;
+      /* No @tailwindcss/forms tick image: the ::after below draws ours. */
+      background-image: none;
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: #fff;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+          center / 14px 14px no-repeat;
+        transform: scale(0);
+        transition: transform 0.15s ease;
+      }
+
+      &:hover {
+        border-color: var(--color-primary);
+      }
+
+      &:checked {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary);
+        background-image: none;
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 30%, transparent);
+      }
     }
   }
 }
