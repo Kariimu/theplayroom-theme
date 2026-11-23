@@ -1470,6 +1470,11 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
 
 /* `ScrollCarousel` with `arrows="sides"`: round white buttons over the row's
    left and right edges, vertically centred on it. */
+/* Reels: 16px between the videos at every size. */
+.scroll-carousel__track.reels-track {
+  gap: 1rem;
+}
+
 .scroll-carousel__stage {
   @apply relative;
 }
@@ -1597,16 +1602,11 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
 }
 
 /*
-  Instagram section — the post pager (app/components/home/InstagramSection.tsx)
-  keeps its prev/next arrows on phones instead of swapping to dots like every
-  other `ScrollCarousel` row: the reference site's own mobile post slider shows
-  arrows (`s-slider-prev`/`s-slider-next`), not dots.
+  Instagram section — the phone post pager (app/components/home/InstagramSection.tsx)
+  uses the round side arrows (`arrows="sides"`, as the reels row), so it
+  drops the dots every other `ScrollCarousel` row shows on phones.
 */
 @media (max-width: 767px) {
-  .instagram-section__pager .scroll-carousel__foot {
-    display: flex;
-  }
-
   .instagram-section__pager .carousel-dots {
     display: none;
   }

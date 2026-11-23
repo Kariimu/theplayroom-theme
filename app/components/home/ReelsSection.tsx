@@ -211,6 +211,7 @@ export function ReelsSection({ data }: ReelsSectionProps) {
 
       <ScrollCarousel
         arrows="sides"
+        className="reels-track"
         prevLabel={t('blocks.home.reviews_prev', 'Previous')}
         nextLabel={t('blocks.home.reviews_next', 'Next')}
       >

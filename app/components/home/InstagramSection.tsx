@@ -217,12 +217,11 @@ export function InstagramSection({ data }: InstagramSectionProps) {
 
       {withMedia.length > 0 && (
         <>
-          {/* Mobile: a swipeable row of 2x2 pages (4 posts each) with prev/next
-              arrows — matches the reference site's own mobile post slider
-              (`s-slider-prev`/`s-slider-next`): arrows stay visible here, unlike
-              every other `ScrollCarousel` row, which drops them for dots below `md`. */}
+          {/* Mobile: a swipeable row of 2x2 pages (4 posts each) with the round
+              white arrows over its left and right edges, as the reels row. */}
           <div className="instagram-section__pager md:hidden">
             <ScrollCarousel
+              arrows="sides"
               prevLabel={t('blocks.home.reviews_prev', 'Previous')}
               nextLabel={t('blocks.home.reviews_next', 'Next')}
             >
