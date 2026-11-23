@@ -246,9 +246,10 @@ registerHomeComponentConfig({
   'modern-banner-section': {
     height: 'clamp(560px, 70vw, 900px)',
   },
-  // A 9:16 video row, ~260px cards plus a product footer.
+  // A 9:16 video card (220px wide, 280px from md) plus its product row and
+  // the heading: ~560px on phones, ~690px on desktop.
   'reels-section': {
-    height: '480px',
+    height: 'clamp(560px, 50vw, 690px)',
     placeholder: <SliderSkeleton />,
   },
   // Boxed, no background band, no vertical padding of its own — matches the

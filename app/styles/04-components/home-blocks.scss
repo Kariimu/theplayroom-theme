@@ -1470,9 +1470,16 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
 
 /* `ScrollCarousel` with `arrows="sides"`: round white buttons over the row's
    left and right edges, vertically centred on it. */
-/* Reels: 16px between the videos at every size. */
+/* Reels, as the old theme: each slide is exactly its video card (220px,
+   280px from `md`), 16px apart at every size. Not the products row's
+   percentage slides, which left each reel in a box wider than its video. */
 .scroll-carousel__track.reels-track {
   gap: 1rem;
+}
+
+.reels-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
 }
 
 .scroll-carousel__stage {

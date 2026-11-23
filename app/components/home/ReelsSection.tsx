@@ -129,7 +129,7 @@ function ReelCard({ reel, item, autoPlay }: { reel: ReelItem; item?: Product; au
   };
 
   return (
-    <div className="w-[220px] flex-shrink-0 md:w-[260px]">
+    <div className="w-[220px] flex-shrink-0 md:w-[280px]">
       <div
         className="relative aspect-[9/16] cursor-pointer overflow-hidden rounded-t-2xl bg-black"
         onClick={togglePlay}
@@ -218,7 +218,7 @@ export function ReelsSection({ data }: ReelsSectionProps) {
         {withVideo.map((reel, index) => (
           // A static settings list with no id; see .react-doctor/false-positives.md.
           // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-          <div key={index} className="s-products-carousel__slide">
+          <div key={index} className="reels-slide">
             <ReelCard
               reel={reel}
               item={productsById.get(toIds(reel.product)[0])}
