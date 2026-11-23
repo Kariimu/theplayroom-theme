@@ -31,11 +31,6 @@
   .bottom-sheet-root.is-open & {
     transform: translateY(0);
   }
-
-  /* clear the mobile bottom bar, which sits on top of the sheet (z-220) */
-  // @media (max-width: 767px) {
-  //   padding-bottom: calc(76px + var(--safe-bottom));
-  // }
 }
 
 .bottom-sheet__handle {

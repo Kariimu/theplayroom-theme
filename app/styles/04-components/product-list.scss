@@ -207,8 +207,9 @@
   }
 }
 
-/* Phones: the toolbar pins under the sticky title bar (`.mobile-page-title`,
-   3rem) once it reaches it, slides out of view while the page scrolls down and
+/* Phones: the toolbar pins under the pinned site header (56px; its `top` is
+   set inline by `ProductListPage.tsx`, 0 when the sticky header is off) once
+   it reaches it, slides out of view while the page scrolls down and
    back in when it scrolls up. `ProductListPage.tsx` (`MobileStickyToolbar`)
    sets `is-stuck` / `is-hidden`. Its white band keeps the products from
    showing behind the bar; its padding is taken back with a negative top
@@ -216,7 +217,7 @@
 @media (max-width: 767px) {
   .s-catalog-toolbar-sticky {
     @apply sticky z-20 -mx-2.5 -mt-2 mb-4 bg-white px-2.5;
-    top: calc(var(--app-safe-area-top, 0px) + 3rem);
+    top: calc(var(--app-safe-area-top, 0px) + 3.5rem);
     transition:
       transform 0.25s ease,
       box-shadow 0.25s ease;

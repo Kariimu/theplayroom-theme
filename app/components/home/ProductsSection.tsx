@@ -3,10 +3,8 @@ import { useQuery } from '@tanstack/react-query';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { product } from '@salla.sa/twilight-theme-engine/api/product';
 import { Link } from '@salla.sa/twilight-theme-engine/common';
-import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { ProductsListSkeleton } from '@salla.sa/twilight-components-react';
 import { ProductCard } from '../product';
-import { ScrollCarousel } from '../common';
 import { toIds } from '../../lib/pickerValue';
 import { resolveLink } from '../../lib/resolveLink';
 
@@ -25,14 +23,12 @@ export interface ProductsSectionProps {
 
 /**
  * `products-section` home block — a row of merchant-chosen products (up to 24,
- * no tabs): the shared {@link ScrollCarousel} on phones and a product grid
- * from `md` up, as the old theme (`products-section.twig`), with an optional
+ * no tabs) in one product grid at every screen size, with an optional
  * header, a footer blurb and a "view all" button. Cards are always vertical.
  * Simpler than
  * `featured-products`: one fixed selection, no category/tag/latest sources.
  */
 export const ProductsSection = memo(function ProductsSection({ data }: ProductsSectionProps) {
-  const { t } = useTranslation();
   const {
     title_section: title,
     desc_section: description,
@@ -65,26 +61,13 @@ export const ProductsSection = memo(function ProductsSection({ data }: ProductsS
       {!isSuccess ? (
         <ProductsListSkeleton />
       ) : (
-        <>
-          {/* As the old theme: a slider on phones, a product grid from `md` up. */}
-          <div className="md:hidden">
-            <ScrollCarousel
-              prevLabel={t('blocks.home.reviews_prev', 'Previous')}
-              nextLabel={t('blocks.home.reviews_next', 'Next')}
-            >
-              {(items ?? []).map((item) => (
-                <div key={item.id} className="s-products-carousel__slide">
-                  <ProductCard product={item} layout="vertical" />
-                </div>
-              ))}
-            </ScrollCarousel>
-          </div>
-          <div className="s-products-list-wrapper s-products-list-vertical-cards hidden md:grid">
-            {(items ?? []).map((item) => (
-              <ProductCard key={item.id} product={item} layout="vertical" />
-            ))}
-          </div>
-        </>
+        // One product grid at every size: 2 columns on phones, 4 from `md`
+        // (`.s-products-list-vertical-cards`, home-blocks.scss). No slider.
+        <div className="s-products-list-wrapper s-products-list-vertical-cards">
+          {(items ?? []).map((item) => (
+            <ProductCard key={item.id} product={item} layout="vertical" />
+          ))}
+        </div>
       )}
 
       {((link && buttonText) || footerText) && (

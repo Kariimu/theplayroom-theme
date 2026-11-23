@@ -80,64 +80,32 @@
   @apply flex items-center sm:gap-1.5 lg:gap-4 justify-self-end;
 }
 
-/* Phones: the bottom nav (`mobile-bottom-bar.scss`) carries navigation, so the
-   header is pared right back on the home page — logo + menu + search only, no
-   cart / user menu — and hidden on every other page. Keyed on
-   `.site-header--home` (`Header.tsx`, route match — present in the SSR HTML),
-   not `body.index`, which the engine only adds after hydration.
-
-   "Hidden" collapses the bar rather than `display: none`-ing the whole
-   `.site-header`: the `<salla-user-menu>` lives in there, and the bottom nav's
-   Account tab opens its (position: fixed) bottom sheet by clicking its trigger.
-   The opened dropdown re-asserts `visibility` and sits fixed, so it escapes. */
+/* Phones get the same header as desktop, as the old theme: menu + language,
+   logo, then search / account / cart, on every page. There is no bottom bar.
+   Smaller buttons, gaps and logo so the row fits a 360px screen. */
 @media (max-width: 767px) {
-  /* `.site-header--product` (`Header.tsx`) covers the same case from route
-     match state instead of the `body` route class — during a pending
-     navigation *into* the product page the body class can still read the
-     previous route for a moment, leaving this collapse un-applied until it
-     catches up. */
-  .site-header:not(.site-header--home),
-  .site-header--product {
-    .site-header__ad,
-    .site-header__intro {
-      display: none;
-    }
+  .site-header__bar-inner {
+    @apply gap-2;
+  }
 
-    .site-header__bar-outer {
-      min-height: 0;
-    }
+  .site-header__nav-toggle {
+    @apply gap-0.5;
+  }
 
-    .site-header__bar {
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
+  .site-header__actions {
+    @apply gap-0;
+  }
+
+  .site-header__bar .header-action {
+    @apply h-9 w-9;
+
+    svg:not(.s-user-menu-dropdown-item *) {
+      @apply h-5 w-5;
     }
   }
 
-  /* The bottom nav's Categories tab already opens this same drawer
-     (MobileBottomBar.tsx → HeaderNav), so the header's own trigger is a
-     redundant second way to do it. Only the home page actually shows the bar
-     on mobile to begin with (every other route collapses it above); plain
-     `display: none` is fine here, unlike the dropdown below -- nothing about
-     this trigger needs to stay reachable off-screen. */
-  .site-header__nav-toggle .site-header__menu-btn {
-    display: none;
-  }
-
-  /* Home: the bottom nav owns cart + account. Drop the cart icon; keep the
-     user-menu mounted (its bottom sheet still opens from the Account tab) but
-     take it out of the visible bar. No `opacity`/`display:none` — either would
-     also kill the position:fixed dropdown. */
-  .site-header--home .site-header__actions .site-header__cart-trigger {
-    display: none;
-  }
-
-  .site-header--home .site-header__actions salla-user-menu {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
+  .site-header__brand img {
+    @apply h-10 max-w-[120px];
   }
 }
 
@@ -148,14 +116,6 @@
      dropdown items, which keep their own (smaller) size. */
   svg:not(.s-user-menu-dropdown-item *) {
     @apply w-6 h-6;
-  }
-}
-
-/* Phones: the bottom bar (`mobile-bottom-bar.scss`, same breakpoint) has its
-   own search tab, so the header's search button goes. */
-@media (max-width: 767px) {
-  .header-action.site-header__search {
-    display: none;
   }
 }
 
@@ -254,8 +214,7 @@
    The sheet stays mounted and just parks off-screen when closed — with
    `pointer-events: none` on the layer it's fully inert, so no `visibility`
    juggling is needed. `visibility: visible` is set explicitly because the
-   `salla-user-menu` host is `visibility: hidden` on the home page (it's pulled
-   out of the visible bar there — see above). */
+   host may be clipped by the bar while the sheet opens. */
 @media (max-width: 767px) {
   .site-header__actions .s-user-menu-toggler {
     @apply fixed inset-0 z-[210];
@@ -280,8 +239,7 @@
 
   .site-header__actions .s-user-menu-dropdown {
     @apply absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t bg-white shadow-2xl;
-    /* clear the mobile bottom bar, which sits on top (z-220) */
-    padding-bottom: calc(76px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -496,9 +454,7 @@
     border-start-start-radius: 1rem;
     border-start-end-radius: 1rem;
     transform: translateY(100%);
-    /* the mobile bottom bar overlays the sheet (z-220); pad so the footer bar
-       and the last links clear it */
-    padding-bottom: calc(76px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
 
     /* grab handle */
     &::before {

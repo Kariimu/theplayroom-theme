@@ -146,12 +146,14 @@ function BrandHeader({ source }: { source: ProductListLoaderData['source'] }) {
   );
 }
 
-/** The mobile title bar's height (`.mobile-page-title`, `h-12`); the toolbar pins below it. */
-const TITLE_BAR_PX = 48;
+/** The pinned site header's height on phones (`.site-header__bar.is-scrolled`,
+ * `min-h-[56px]`); the toolbar pins below it. */
+const PINNED_HEADER_PX = 56;
 
 /**
- * On phones the toolbar pins under the sticky title bar once it scrolls up to
- * it (`is-stuck`), slides out of view while the page scrolls down and back in
+ * On phones the toolbar pins under the pinned site header once it scrolls up
+ * to it (or the top of the screen when the merchant turned the sticky header
+ * off) (`is-stuck`), slides out of view while the page scrolls down and back in
  * when it scrolls up (`is-hidden`). In its own place on the page it never
  * hides. A zero-height sentinel above it tells when it is pinned, as in
  * `Header.tsx`. Styling: `04-components/product-list.scss`; desktop keeps the
@@ -163,11 +165,13 @@ function MobileStickyToolbar({ children }: { children: ReactNode }) {
   const safeTop = useAppSafeAreaTop();
   const direction = useScrollDirection();
   const [stuck, setStuck] = useState(false);
+  const { theme } = useTwilight();
+  const headerPx = theme?.settings?.header_is_sticky !== false ? PINNED_HEADER_PX : 0;
 
   useEffect(() => {
     const sentinel = sentinelRef.current;
     if (!sentinel || typeof IntersectionObserver === 'undefined') return;
-    const top = safeTop + TITLE_BAR_PX;
+    const top = safeTop + headerPx;
     const observer = new IntersectionObserver(
       // Out of view above the pin line, not below the fold.
       ([entry]) => setStuck(!entry.isIntersecting && entry.boundingClientRect.top < top),
@@ -175,7 +179,7 @@ function MobileStickyToolbar({ children }: { children: ReactNode }) {
     );
     observer.observe(sentinel);
     return () => observer.disconnect();
-  }, [safeTop]);
+  }, [safeTop, headerPx]);
 
   const className = [
     's-catalog-toolbar-sticky',
@@ -188,7 +192,12 @@ function MobileStickyToolbar({ children }: { children: ReactNode }) {
   return (
     <>
       <div ref={sentinelRef} aria-hidden="true" />
-      <div className={className}>{children}</div>
+      <div
+        className={className}
+        style={{ top: `calc(var(--app-safe-area-top, 0px) + ${headerPx}px)` }}
+      >
+        {children}
+      </div>
     </>
   );
 }

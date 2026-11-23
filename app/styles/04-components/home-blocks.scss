@@ -1262,65 +1262,114 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   display: none;
 }
 
-/* No heading of its own (the old theme never renders one here) — just the
-   slide and, below it, its arrows + dots. The "x of y" count is part of
-   every other `ScrollCarousel` consumer's nav, but this one has no title row
-   to put it beside, so it's dropped here specifically. The dots are also
-   `md:hidden` by default (phones swap them in for the arrows); the old
-   theme's slider always shows both, centered under the slide. */
+/* Customer reviews, as the old theme's `custom-testimonials` (measured on the
+   live site): one review at a time in a 896px stage, cross-fading in place,
+   an orange chevron on each side, orange dots below. Markup:
+   `common/TestimonialsCarousel.tsx`. */
 .s-testimonials {
-  .scroll-carousel__count {
-    display: none;
-  }
+  @apply max-w-4xl;
+}
 
-  .scroll-carousel__foot {
-    @apply justify-center;
-  }
+.s-testimonials__stage {
+  @apply relative pt-10;
+}
 
-  .carousel-dots {
-    @apply mt-3 flex;
+/* Every slide in the same grid cell: the stage is as tall as the longest
+   review, so changing slides never moves the page. */
+.s-testimonials__slides {
+  @apply grid;
+}
+
+.s-testimonials__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
-/* One full-width slide at a time, centered — matches the old theme's single
-   fading testimonial (`custom-testimonials.twig`, `slides-per-view="1"`).
-   The slide itself (`.testimonial-card`) stays the flex item's full 100%
-   width; `__inner` carries the actual centered/max-width content so a
-   narrower max-width doesn't shrink the slide and let a second one share
-   the row. */
+.s-testimonials__arrow {
+  @apply absolute top-1/2 z-[1] grid h-10 w-10 place-items-center text-[#f47e4d] transition-opacity;
+
+  svg {
+    @apply h-8 w-8;
+  }
+
+  &:disabled {
+    @apply cursor-default opacity-35;
+  }
+}
+
+/* Prev at the reading start (right in Arabic), next at the end; each chevron
+   points outward. */
+.s-testimonials__arrow--prev {
+  inset-inline-start: 0;
+
+  svg {
+    @apply ltr:rotate-90 rtl:-rotate-90;
+  }
+}
+
+.s-testimonials__arrow--next {
+  inset-inline-end: 0;
+
+  svg {
+    @apply ltr:-rotate-90 rtl:rotate-90;
+  }
+}
+
+.s-testimonials__dots {
+  @apply mt-4 flex justify-center gap-4;
+}
+
+.s-testimonials__dot {
+  @apply h-2 w-2 rounded-full bg-[#f3c6b6] opacity-50 transition;
+
+  &.is-active {
+    @apply bg-[#f47e4d] opacity-100;
+  }
+}
+
 .testimonial-card {
   @apply m-0 p-0;
-  flex: 0 0 100%;
-  scroll-snap-align: start;
 
+  /* 768px of text, leaving room for the arrows at the sides. */
   &__inner {
-    @apply mx-auto flex max-w-3xl flex-col items-center gap-4 text-center;
+    @apply mx-auto flex max-w-3xl cursor-pointer flex-col items-center px-10 text-center md:px-0;
   }
 
   &__quote {
-    /* The old theme's dusty blue-gray, not the merchant's primary color —
-       a deliberately neutral "quote" mark. */
-    @apply h-10 w-auto text-[#8fa7c3] lg:h-[60px];
+    @apply mb-4 h-[60px] w-20;
+  }
+
+  &__text {
+    @apply m-0 mb-8 text-xl font-medium leading-7 text-[#4a6b8a] md:text-2xl md:leading-8;
   }
 
   &__stars {
-    @apply inline-flex shrink-0 gap-0.5;
+    @apply inline-flex shrink-0 gap-3;
 
     svg {
-      @apply h-4 w-4 fill-current text-gray-200 lg:h-[18px] lg:w-[18px];
+      @apply h-4 w-4 fill-current text-gray-300;
 
       &.is-on {
-        @apply text-accent;
+        @apply text-[#fbbf24];
       }
     }
   }
 
-  &__text {
-    @apply m-0 text-xl font-medium leading-relaxed text-[#4a6b8a] lg:text-2xl;
+  &__inner > &__stars {
+    @apply mb-4;
   }
 
   &__person {
-    @apply flex items-center justify-center gap-1.5;
+    @apply mb-2 flex items-center justify-center gap-1.5;
   }
 
   &__name {
@@ -1331,15 +1380,85 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
     @apply h-4 w-4 shrink-0 text-green-600;
   }
 
-  /* A customer-submitted photo (legacy `items.image`): a text trigger, not
-     shown inline — opens in the shared BottomSheet. */
   &__view-photo {
-    @apply text-xs text-gray-400 underline transition-colors hover:text-primary;
+    @apply mt-1 text-xs text-gray-400 underline transition-colors duration-200 hover:text-primary;
   }
 
   &__photo {
     @apply aspect-video w-full rounded-2xl bg-gray-100 object-cover;
   }
+}
+
+/* The review in full (the old theme's `salla-modal`, width md): a bottom sheet
+   on phones, a centred rounded dialog from `md` up. */
+.testimonial-sheet {
+  .bottom-sheet__head {
+    @apply border-b px-6 py-4;
+  }
+
+  .bottom-sheet__body {
+    @apply p-6;
+  }
+
+  @media (min-width: 768px) {
+    @apply rounded-3xl;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: min(600px, 92vw);
+    max-height: 90vh;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+
+    .bottom-sheet-root.is-open & {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    .bottom-sheet__handle {
+      display: none;
+    }
+  }
+}
+
+.testimonial-sheet__person {
+  @apply flex items-center gap-3;
+
+  .testimonial-card__stars {
+    @apply mt-1 gap-1;
+  }
+}
+
+.testimonial-sheet__avatar {
+  @apply flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full;
+  background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+
+  img {
+    @apply h-full w-full object-cover;
+  }
+}
+
+.testimonial-sheet__name {
+  @apply block font-bold text-gray-900;
+}
+
+.testimonial-details__text {
+  @apply mb-6 text-lg leading-relaxed text-gray-900;
+}
+
+.testimonial-details__photos {
+  @apply space-y-4;
+}
+
+.testimonial-details__photos-title {
+  @apply font-bold text-gray-900;
+}
+
+.testimonial-details__verified {
+  @apply mt-6 flex items-center gap-2 font-medium text-green-600;
 }
 
 /*

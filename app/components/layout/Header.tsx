@@ -143,8 +143,8 @@ function HeaderIntro() {
  * hook slots are kept for installed apps.
  *
  * The drawer's open state can be lifted: pass `navOpen` + `onNavOpenChange` and
- * the header renders controlled (ThemeLayout does this so the mobile bottom bar
- * shares the same drawer). Left unset, the header owns the state itself.
+ * the header renders controlled (ThemeLayout does this so it can close the drawer
+ * on route changes). Left unset, the header owns the state itself.
  */
 interface HeaderProps {
   navOpen?: boolean;
@@ -313,13 +313,14 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
               </nav>
             )}
 
+            {/* Old theme order: search, account, cart. */}
             <div className="site-header__actions">
+              <SearchButton label={searchLabel} />
               <SallaUserMenu avatarOnly showHeader relativeDropdown className="header-action" />
               {store?.scope && (
                 <ScopeButton label={store.scope.name || t('blocks.header.branches', 'Branches')} />
               )}
               <CartSummaryTrigger />
-              <SearchButton label={searchLabel} />
             </div>
           </div>
         </div>

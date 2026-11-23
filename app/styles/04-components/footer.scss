@@ -72,18 +72,3 @@
   }
 }
 
-/* Mobile: no page footer — its widgets live in the bottom bar's account sheet
-   (`MobileAccountSheet`, `.store-footer--sheet`). Same breakpoint as the bar.
-   Hidden with CSS rather than unmounted so the SSR'd footer (links, tax / SBC
-   details) stays in the document. Only the widgets are hidden: the
-   `footer:start` / `footer:end` hook output stays visible for apps. */
-@media (max-width: 767px) {
-  .store-footer:not(.store-footer--sheet) {
-    margin-top: 0;
-
-    > .store-footer__inner,
-    > .store-footer__bottom {
-      display: none;
-    }
-  }
-}
