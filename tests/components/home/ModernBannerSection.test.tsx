@@ -16,6 +16,11 @@ vi.mock('@salla.sa/twilight-theme-engine/api/product', () => ({
   },
 }));
 
+let themeSettings: Record<string, unknown> = {};
+vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
+  useTwilight: () => ({ theme: { settings: themeSettings } }),
+}));
+
 vi.mock('@salla.sa/twilight-theme-engine/hooks/useMoney', () => ({
   useMoney: () => ({ format: (amount: unknown) => `${amount} SAR` }),
 }));
@@ -36,6 +41,7 @@ function renderWithClient(ui: React.ReactElement) {
 beforeEach(() => {
   listMock.mockReset();
   listMock.mockResolvedValue({ items: [] });
+  themeSettings = {};
 });
 
 describe('ModernBannerSection', () => {
@@ -89,6 +95,27 @@ describe('ModernBannerSection', () => {
     expect(cta?.textContent).toBe('Chat with us');
     expect(cta?.getAttribute('href')).toBe('https://wa.me/966500000000?text=Hi');
     expect(cta?.getAttribute('target')).toBe('_blank');
+  });
+
+  it("falls back to the store's WhatsApp number when the block has none", () => {
+    themeSettings = { whatsapp_number: 966511111111 };
+    const { container } = renderWithClient(
+      <ModernBannerSection data={{ image: 'banner.jpg', whatsapp_msg: 'Hi', whatsapp_btn_text: 'Chat with us' }} />
+    );
+    expect(container.querySelector('a[href^="https://wa.me/"]')?.getAttribute('href')).toBe(
+      'https://wa.me/966511111111?text=Hi'
+    );
+  });
+
+  it('positions a hotspot from number values as well as text', async () => {
+    listMock.mockResolvedValue({
+      items: [{ id: 1, name: 'Climbing frame', url: '/p/1', price: 500, is_on_sale: false, regular_price: 500 }],
+    });
+    const { container } = renderWithClient(
+      <ModernBannerSection data={{ image: 'banner.jpg', hotspots: [{ product: [1], pos_x: 25, pos_y: 60 }] }} />
+    );
+    await waitFor(() => expect(container.textContent).toContain('Climbing frame'));
+    expect(container.querySelector('a[href="/p/1"]')?.parentElement?.getAttribute('style')).toContain('left: 25%');
   });
 
   it('fetches and resolves hotspot products by id, positioned by pos_x/pos_y', async () => {

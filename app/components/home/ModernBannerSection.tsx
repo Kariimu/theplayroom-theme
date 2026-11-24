@@ -6,6 +6,7 @@ import { Link } from '@salla.sa/twilight-theme-engine/common';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { useMoney } from '@salla.sa/twilight-theme-engine/hooks/useMoney';
 import { getCdnImageUrl } from '@salla.sa/twilight-theme-engine/utils/cdn-image';
+import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { toIds } from '../../lib/pickerValue';
 import { whatsappEnquiryHref } from '../../lib/whatsapp';
 
@@ -18,8 +19,8 @@ interface ModernBannerFeature {
 interface ModernBannerHotspot {
   product?: unknown;
   /** `hotspots.pos_x`/`pos_y`: "from the left/top, 0–100" — always physical, not RTL/LTR-relative. */
-  pos_x?: string;
-  pos_y?: string;
+  pos_x?: string | number;
+  pos_y?: string | number;
 }
 
 export interface ModernBannerSectionProps {
@@ -41,7 +42,7 @@ export interface ModernBannerSectionProps {
   };
 }
 
-/** Clamps a hotspot's `pos_x`/`pos_y` (free text in the dashboard) to a usable percentage. */
+/** Clamps a hotspot's `pos_x`/`pos_y` (a number field; older saves are text) to a usable percentage. */
 function clampPercent(value: unknown, fallback = 50): number {
   const n = Number(value);
   return Number.isFinite(n) ? Math.min(100, Math.max(0, n)) : fallback;
@@ -189,7 +190,11 @@ export function ModernBannerSection({ data }: ModernBannerSectionProps) {
     return map;
   }, [result]);
 
-  const whatsappHref = whatsappEnquiryHref(whatsappNumber, whatsappMsg);
+  // The block's own number, else the store's `whatsapp_number` setting, so the
+  // merchant does not have to type the same number twice.
+  const { theme } = useTwilight();
+  const storeWhatsapp = (theme?.settings as { whatsapp_number?: string | number } | undefined)?.whatsapp_number;
+  const whatsappHref = whatsappEnquiryHref(whatsappNumber || storeWhatsapp, whatsappMsg);
 
   if (!image && !title && !description && !features.length) return null;
 
