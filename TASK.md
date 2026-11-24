@@ -209,6 +209,7 @@ Result: **Review done, suite green, CI in place; waiting on owner screenshots an
 
 ## Stage 14 — Staging preview
 Goal: the owner clicks through the real theme on a real store before the live store changes.
+- [x] OWNER: import the repo into the Partners Portal — done 24 Nov 2026 as a new theme `Theplayroom_react`, Theme ID `786991395` (the name `Theplayroom_theme` was taken by the earlier record 1869420365). The repo's default branch is now `migration`, so Salla reads `twilight.json` from it; switch back to `master` before Stage 15 if publishing needs it
 - [ ] OWNER: create a demo store for this theme in the Partners Portal (each theme needs its own preview store)
 - [ ] OWNER: in the theme's portal page set "GitHub Branch" to `migration`, so the staging build comes from `migration` and `master` stays untouched; confirm the build log is green
 - [ ] OWNER: install the theme on the demo store ("Send Installation Request") and set up the home page and settings from the Stage 7 screenshots
