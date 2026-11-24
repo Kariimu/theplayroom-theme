@@ -9,6 +9,7 @@ import { BottomSheet } from '../common';
 import { CartQuantity } from './CartQuantity';
 import { toNumber, moneyCurrency } from './cartMoney';
 import { Delete01Icon } from '../icons';
+import { isNotFound } from '../../lib/http';
 
 /** Dispatched by the header's cart icon (`Header.tsx`) instead of following its link. */
 export const CART_DRAWER_OPEN_EVENT = 'theme::cart-drawer.open';
@@ -149,7 +150,15 @@ export function CartDrawer() {
   // so `isPending` forever), and that is the empty state, not loading.
   const loading =
     hasOpened && cartData === undefined && (cartIdQuery.isPending || (!!cartId && cartQuery.isPending));
-  const failed = cartData === undefined && (cartIdQuery.isError || cartQuery.isError);
+  // The SDK's cart id names a cart the API no longer has: drop it (as
+  // `CartPage` does) and show the empty cart, not an error a retry can't fix.
+  const cartGone = isNotFound(cartQuery.error);
+  useEffect(() => {
+    if (!cartGone) return;
+    // `reset` is on the SDK's cart, but not in the engine's `SallaCart` type.
+    (window.salla?.cart as { reset?: () => void } | undefined)?.reset?.();
+  }, [cartGone]);
+  const failed = cartData === undefined && (cartIdQuery.isError || (cartQuery.isError && !cartGone));
   const retry = () => {
     if (cartIdQuery.isError) cartIdQuery.refetch();
     else cartQuery.refetch();

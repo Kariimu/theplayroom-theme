@@ -23,6 +23,7 @@ const makeCart = () => ({
 let cartData: ReturnType<typeof makeCart> | null = makeCart();
 let currentCartId: number | null = 5;
 let currentIdFails = false;
+let detailGone = false;
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
@@ -57,7 +58,13 @@ vi.mock('@salla.sa/twilight-theme-engine/api/cart', () => ({
           return currentCartId;
         },
       }),
-      detail: (id: number) => ({ queryKey: ['cart', 'detail', id], queryFn: () => cartData }),
+      detail: (id: number) => ({
+        queryKey: ['cart', 'detail', id],
+        queryFn: () => {
+          if (detailGone) throw Object.assign(new Error('Not Found'), { response: { status: 404 } });
+          return cartData;
+        },
+      }),
     },
   },
 }));
@@ -99,18 +106,21 @@ describe('CartDrawer', () => {
   let updateItem: ReturnType<typeof vi.fn>;
   let deleteItem: ReturnType<typeof vi.fn>;
   let submit: ReturnType<typeof vi.fn>;
+  let reset: ReturnType<typeof vi.fn>;
 
   beforeEach(() => {
     cartData = makeCart();
     currentCartId = 5;
     currentIdFails = false;
+    detailGone = false;
     updateItem = vi.fn().mockResolvedValue(undefined);
     deleteItem = vi.fn().mockResolvedValue(undefined);
     submit = vi.fn();
+    reset = vi.fn();
     originalSalla = (window as { salla?: unknown }).salla;
     (window as { salla?: unknown }).salla = {
       event: makeEventBus(),
-      cart: { updateItem, deleteItem, submit },
+      cart: { updateItem, deleteItem, submit, reset },
     };
   });
 
@@ -152,6 +162,15 @@ describe('CartDrawer', () => {
     currentIdFails = false;
     fireEvent.click(getByText('Try again'));
     await waitFor(() => expect(getByText('Wooden Train')).toBeTruthy());
+  });
+
+  it('drops a cart the API no longer knows and shows it empty, not an error', async () => {
+    detailGone = true;
+    const { getByText, queryByText } = renderDrawer();
+    openDrawer();
+    await waitFor(() => expect(getByText('Your cart is empty')).toBeTruthy());
+    expect(queryByText('Something went wrong')).toBeNull();
+    expect(reset).toHaveBeenCalled();
   });
 
   it('removes an item through salla.cart.deleteItem', async () => {
