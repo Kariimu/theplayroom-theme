@@ -131,8 +131,8 @@ registry.register('product:list-skeleton', ProductListSkeleton);
 // infinitely (freezes the page when a product list mounts; the recipe warns
 // "do not render the engine card inside your override"). The theme card is used
 // directly in the home blocks (FeaturedProducts etc.), which is safe. A global
-// override needs a from-scratch card (no engine-card wrap) — Stage 4/5, when the
-// list/product pages are forked.
+// override would need a from-scratch card (no engine-card wrap); the forked list
+// page (`ProductListPage`) imports the theme card directly instead.
 
 registerHomeComponents({
   ...DefaultHomeComponents,

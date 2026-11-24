@@ -47,9 +47,8 @@ if (typeof window !== 'undefined') {
 }
 
 // jsdom doesn't implement matchMedia. Default to "matches" so components that
-// gate mobile-only behavior behind a media query (e.g. MobileBottomBar's DOM
-// observers) behave as they would on a small screen, matching what the
-// existing tests for those components already assume.
+// gate mobile-only behavior behind a media query behave as they would on a
+// small screen.
 if (typeof window !== 'undefined' && !window.matchMedia) {
   window.matchMedia = ((query: string) => ({
     matches: true,

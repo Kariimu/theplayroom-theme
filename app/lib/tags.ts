@@ -125,21 +125,3 @@ export function parseGroupValueTag(tag: string): { group: string; value: string 
   return { group, value };
 }
 
-/**
- * Dev-only guard: warn once per unknown `<prefix><key>` tag whose key is not in
- * the code library, so a mistyped `feature-` / `inuse-` / `set:` tag is caught in
- * the editor instead of silently rendering nothing (MIGRATION-PLAN §8). No-op in
- * production builds.
- */
-const warned = new Set<string>();
-export function warnUnknownTagKey(prefix: TagPrefix, key: string, known: Iterable<string>): void {
-  if (!import.meta.env?.DEV) return;
-  const set = known instanceof Set ? known : new Set(known);
-  if (set.has(key)) return;
-  const id = `${prefix}:${key}`;
-  if (warned.has(id)) return;
-  warned.add(id);
-  console.warn(
-    `[theme] unknown ${TAG_PREFIX[prefix]}${key} tag — no "${key}" in the ${prefix} library`
-  );
-}

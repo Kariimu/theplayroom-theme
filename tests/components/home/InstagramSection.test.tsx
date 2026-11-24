@@ -9,7 +9,7 @@ vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
 // Only the real BottomSheet and ScrollCarousel, not the whole barrel — it also
 // re-exports BlockHookSlot, which imports `@salla.sa/twilight-theme-engine/home`
 // and pulls in a chunk graph the test setup's narrow component-library mock
-// doesn't cover (see MobileAccountSheet.test.tsx for the same pattern).
+// doesn't cover.
 vi.mock('../../../app/components/common', async () => ({
   BottomSheet: (await vi.importActual<typeof import('../../../app/components/common/BottomSheet')>(
     '../../../app/components/common/BottomSheet'
