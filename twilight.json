@@ -2928,7 +2928,7 @@
                     },
                     "id": "rating_count",
                     "value": null,
-                    "description": "رقم من 1 إلى 5، مثال: 4.9. يحدد عدد النجوم الممتلئة.",
+                    "description": "رقم من 1 إلى 5، مثال: 4.9. يظهر بجانب خمس نجوم بصيغة 4.9 / 5.",
                     "format": "text",
                     "required": false,
                     "placeholder": "4.9",

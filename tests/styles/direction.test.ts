@@ -45,11 +45,13 @@ describe('direction-aware styles', () => {
   });
 
   // Arabic renders as before; English mirrors it, as the star counts already do.
+  // The summary lives under `.reviews-wrapper`: `ProductReviews.tsx` moves it
+  // out of `.s-comments-product` into the toolbar.
   it('keeps the review percentages next to their bars', async () => {
     const root = await compile('04-components/reviews.scss');
 
     expect(
-      declsFor(root, '.s-comments-product .s-reviews-summary-percentage')['text-align']
+      declsFor(root, '.reviews-wrapper .s-reviews-summary-percentage')['text-align']
     ).toBe('start');
   });
 });

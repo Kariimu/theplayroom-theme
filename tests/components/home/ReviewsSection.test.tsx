@@ -33,17 +33,17 @@ describe('ReviewsSection', () => {
     expect(container.textContent).toContain('+3,000 happy customers');
   });
 
-  it('renders 5 stars, filled up to the rounded rating, when rating_count is a number', () => {
+  it('renders 5 solid stars beside the rating, as the old theme does', () => {
     const { container } = render(<ReviewsSection data={{ rating_count: '4.4', title: 'x' }} />);
-    const stars = container.querySelectorAll('svg');
-    expect(stars).toHaveLength(5);
-    expect(container.querySelectorAll('svg.fill-accent')).toHaveLength(4);
+    expect(container.querySelectorAll('svg')).toHaveLength(5);
+    expect(container.querySelector('[role="img"]')?.getAttribute('aria-label')).toBe('4.4');
+    expect(container.textContent).toContain('4.4 / 5');
   });
 
-  it('skips the stars when rating_count does not parse as a number', () => {
-    const { container } = render(<ReviewsSection data={{ rating_count: 'ممتاز', title: 'x' }} />);
+  it('renders no stars without a rating', () => {
+    const { container } = render(<ReviewsSection data={{ title: 'x', total_reviews: '+3,000' }} />);
     expect(container.querySelectorAll('svg')).toHaveLength(0);
-    expect(container.textContent).toContain('ممتاز');
+    expect(container.textContent).toContain('+3,000');
   });
 
   it('renders the CTA only with both a link and button text', () => {

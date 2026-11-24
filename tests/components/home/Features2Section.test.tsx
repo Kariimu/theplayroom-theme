@@ -19,7 +19,9 @@ describe('Features2Section', () => {
         }}
       />
     );
-    expect(container.querySelectorAll('img').length).toBe(2);
+    // Each card is drawn twice: once in the mobile row, once in the desktop grid.
+    expect(container.querySelectorAll('.md\\:grid img').length).toBe(2);
+    expect(container.querySelectorAll('.md\\:hidden img').length).toBe(2);
     expect(container.textContent).toContain('Solid wood');
     expect(container.textContent).toContain('Built to last');
     expect(container.textContent).toContain('Non-toxic paint');

@@ -30,29 +30,18 @@ function declarations(root: Root, selector: string): Record<string, string> {
 }
 
 describe('footer_is_dark (body.footer-is-dark)', () => {
-  // The footer's own background/text colors for this setting moved into the
-  // Footer component itself (@salla.sa/twilight-theme-engine/layout) along
-  // with the rest of its structure -- see that package's own
-  // Footer.test.tsx for the equivalent "Raed palette, not a generic Tailwind
-  // shade" regression guard. What's left compiled here is just the one piece
-  // still theme-owned: the footer-menu item colors, which depend on the
-  // `--stacked` / `--inline` modifier classes this theme's own Footer usage
-  // adds, not something the shared component could style itself.
-  it('darkens the footer menu items, not a generic Tailwind shade', async () => {
+  // The footer band is always a saturated colour: the slate blue, or the
+  // near-black `footer_is_dark` picks in `Footer.tsx` (`paletteIsDark`). The
+  // menu items rendered by `<salla-menu>` are styled here, light on both.
+  it('keeps the footer menu items light, on either footer palette', async () => {
     const root = await compile('footer.scss');
 
-    const stacked = declarations(
-      root,
-      'body.footer-is-dark .store-footer__menu--stacked .s-menu-footer-item'
-    );
-    expect(stacked.color).toContain('rgb(255 255 255');
+    const stacked = declarations(root, '.store-footer__menu--stacked .s-menu-footer-item');
+    expect(stacked.color).toContain('rgb(255 255 255 / 0.8)');
 
-    const inline = declarations(
-      root,
-      'body.footer-is-dark .store-footer__menu--inline .s-menu-footer-item'
-    );
-    expect(inline.color).toContain('rgb(255 255 255');
-    expect(inline['border-color']).toBe('rgb(255 255 255 / 0.1)');
+    const inline = declarations(root, '.store-footer__menu--inline .s-menu-footer-item');
+    expect(inline.color).toContain('rgb(255 255 255 / 0.8)');
+    expect(inline['border-color']).toContain('rgb(255 255 255 / 0.3)');
   });
 });
 
