@@ -337,10 +337,11 @@
     }
   }
 
+  // The reading-end corner, as on the live site: top-left in Arabic, top-right in English.
   &__close {
     position: absolute;
     top: 12px;
-    left: 12px;
+    inset-inline-end: 12px;
     z-index: 10;
     display: flex;
     align-items: center;
@@ -577,12 +578,6 @@
 
 [dir='ltr'] .gallery-modal {
   --gallery-text-dir: ltr;
-}
-
-// Close button on the reading-end corner, as on the live site: top-left in Arabic, top-right in English.
-[dir='ltr'] .gallery-modal__close {
-  right: 12px;
-  left: auto;
 }
 
 @keyframes gallery-modal-fade {
