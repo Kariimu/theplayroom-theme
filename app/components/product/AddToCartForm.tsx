@@ -285,10 +285,10 @@ function StickyPriceDisplay({ product, priceBump }: { product: Product; priceBum
           key={`sale-${priceBump}`}
           className={`price_is_on_sale${priceBumpClass} space-x-2 rtl:space-x-reverse whitespace-nowrap ${product.is_on_sale ? '' : 'hidden'}`}
         >
-          <span className="price-bump__now total-price text-red-800 font-bold text-xl inline-block">
+          <span className="price-bump__now total-price text-[#222222] font-bold text-[22px] inline-block">
             {product.sale_price} <CurrencySymbol currency={priceCurrency} />
           </span>
-          <span className="before-price text-gray-500 line-through">
+          <span className="before-price text-[20px] text-gray-500 line-through">
             {product.regular_price} <CurrencySymbol currency={priceCurrency} />
           </span>
         </div>
