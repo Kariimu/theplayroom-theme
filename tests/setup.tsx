@@ -6,6 +6,46 @@ afterEach(() => {
   cleanup();
 });
 
+// Node 25+ ships its own Web Storage globals, which shadow jsdom's and are
+// unusable without `--localstorage-file` (`localStorage` is undefined or
+// throws). Give tests a working in-memory Storage on any Node version.
+function memoryStorage(): Storage {
+  const items = new Map<string, string>();
+  return {
+    get length() {
+      return items.size;
+    },
+    clear: () => items.clear(),
+    getItem: (key) => (items.has(key) ? (items.get(key) as string) : null),
+    key: (index) => Array.from(items.keys())[index] ?? null,
+    removeItem: (key) => {
+      items.delete(key);
+    },
+    setItem: (key, value) => {
+      items.set(key, String(value));
+    },
+  };
+}
+
+function usable(get: () => Storage | undefined): boolean {
+  try {
+    const storage = get();
+    return !!storage && typeof storage.clear === 'function';
+  } catch {
+    return false;
+  }
+}
+
+if (typeof window !== 'undefined') {
+  for (const name of ['localStorage', 'sessionStorage'] as const) {
+    if (!usable(() => window[name])) {
+      const storage = memoryStorage();
+      Object.defineProperty(window, name, { configurable: true, value: storage });
+      Object.defineProperty(globalThis, name, { configurable: true, value: storage });
+    }
+  }
+}
+
 // jsdom doesn't implement matchMedia. Default to "matches" so components that
 // gate mobile-only behavior behind a media query (e.g. MobileBottomBar's DOM
 // observers) behave as they would on a small screen, matching what the
