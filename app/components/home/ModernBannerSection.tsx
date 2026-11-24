@@ -8,7 +8,7 @@ import { useMoney } from '@salla.sa/twilight-theme-engine/hooks/useMoney';
 import { getCdnImageUrl } from '@salla.sa/twilight-theme-engine/utils/cdn-image';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { toIds } from '../../lib/pickerValue';
-import { whatsappEnquiryHref } from '../../lib/whatsapp';
+import { cleanWhatsappNumber, whatsappEnquiryHref } from '../../lib/whatsapp';
 
 interface ModernBannerFeature {
   image?: string;
@@ -194,7 +194,7 @@ export function ModernBannerSection({ data }: ModernBannerSectionProps) {
   // merchant does not have to type the same number twice.
   const { theme } = useTwilight();
   const storeWhatsapp = (theme?.settings as { whatsapp_number?: string | number } | undefined)?.whatsapp_number;
-  const whatsappHref = whatsappEnquiryHref(whatsappNumber || storeWhatsapp, whatsappMsg);
+  const whatsappHref = whatsappEnquiryHref(cleanWhatsappNumber(whatsappNumber) || storeWhatsapp, whatsappMsg);
 
   if (!image && !title && !description && !features.length) return null;
 

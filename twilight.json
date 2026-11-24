@@ -558,22 +558,15 @@
                 "ar": "رقم واتساب المتجر",
                 "en": "Store WhatsApp number"
             },
-            "description": "بالمفتاح الدولي، أرقام فقط بدون مسافات أو علامة +. مثال: 966501234567",
+            "description": "بالمفتاح الدولي، أرقام فقط بدون مسافات أو علامة +. مثال: 966501234567. يُستخدم لزر واتساب العائم ولاستفسار المنتجات التي تحمل وسم whatsapp، حتى لو كان الزر العائم مخفياً.",
             "labelHTML": null,
             "placeholder": "966501234567",
             "icon": "sicon-hashtag",
-            "value": 0,
+            "value": null,
             "required": false,
             "minimum": 0,
             "maximum": 10000000000000,
-            "public": false,
-            "conditions": [
-                {
-                    "id": "show_whatsapp",
-                    "operation": "=",
-                    "value": true
-                }
-            ]
+            "public": false
         },
         {
             "type": "string",
