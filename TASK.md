@@ -212,7 +212,7 @@ Goal: the owner clicks through the real theme on a real store before the live st
 - [ ] OWNER: create a demo store for this theme in the Partners Portal (each theme needs its own preview store)
 - [ ] OWNER: in the theme's portal page set "GitHub Branch" to `migration`, so the staging build comes from `migration` and `master` stays untouched; confirm the build log is green
 - [ ] OWNER: install the theme on the demo store ("Send Installation Request") and set up the home page and settings from the Stage 7 screenshots
-- [ ] Agent: write `docs/STAGING-CHECKLIST.md`, a click-through script covering every page type, both languages, a test order, each setting, each home block, and the installed apps
+- [x] Agent: write `docs/STAGING-CHECKLIST.md`, a click-through script covering every page type, both languages, a test order, each setting, each home block, and the installed apps — written 24 Nov 2026 on `stage-14-staging`; also lists the open items to settle on staging (§9) and the agent's re-run of Stages 9–12 (§10)
 - [ ] Owner walk-through; issues logged in TASK.md and fixed through normal stage PRs
 - [ ] Re-run Stages 9 to 12 checks against the staging URL (they were run locally before)
 Result:
