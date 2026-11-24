@@ -20,8 +20,9 @@ interface ProductDetailsProps {
 /**
  * Theme fork of the engine `ProductDetails`.
  *
- * Differs from the engine version: the data-column blocks (title, SKU row,
- * availability, sold / remaining quantity) render flat: no `bg-white`, no
+ * Differs from the engine version: the data-column blocks (title,
+ * availability, sold / remaining quantity; SKU and barcode moved to
+ * `ProductInfoSection` in `AddToCartForm.tsx`) render flat: no `bg-white`, no
  * `rounded`, no card padding. The `.product-form` `gap` / element `mb`
  * classes control the vertical rhythm. The brand logo passes `objectFit="contain"`
  * to `<Image>` rather than an `object-contain` class, which the component's own

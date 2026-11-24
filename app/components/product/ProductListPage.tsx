@@ -367,10 +367,9 @@ export function ProductListPage(props: ProductListLoaderData) {
 }
 
 /**
- * The product list itself. Same data flow as upstream; the toolbar is rebuilt
- * as a pill with a product count, a grid / list view switch and a styled sort
- * control, plus a desktop "hide filters" toggle that collapses the filter
- * column. View + collapse state persist in `localStorage`. Upgrade notes: `FORKS.md`.
+ * The product list itself. Same data flow as upstream, plus the tag filters
+ * (`buildTagFilterGroups`) and a product count that follows them. Salla's own
+ * `<SallaFilters>` stays off (`NATIVE_FILTERS`, owner's choice). Upgrade notes: `FORKS.md`.
  */
 function CatalogListPage({
   page,

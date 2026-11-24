@@ -9,6 +9,10 @@ describe('cleanWhatsappNumber', () => {
   it('is empty for nothing usable', () => {
     for (const v of [null, undefined, '', '+', '  ']) expect(cleanWhatsappNumber(v)).toBe('');
   });
+  it("is empty for the manifest's unset default 0 and other too-short numbers", () => {
+    for (const v of [0, '0', 1234567, '+966 5']) expect(cleanWhatsappNumber(v)).toBe('');
+    expect(whatsappEnquiryHref(0, 'hi')).toBe('');
+  });
 });
 
 describe('whatsappEnquiryHref', () => {

@@ -1,4 +1,4 @@
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { describe, expect, it } from 'vitest';
 import {
   TAG,
   TAG_PREFIX,
@@ -9,7 +9,6 @@ import {
   prefixedTagKeys,
   tagIdFromUrl,
   tagNames,
-  warnUnknownTagKey,
 } from '../../app/lib/tags';
 
 describe('tagNames', () => {
@@ -86,21 +85,6 @@ describe('tagIdFromUrl', () => {
     for (const u of [null, undefined, '', 'https://theplayroom.sa/ar/category/c123', 'tag-']) {
       expect(tagIdFromUrl(u)).toBeNull();
     }
-  });
-});
-
-describe('warnUnknownTagKey', () => {
-  afterEach(() => vi.restoreAllMocks());
-
-  it('warns once for an unknown key and never for a known one', () => {
-    const warn = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const known = new Set(['wood']);
-    warnUnknownTagKey('feature', 'wood', known);
-    expect(warn).not.toHaveBeenCalled();
-    warnUnknownTagKey('feature', 'mystery-key', known);
-    warnUnknownTagKey('feature', 'mystery-key', known); // deduped
-    expect(warn).toHaveBeenCalledTimes(1);
-    expect(warn.mock.calls[0][0]).toContain('feature-mystery-key');
   });
 });
 

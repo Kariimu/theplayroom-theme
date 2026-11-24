@@ -374,39 +374,6 @@ export const CrownIcon = (props: SVGProps<SVGSVGElement>) => (
  * four are meant to look identical to the old theme, not to the rest of the
  * icon set.
  */
-export const UsersIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...base} {...props}>
-    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" {...stroke} strokeWidth={2} />
-    <circle cx="9" cy="7" r="4" {...stroke} strokeWidth={2} />
-    <path d="M22 21v-2a4 4 0 0 0-3-3.87" {...stroke} strokeWidth={2} />
-    <path d="M16 3.13a4 4 0 0 1 0 7.75" {...stroke} strokeWidth={2} />
-  </svg>
-);
-
-export const LeafIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...base} {...props}>
-    <path
-      d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"
-      {...stroke}
-      strokeWidth={2}
-    />
-    <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12" {...stroke} strokeWidth={2} />
-  </svg>
-);
-
-export const PackageIcon = (props: SVGProps<SVGSVGElement>) => (
-  <svg {...base} {...props}>
-    <path
-      d="M11 21.73a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73z"
-      {...stroke}
-      strokeWidth={2}
-    />
-    <path d="M12 22V12" {...stroke} strokeWidth={2} />
-    <path d="m3.3 7 7.703 4.734a2 2 0 0 0 1.994 0L20.7 7" {...stroke} strokeWidth={2} />
-    <path d="m7.5 4.27 9 5.15" {...stroke} strokeWidth={2} />
-  </svg>
-);
-
 export const CheckIcon = (props: SVGProps<SVGSVGElement>) => (
   <svg {...base} {...props}>
     <path d="M20 6 9 17l-5-5" {...stroke} strokeWidth={2} />

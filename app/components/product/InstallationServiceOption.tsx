@@ -1,5 +1,6 @@
-import { useCallback, useEffect, useId, useMemo, useRef, useState } from 'react';
+import { Fragment, useCallback, useEffect, useId, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
+import { useMoney } from '@salla.sa/twilight-theme-engine/hooks/useMoney';
 import { matchesName } from '../../lib/specs';
 import { ChevronDownIcon, WrenchIcon } from '../icons';
 import type { PanelOption } from '../common/ProductOptionsPanel';
@@ -12,8 +13,18 @@ const INSTALLATION_OPTION_NAMES = ['خدمة التركيب', 'Installation serv
 /** `:city` / `:price` replaced into the locale string — this theme's own
  * interpolation convention (`ProductDetails`' `rating_summary`), not i18next's
  * `{{}}`, so every locale file keeps using the same pattern. */
-const fill = (template: string, vars: Record<string, string>) =>
-  Object.entries(vars).reduce((text, [key, value]) => text.replace(`:${key}`, value), template);
+export function fill(template: string, vars: Record<string, ReactNode>): ReactNode {
+  // Split on the placeholders so a value can be a node (`useMoney().format()`
+  // returns one, with the visitor's currency), not only a string.
+  // Only the given names are placeholders, so other `:text` stays as written.
+  const names = Object.keys(vars).join('|');
+  if (!names) return template;
+  return template.split(new RegExp(`(:(?:${names}))(?![a-z_])`)).map((part, index) => {
+    const key = part.startsWith(':') ? part.slice(1) : '';
+    // react-doctor-disable-next-line react-doctor/no-array-index-as-key
+    return <Fragment key={index}>{Object.hasOwn(vars, key) ? vars[key] : part}</Fragment>;
+  });
+}
 
 type Detail = NonNullable<PanelOption['details']>[number] & {
   additional_price?: number;
@@ -64,7 +75,7 @@ interface PillProps {
   groupName: string;
   id: string;
   city: string;
-  priceLabel: string;
+  priceLabel: ReactNode;
   selected: boolean;
   onSelect: (id: string) => void;
 }
@@ -119,10 +130,11 @@ function Pill({ groupName, id, city, priceLabel, selected, onSelect }: PillProps
  * id is per-product) — `[data-option-id]`, same attribute `ProductOptionsPanel`
  * reads for its own chip-scroll targeting. A `MutationObserver` re-runs the
  * sync because the component can re-render its option boxes after the async
- * options fetch, same as `ProductMetadata`'s own native-DOM sync.
+ * options fetch.
  */
 export function InstallationServiceOption({ options }: { options: PanelOption[] }) {
   const { t } = useTranslation();
+  const { format } = useMoney();
   const panelId = useId();
   const wrapperRef = useRef<HTMLDivElement>(null);
   const [open, setOpen] = useState(false);
@@ -183,18 +195,18 @@ export function InstallationServiceOption({ options }: { options: PanelOption[] 
 
   const selected = details.find((detail) => String(detail.id) === selectedId);
   const summary = selected
-    ? fill(t('pages.products.installation.summary', ':city · +:price ر.س'), {
+    ? fill(t('pages.products.installation.summary', ':city · +:price'), {
         city: selected.name ?? '',
-        price: String(selected.additional_price ?? 0),
+        price: format(selected.additional_price ?? 0),
       })
-    : '';
+    : null;
   const note = selected
     ? fill(
         t(
           'pages.products.installation.note_with_city',
-          'سيُضاف :price ر.س للتركيب في :city، ونتواصل معك عبر واتساب لتحديد الموعد'
+          'سيُضاف :price للتركيب في :city، ونتواصل معك عبر واتساب لتحديد الموعد'
         ),
-        { city: selected.name ?? '', price: String(selected.additional_price ?? 0) }
+        { city: selected.name ?? '', price: format(selected.additional_price ?? 0) }
       )
     : t(
         'pages.products.installation.note_without',
@@ -255,8 +267,8 @@ export function InstallationServiceOption({ options }: { options: PanelOption[] 
               groupName={panelId}
               id={String(detail.id)}
               city={detail.name ?? ''}
-              priceLabel={fill(t('pages.products.installation.price_addition', '+:price ر.س'), {
-                price: String(detail.additional_price ?? 0),
+              priceLabel={fill(t('pages.products.installation.price_addition', '+:price'), {
+                price: format(detail.additional_price ?? 0),
               })}
               selected={selectedId === String(detail.id)}
               onSelect={selectDetail}

@@ -13,11 +13,7 @@ import { cart } from '@salla.sa/twilight-theme-engine/api/cart';
 import type { CartPageProps } from '@salla.sa/twilight-theme-engine/routes/cart';
 import { CartItem } from './CartItem';
 import { CartUpsellSlider } from './CartUpsellSlider';
-
-/** Whether a failed request was answered 404 (the engine's API client throws ky's `HTTPError`). */
-function isNotFound(error: unknown): boolean {
-  return (error as { response?: { status?: number } } | null)?.response?.status === 404;
-}
+import { isNotFound } from '../../lib/http';
 
 /**
  * Theme fork of the engine `CartPage`.

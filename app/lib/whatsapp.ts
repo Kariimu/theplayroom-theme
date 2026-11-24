@@ -3,9 +3,17 @@
 // product card / product page (per-product enquiry) both build `wa.me` links
 // from the `whatsapp_number` setting. Keep that logic here, not duplicated.
 
-/** Digits only for a `wa.me` link (drops spaces, `+`, `-`, and anything non-numeric). */
+/** Fewer digits than any real international number (country code + subscriber). */
+const MIN_DIGITS = 8;
+
+/**
+ * Digits only for a `wa.me` link (drops spaces, `+`, `-`, and anything
+ * non-numeric), or '' when that is too short to be a real number — the
+ * manifest's unset default `0` included, so nothing links to `wa.me/0`.
+ */
 export function cleanWhatsappNumber(raw: string | number | null | undefined): string {
-  return String(raw ?? '').replace(/\D/g, '');
+  const digits = String(raw ?? '').replace(/\D/g, '');
+  return digits.length >= MIN_DIGITS ? digits : '';
 }
 
 /**

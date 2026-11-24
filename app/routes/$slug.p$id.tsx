@@ -3,6 +3,7 @@ import { Product } from '@salla.sa/twilight-theme-engine/routes/product';
 import { ProductDetailSkeleton } from '@salla.sa/twilight-theme-engine/skeleton';
 import { withHead, getTwilightContext } from '@salla.sa/twilight-theme-engine/tanstack';
 import { home } from '@salla.sa/twilight-theme-engine/api/home';
+import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
 import { ProductPage, type ProductPageWithFaq } from '../components/product/ProductPage';
 import { redirectHomeIfNotFound } from '../lib/productNotFound';
 import { faqJsonLdFromQuestions } from '../lib/faqJsonLd';
@@ -26,7 +27,11 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
         async (data) => {
           const { queryClient, locale } = getTwilightContext();
           const [storeComponents, featureLibrary, previewComponents] = await Promise.all([
-            queryClient.ensureQueryData(home.queries.components()),
+            // Only feeds the FAQ and in-use blocks: a failed home-blocks fetch
+            // leaves them empty instead of breaking the whole product page.
+            queryClient
+              .ensureQueryData(home.queries.components())
+              .catch((): HomeComponentData[] => []),
             // Only a product with a `feature-` tag pays for the blog lookup. A
             // failed or missing library never breaks the product page.
             hasFeatureTags(data.product.tags)

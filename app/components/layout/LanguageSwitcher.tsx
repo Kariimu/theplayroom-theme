@@ -61,7 +61,8 @@ export function LanguageSwitcher() {
       href={otherLanguageHref(pathname, search, target)}
       hrefLang={target}
       className="site-header__language-switcher"
-      aria-label={isArabic ? 'Switch to English' : 'التبديل إلى العربية'}
+      // In the page's own language, so the screen reader voice can read it.
+      aria-label={t('blocks.header.switch_language', isArabic ? 'التبديل إلى الإنجليزية' : 'Switch to Arabic')}
       title={t('blocks.header.change_language', 'Change language')}
       onClick={(event) => {
         if (isNativeApp()) {
