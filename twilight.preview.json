@@ -26,7 +26,15 @@
     "whatsapp_number": 0,
     "footer_logo": "",
     "footer_description": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع.",
-    "gallery_page_category": [],
+    "gallery_page_category": [
+      {
+        "id": "BxWBNq",
+        "name": "معرض الأعمال",
+        "url": "https://theplayroom.sa/ar/معرض-الأعمال/c1241225104",
+        "image": null,
+        "icon": null
+      }
+    ],
     "show_tags": false
   },
   "layout": [
@@ -280,12 +288,49 @@
         "desc_section": "لحظات حقيقية من الفرح من عائلات تحب ألعابنا ❤️",
         "images": [
           {
-            "img": "",
+            "img": "/__twilight/preview/image/30f36889acd3bc2b.webp",
+            "product": []
+          },
+          {
+            "img": "/__twilight/preview/image/c2114492ada4b594.webp",
+            "product": [
+              {
+                "id": 752899893,
+                "name": "بيت التسلق",
+                "url": "https://theplayroom.sa/ar/بيت-التسلق/p752899893",
+                "image": "https://cdn.salla.sa/pOONr/d23fa797-48b6-4fd7-863b-99cd99e29484-500x500-Y8dfym63WN98HjGj528bSJC4roxuJeCMW9AndjaS.jpg"
+              }
+            ]
+          },
+          {
+            "img": "/__twilight/preview/image/2fe830f5779f6459.webp",
+            "product": []
+          },
+          {
+            "img": "/__twilight/preview/image/35bd0a6ebfc5af27.webp",
+            "product": []
+          },
+          {
+            "img": "/__twilight/preview/image/ebb8da0bc34888d3.webp",
             "product": []
           }
         ],
         "videos_title": "",
-        "videos": []
+        "videos": [
+          {
+            "video": "https://reels.theplayroom.silverback.sa/video7.mp4",
+            "poster": "",
+            "desc": "متعة اللعب مع السلم السويدي",
+            "product": [
+              {
+                "id": 1571449334,
+                "name": "السلم السويدي",
+                "url": "https://theplayroom.sa/ar/سلم-سويدي/p1571449334",
+                "image": "https://cdn.files.salla.network/products/1437537113/381cd60a-5225-4e73-91ac-32c5ae90e963_900x900.webp"
+              }
+            ]
+          }
+        ]
       }
     },
     {
@@ -295,9 +340,9 @@
         "key": "2fd43f1f-9734-47fc-870c-0372d0e01542",
         "items": [
           {
-            "key": "",
-            "question": "",
-            "answer": ""
+            "key": "swedish-ladder",
+            "question": "هل يتوفر الدفع عند الاستلام؟ وما طرق الدفع المتاحة؟",
+            "answer": "لا، خدمة الدفع عند الاستلام غير متاحة حاليًا. يمكنك إتمام عملية الشراء باستخدام إحدى طرق الدفع التالية: - التحويل البنكي المباشر. - Apple Pay. - بطاقات مدى. - بطاقات Visa و Mastercard."
           }
         ]
       }
