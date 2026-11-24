@@ -106,6 +106,10 @@
   @apply h-6 w-6 md:h-7 md:w-7;
 }
 
+.site-header__bar .header-action.site-header__menu-btn {
+  @apply text-[#222] hover:text-primary;
+}
+
 .site-header__bar .header-action svg.site-header__search-icon {
   @apply h-5 w-5 md:h-6 md:w-6;
 }
