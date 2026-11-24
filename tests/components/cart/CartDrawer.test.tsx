@@ -22,6 +22,7 @@ const makeCart = () => ({
 });
 let cartData: ReturnType<typeof makeCart> | null = makeCart();
 let currentCartId: number | null = 5;
+let currentIdFails = false;
 
 vi.mock('@salla.sa/twilight-theme-engine/i18n', () => ({
   useTranslation: () => ({ t: (_k: string, fb?: string) => fb ?? _k }),
@@ -49,7 +50,13 @@ vi.mock('../../../app/components/common', async () => ({
 vi.mock('@salla.sa/twilight-theme-engine/api/cart', () => ({
   cart: {
     queries: {
-      currentId: () => ({ queryKey: ['cart', 'id'], queryFn: () => currentCartId }),
+      currentId: () => ({
+        queryKey: ['cart', 'id'],
+        queryFn: () => {
+          if (currentIdFails) throw new Error('network');
+          return currentCartId;
+        },
+      }),
       detail: (id: number) => ({ queryKey: ['cart', 'detail', id], queryFn: () => cartData }),
     },
   },
@@ -96,6 +103,7 @@ describe('CartDrawer', () => {
   beforeEach(() => {
     cartData = makeCart();
     currentCartId = 5;
+    currentIdFails = false;
     updateItem = vi.fn().mockResolvedValue(undefined);
     deleteItem = vi.fn().mockResolvedValue(undefined);
     submit = vi.fn();
@@ -126,6 +134,24 @@ describe('CartDrawer', () => {
     const { getByText } = renderDrawer();
     openDrawer();
     await waitFor(() => expect(getByText('Your cart is empty')).toBeTruthy());
+  });
+
+  it('shows the empty state, not a skeleton, for a visitor with no cart yet', async () => {
+    currentCartId = null;
+    const { getByText, container } = renderDrawer();
+    openDrawer();
+    await waitFor(() => expect(getByText('Your cart is empty')).toBeTruthy());
+    expect(container.querySelector('.cart-drawer__skeleton')).toBeNull();
+  });
+
+  it('offers a retry when the cart cannot be loaded, and recovers', async () => {
+    currentIdFails = true;
+    const { getByText } = renderDrawer();
+    openDrawer();
+    await waitFor(() => expect(getByText('Something went wrong')).toBeTruthy());
+    currentIdFails = false;
+    fireEvent.click(getByText('Try again'));
+    await waitFor(() => expect(getByText('Wooden Train')).toBeTruthy());
   });
 
   it('removes an item through salla.cart.deleteItem', async () => {

@@ -145,7 +145,15 @@ export function CartDrawer() {
   // While the first fetch is in flight there's no data yet, so `items` reads
   // as empty — without this check the "cart is empty" message would flash
   // before the real rows (or real empty state) land.
-  const loading = hasOpened && cartData === undefined && (cartIdQuery.isPending || cartQuery.isPending);
+  // A visitor with no cart yet has no id: the detail query stays disabled (and
+  // so `isPending` forever), and that is the empty state, not loading.
+  const loading =
+    hasOpened && cartData === undefined && (cartIdQuery.isPending || (!!cartId && cartQuery.isPending));
+  const failed = cartData === undefined && (cartIdQuery.isError || cartQuery.isError);
+  const retry = () => {
+    if (cartIdQuery.isError) cartIdQuery.refetch();
+    else cartQuery.refetch();
+  };
 
   return (
     <BottomSheet
@@ -159,6 +167,13 @@ export function CartDrawer() {
           <div className="cart-drawer-item cart-drawer-item--skeleton" />
           <div className="cart-drawer-item cart-drawer-item--skeleton" />
           <div className="cart-drawer-item cart-drawer-item--skeleton" />
+        </div>
+      ) : failed ? (
+        <div className="cart-drawer__empty" role="alert">
+          <p>{t('common.errors.error_occurred', 'Something went wrong')}</p>
+          <button type="button" className="cart-drawer__retry" onClick={retry}>
+            {t('common.elements.try_again', 'Try again')}
+          </button>
         </div>
       ) : items.length === 0 ? (
         <p className="cart-drawer__empty">{t('pages.cart.empty_cart', 'Your cart is empty')}</p>

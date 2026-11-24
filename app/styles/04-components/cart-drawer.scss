@@ -46,6 +46,10 @@
   @apply flex-1 pt-10 text-center text-sm text-gray-500;
 }
 
+.cart-drawer__retry {
+  @apply mt-3 font-bold text-primary underline;
+}
+
 .cart-drawer__items {
   @apply flex-1 overflow-y-auto overscroll-contain;
 }
