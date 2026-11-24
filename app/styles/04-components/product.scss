@@ -875,112 +875,16 @@ salla-gifting {
     display: none;
   }
 
-  /* floating bar over the image — hidden until the client has mounted
-     (`useHydrated`, `ProductGallery.tsx`), then slides down into place
-     instead of popping in wherever hydration happens to land mid-paint. */
-  .product-gallery__bar {
-    position: absolute;
-    inset-inline: 0;
-    top: 0;
-    z-index: 3;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: calc(var(--flow-safe-top) + 0.75rem) 1rem 0;
-    pointer-events: none;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-100%);
-    /* One-way reveal only (never hides again) — `visibility` just needs to
-       flip to `visible` the instant `.is-visible` lands so the transform /
-       opacity transition is what the eye actually sees animate. */
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.35s ease;
+  /* "Back to home" row above the images: arrow + text, no background. */
+  .product-gallery__back {
+    @apply flex w-fit items-center gap-1.5 text-sm font-medium text-gray-800;
+    /* Flush with the start edge (the right in Arabic). */
+    padding: calc(var(--flow-safe-top) + 0.75rem) 1rem 0.5rem;
+    padding-inline-start: 0;
 
-    &.is-visible {
-      visibility: visible;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
-  }
-
-  /* Own reveal, independent of `.product-gallery__bar`'s — the back button
-     (its sibling) shows as soon as the bar does, but the wishlist/share
-     actions wait for the slider to actually finish loading (`sliderReady`,
-     the `onAfterInit` event, `ProductGallery.tsx`) rather than just React
-     having mounted, so they don't slide in while the images are still
-     stacking/loading underneath. */
-  .product-gallery__bar-actions {
-    display: inline-flex;
-    gap: 0.5rem;
-    pointer-events: none;
-    visibility: hidden;
-    opacity: 0;
-    transform: translateY(-100%);
-    transition:
-      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1),
-      opacity 0.35s ease;
-
-    &.is-visible {
-      pointer-events: auto;
-      visibility: visible;
-      opacity: 1;
-      transform: translateY(0);
-    }
-
-    @media (prefers-reduced-motion: reduce) {
-      transition: none;
-    }
-  }
-
-  .product-gallery__bar-btn {
-    @apply relative inline-flex h-10 w-10 items-center justify-center rounded text-gray-800;
-    pointer-events: auto;
-    /* `!important` — the store's Twig CSS otherwise strips the background off
-       `<salla-social-share>` */
-    background-color: #fff !important;
-    box-shadow:
-      0 4px 14px rgb(0 0 0 / 5%),
-      0 1px 3px rgb(0 0 0 / 3%);
-
+    /* `ArrowRightIcon` is "back" in Arabic; in LTR back points left. */
     svg {
-      @apply h-5 w-5;
-    }
-
-    /* The back button (the bar's own child, not one of `__bar-actions`) draws
-       `ArrowRightIcon`, which is "back" in Arabic; in LTR back points left. */
-    .product-gallery__bar > & svg {
-      @apply ltr:-scale-x-100;
-    }
-
-    i {
-      font-size: 1.15rem;
-    }
-
-    /* `<salla-social-share>` renders `.s-social-share-wrapper` (its own
-       positioning context) around the trigger + the `.s-social-share-list`
-       dropdown — stretch it to the button so the list anchors to the button. */
-    .s-social-share-wrapper {
-      @apply flex h-full w-full items-center justify-center bg-transparent;
-    }
-
-    .s-social-share-btn,
-    button {
-      @apply h-full w-full border-0 bg-transparent p-0 text-inherit justify-center items-center flex;
-    }
-
-    /* drop the list straight below the button (engine pins it `left: 2.5px;
-       top: 3rem`, which floats it off to the side against the tiny wrapper) */
-    .s-social-share-list {
-      inset-inline: 0 auto;
-      inset-block-start: calc(100% + 0.4rem);
-      left: 0;
-      right: auto;
+      @apply h-5 w-5 shrink-0 ltr:-scale-x-100;
     }
   }
 }

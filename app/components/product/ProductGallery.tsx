@@ -1,14 +1,11 @@
 import { type ComponentRef, type RefObject, useCallback, useEffect, useRef, useState } from 'react';
 import { SallaSlider } from '@salla.sa/twilight-components-react/slider';
-import { SallaSocialShare } from '@salla.sa/twilight-components-react/social-share';
 import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
-import { useWishlist } from '@salla.sa/twilight-theme-engine/hooks/useWishlist';
-import { Image } from '@salla.sa/twilight-theme-engine/common';
+import { Image, Link } from '@salla.sa/twilight-theme-engine/common';
 import { isNativeApp } from '@salla.sa/twilight-theme-engine/native-app';
 import type { Product, ProductImage } from '@salla.sa/twilight-theme-engine/types';
 import { ArrowRightIcon } from '../icons';
-import { useHydrated } from '../../hooks/useHydrated';
 
 export interface ProductGalleryProps {
   product: Product;
@@ -79,12 +76,10 @@ function sliderObjectFit(raw: unknown): ObjectFit {
  */
 export function ProductGallery({ product }: ProductGalleryProps) {
   const { t } = useTranslation();
-  const wishlist = useWishlist();
   const { theme } = useTwilight();
   const sliderId = `details-slider-${product.id}`;
   const sliderRef = useRef<ComponentRef<typeof SallaSlider>>(null);
   const objectFit = sliderObjectFit(theme.settings.slider_background_size);
-  const hydrated = useHydrated();
   // `onAfterInit` fires once Swiper actually finishes laying the slider out —
   // later than `hydrated` (which only means React has mounted; the slider web
   // component upgrades and initializes on its own, separate timeline).
@@ -150,41 +145,13 @@ export function ProductGallery({ product }: ProductGalleryProps) {
     // after it (ProductDetails' title / tags) still flowed right where the
     // gallery would have sat unshifted — the two rendered on top of each other.
     <div className={galleryClassName(images[0])}>
-      {/* Mobile: a floating bar over the top of the image — back on one side,
-          wishlist + share on the other. Hidden until hydrated, then slides
-          down into place instead of popping in wherever the page happens to
-          be mid-load. Styling: `04-components/product.scss`. */}
-      <div className={`product-gallery__bar md:hidden${hydrated ? ' is-visible' : ''}`}>
-        <button
-          type="button"
-          className="product-gallery__bar-btn"
-          onClick={() => {
-            if (window.history.length > 1) window.history.back();
-            else window.location.assign('/');
-          }}
-          aria-label={t('blocks.header.back', 'Back')}
-        >
-          <ArrowRightIcon aria-hidden="true" />
-        </button>
-        {/* Waits for the slider itself (`sliderReady`, not just `hydrated`) so
-            it doesn't slide in while the images underneath are still loading. */}
-        <div className={`product-gallery__bar-actions${sliderReady ? ' is-visible' : ''}`}>
-          <button
-            type="button"
-            className={`product-gallery__bar-btn btn--wishlist ${wishlist.has(Number(product.id)) ? 'is-added' : 'not-added'}`}
-            data-id={product.id}
-            onClick={() => window.salla?.wishlist?.toggle?.(product.id)}
-            aria-label={t('pages.products.add_to_wishlist', 'Add to wishlist')}
-            aria-pressed={wishlist.has(Number(product.id))}
-          >
-            <i className="sicon-heart" aria-hidden="true" />
-          </button>
-          <SallaSocialShare
-            className="product-gallery__bar-btn"
-            aria-label={t('blocks.header.share', 'Share')}
-          />
-        </div>
-      </div>
+      {/* Mobile: its own row above the images — an arrow and "Back to home",
+          a plain link (works before the app JS loads). Wishlist and share are
+          not shown on mobile. Styling: `04-components/product.scss`. */}
+      <Link to="/" className="product-gallery__back md:hidden">
+        <ArrowRightIcon aria-hidden="true" />
+        <span>{t('common.elements.back_home', 'Back to Home')}</span>
+      </Link>
 
       <SallaSlider
         ref={sliderRef}

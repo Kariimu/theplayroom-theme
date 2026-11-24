@@ -3,7 +3,6 @@ import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { act, render, waitFor, fireEvent } from '@testing-library/react';
 import { renderToString } from 'react-dom/server';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
-import { resetWishlistStore } from '@salla.sa/twilight-theme-engine/hooks/useWishlist';
 import { ProductGallery } from '../../../app/components/product/ProductGallery';
 
 // The merchant settings each test sees. `vi.hoisted` shares them with the hoisted
@@ -41,8 +40,13 @@ vi.mock('@salla.sa/twilight-components-react/slider', () => ({
   },
 }));
 
-vi.mock('@salla.sa/twilight-components-react/social-share', () => ({
-  SallaSocialShare: () => null,
+vi.mock('@salla.sa/twilight-theme-engine/common', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@salla.sa/twilight-theme-engine/common')>()),
+  Link: ({ to, children, className }: { to: string; children?: React.ReactNode; className?: string }) => (
+    <a href={to} className={className}>
+      {children}
+    </a>
+  ),
 }));
 
 const product = {
@@ -256,21 +260,13 @@ describe('ProductGallery in the Salla app', () => {
   });
 });
 
-describe('ProductGallery wishlist button', () => {
-  const heart = (container: HTMLElement) =>
-    container.querySelector('.product-gallery__bar-btn.btn--wishlist');
-
-  it('tells screen readers whether the product is saved, through the pressed state', async () => {
-    resetWishlistStore();
-    const { container, unmount } = render(<ProductGallery product={product} />);
-    await waitFor(() => expect(heart(container)?.getAttribute('aria-pressed')).toBe('false'));
-    unmount();
-
-    resetWishlistStore();
-    (window as unknown as { salla: { storage: { get: () => number[] } } }).salla.storage.get = () => [
-      product.id as number,
-    ];
-    const saved = render(<ProductGallery product={product} />);
-    await waitFor(() => expect(heart(saved.container)?.getAttribute('aria-pressed')).toBe('true'));
+describe('ProductGallery mobile back link', () => {
+  it('shows "Back to home" above the images, with no wishlist or share', () => {
+    const { container } = render(<ProductGallery product={product} />);
+    const back = container.querySelector('.product-gallery__back');
+    expect(back?.getAttribute('href')).toBe('/');
+    expect(back?.textContent).toBe('Back to Home');
+    expect(container.querySelector('.btn--wishlist')).toBeNull();
+    expect(container.querySelector('salla-social-share')).toBeNull();
   });
 });
