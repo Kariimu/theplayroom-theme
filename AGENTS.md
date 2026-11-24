@@ -92,8 +92,8 @@ This repo is the React rebuild of the Salla theme for theplayroom.sa (wooden toy
 - `docs/legacy/` describes the old theme (settings inventory, custom features, known issues, `old-twilight.json`). Port behaviour, not code. Do not port anything listed in `docs/legacy/09-known-issues.md`.
 - The old theme folder (`../Theplayroom-theme`) is read-only reference. Never edit it.
 - Keep home-block `key` (UUID) and `path` values identical to `docs/legacy/old-twilight.json` for blocks that exist in both themes.
-- Git: work on the `migration` branch. Never commit to or push `master`, never publish, and never change anything in the Salla Partners Portal; the owner does releases. Salla builds whatever is pushed, and only `master` can be submitted for publication.
+- Git: work on the `migration` branch (the repo's default branch since 24 Nov 2026, so Salla reads `twilight.json` from it). Never commit to or push `master`, never publish, and never change anything in the Salla Partners Portal; the owner does releases. Salla builds whatever is pushed, and only `master` can be submitted for publication.
 - Every user-visible string goes in both `locales/ar.json` and `locales/en.json`. Check every UI change at `/ar` and `/en`, on mobile and desktop.
 - When you fork an engine component, add the row to `FORKS.md` in the same commit.
-- Partners theme: `Theplayroom_theme`, Theme ID `1869420365`. Live store for reference only: https://theplayroom.sa/ar
+- Partners theme: `Theplayroom_react`, Theme ID `786991395` (imported 24 Nov 2026 as a new theme). The earlier record `Theplayroom_theme`, Theme ID `1869420365`, keeps the old name. Live store for reference only: https://theplayroom.sa/ar
 - `TASK.md` is the ordered checklist of everything left (build stages, SEO, GEO, performance, security audit, PR review, staging, go-live). Work one stage per session and tick it there.
