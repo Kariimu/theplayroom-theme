@@ -121,7 +121,7 @@ function InfoRow({
  * and the same gap between every row (`space-y-4`, not a `mb-4` on some rows
  * and nothing on others). Reads the live `product` (this component's, not
  * `ProductDetails`' stable loader prop): all four are per-variant. */
-function ProductInfoSection({ product }: { product: Product }) {
+export function ProductInfoSection({ product }: { product: Product }) {
   const { t } = useTranslation();
   if (!product.sku && !product.barcode && !product.weight && !product.has_size_guide) {
     return null;
