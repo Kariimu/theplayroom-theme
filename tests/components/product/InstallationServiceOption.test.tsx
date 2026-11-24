@@ -57,6 +57,11 @@ describe('fill', () => {
     expect(container.textContent).toBe('Riyadh · +150');
     expect(container.querySelector('b')?.textContent).toBe('150');
   });
+
+  it('leaves other :text alone', () => {
+    const { container } = render(<p>{fill('Note: :city:time', { city: 'Riyadh' })}</p>);
+    expect(container.textContent).toBe('Note: Riyadh:time');
+  });
 });
 
 describe('InstallationServiceOption', () => {

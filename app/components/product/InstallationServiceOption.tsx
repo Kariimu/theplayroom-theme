@@ -16,10 +16,13 @@ const INSTALLATION_OPTION_NAMES = ['خدمة التركيب', 'Installation serv
 export function fill(template: string, vars: Record<string, ReactNode>): ReactNode {
   // Split on the placeholders so a value can be a node (`useMoney().format()`
   // returns one, with the visitor's currency), not only a string.
-  return template.split(/(:[a-z_]+)/).map((part, index) => {
+  // Only the given names are placeholders, so other `:text` stays as written.
+  const names = Object.keys(vars).join('|');
+  if (!names) return template;
+  return template.split(new RegExp(`(:(?:${names}))(?![a-z_])`)).map((part, index) => {
     const key = part.startsWith(':') ? part.slice(1) : '';
     // react-doctor-disable-next-line react-doctor/no-array-index-as-key
-    return <Fragment key={index}>{key in vars ? vars[key] : part}</Fragment>;
+    return <Fragment key={index}>{Object.hasOwn(vars, key) ? vars[key] : part}</Fragment>;
   });
 }
 
