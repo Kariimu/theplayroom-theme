@@ -1,5 +1,5 @@
 {
-  "enabled": false,
+  "enabled": true,
   "settings": {
     "product_card_layout": "vertical",
     "product_card_img_ratio": "auto",
@@ -23,232 +23,704 @@
     "slider_background_size": "contain",
     "imageZoom": false,
     "show_whatsapp": true,
-    "whatsapp_number": 0,
+    "whatsapp_number": 966532603300,
     "footer_logo": "",
     "footer_description": "ألعاب خشبية فاخرة للعب والتطور الطبيعي. صُممت لإثارة البهجة والإبداع.",
     "gallery_page_category": [
       {
-        "id": "BxWBNq",
+        "id": 1241225104,
         "name": "معرض الأعمال",
         "url": "https://theplayroom.sa/ar/معرض-الأعمال/c1241225104",
-        "image": null,
-        "icon": null
+        "image": ""
       }
     ],
     "show_tags": false
   },
   "layout": [
     {
-      "id": "b-6d1aab5ea1ec",
+      "id": "b-925e59432e54",
       "path": "banner-section",
       "fields": {
         "key": "e0ddefcd-5aee-43ef-9bdb-36880f2239db",
-        "image_mobile_description": "",
-        "image_desktop_description": "",
         "top_margin": false,
-        "image_desktop": "",
-        "image_mobile": ""
+        "image_mobile": "https://cdn.files.salla.network/other/1437537113/0f99cdb0-8d8f-4625-8e7f-ea68dba39abb-original.webp",
+        "image_desktop": "https://cdn.files.salla.network/other/1437537113/0f99cdb0-8d8f-4625-8e7f-ea68dba39abb-original.webp",
+        "image_desktop_description": "ألعابنا تصنع لحظات مليئة بالضحكات، وتمنح الخيال مساحة ليكبر"
       }
     },
     {
-      "id": "b-204c56b5e050",
+      "id": "b-659bcb0d0ab7",
       "path": "reviews-section",
       "fields": {
         "key": "3cdb6a6e-cbbb-4e1f-b282-6e02eeb85cd1",
-        "title": "",
-        "description": "",
-        "button_text": "",
-        "link": "",
-        "rating_count": "",
-        "total_reviews": ""
+        "link": "https://theplayroom.sa/ar/-/c851891340",
+        "rating_count": "4.8",
+        "title": "ألعاب خشبية تحتضن طفولة أطفالنا!",
+        "button_text": "استكشف الآن",
+        "description": "ألعاب تعلم الإبداع والخيال وتبث البهجة في قلوب الصغار.",
+        "total_reviews": "560 تقييم"
       }
     },
     {
-      "id": "b-8f7acc7d8e5d",
+      "id": "b-349096333aba",
       "path": "custom-brands-section",
       "fields": {
         "key": "e898a0a9-abb9-47d9-8bcb-5a20169b62f6",
-        "display_as_grid": false,
-        "brands": []
+        "brands": [
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/5534d088-97a5-4278-b54c-fb85d5a5b5be.webp",
+            "alt_text": ""
+          },
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/d1931b89-4614-4104-a373-25deacd64116.webp",
+            "alt_text": ""
+          },
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/faf51e54-bfd4-4c30-b037-fc3f39ab56fc.webp",
+            "alt_text": ""
+          },
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/142550a4-107a-42cc-86ee-6d0957680d9e.webp",
+            "alt_text": ""
+          },
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/a3f191fe-cfa6-4987-b902-ca8692439c7e.webp",
+            "alt_text": ""
+          },
+          {
+            "url": "",
+            "image": "https://cdn.files.salla.network/other/1437537113/d30da621-4aaa-41bd-8262-440df379bb02-original.webp",
+            "alt_text": ""
+          }
+        ],
+        "display_as_grid": true
       }
     },
     {
-      "id": "b-eea3028196e6",
+      "id": "b-8f4fbe42d5ef",
       "path": "shopping1-section",
       "fields": {
         "key": "3db77766-6dcd-4f34-8152-998b227c357a",
+        "items": [
+          {
+            "url": "https://theplayroom.sa/ar/-/c2118208525",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/f0afbf8d-8faf-4dc6-85ec-d48df80bd6b8-original.webp",
+            "title_type": true,
+            "subtitle_type": true,
+            "title": "ألعاب جاهزة",
+            "subtitle": "تصفح جميع ألعابنا الخشبية"
+          },
+          {
+            "url": "https://theplayroom.sa/ar/-/c1766577166",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/21d3b2a2-5ab2-4d1a-90c5-931428fdfe3a-original.webp",
+            "title_type": true,
+            "subtitle_type": true,
+            "title": "تصاميم مخصصة",
+            "subtitle": "تصاميم خاصة حسب طلبك"
+          },
+          {
+            "url": "https://theplayroom.sa/ar/-/c2118208525",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/84f96b84-5859-4c1e-9372-79da186d3cfd-original.webp",
+            "title_type": true,
+            "subtitle_type": true,
+            "title": "تجهيز الحضانات",
+            "subtitle": "حلول متكاملة للحضانات والمدارس"
+          }
+        ],
         "title": "تسوق حسب النوع",
-        "subtitle": "اختر ما يناسب احتياجاتك",
-        "items": []
+        "subtitle": "اختر ما يناسب احتياجاتك"
       }
     },
     {
-      "id": "b-daa82578ba5c",
+      "id": "b-95894e5396c6",
+      "path": "shopping1-section",
+      "fields": {
+        "key": "3db77766-6dcd-4f34-8152-998b227c357a",
+        "items": [
+          {
+            "url": "https://theplayroom.sa/ar/-/c48709728",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/1d802b7b-f25c-4eae-a168-d1daca7cab28-original.webp",
+            "title_type": false,
+            "subtitle_type": false,
+            "title": "٧ أشهر - سنة ونص",
+            "subtitle": "ينمو مع طفلك"
+          },
+          {
+            "url": "https://theplayroom.sa/ar/-/c2021109091",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/bc8ac5d7-67ed-4afa-91bc-e1673163b442-original.webp",
+            "title_type": false,
+            "subtitle_type": false,
+            "title": "٢ سنة -٤ سنين",
+            "subtitle": "مرحلة الاستكشاف"
+          },
+          {
+            "url": "https://theplayroom.sa/ar/-/c1247595628",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/c14028d4-fc4d-457e-a14b-fd7e2635b78f-original.webp",
+            "title_type": false,
+            "subtitle_type": false,
+            "title": "٥ سنوات - ١٢ سنة",
+            "subtitle": "يخدم طفلك لسنوات طويلة"
+          }
+        ],
+        "title": "ابحث عن اللعبة المثالية لمرحلتهم",
+        "subtitle": "تصفح حسب الفئة العمرية لاكتشاف الألعاب التي تدعم التطور الطبيعي"
+      }
+    },
+    {
+      "id": "b-cf1e0d2a838d",
       "path": "products-section",
       "fields": {
         "key": "a55fde15-f7e6-4796-acec-b1f982f32ea3",
-        "title_section": "",
-        "desc_section": "",
-        "products": [],
-        "btn_text": "",
-        "button_url": "",
-        "desc2_section": ""
+        "products": [
+          {
+            "id": 1942350190,
+            "name": "طاولة اللعب الحسي و مثلث بيكلر الخشبي و المرتبة",
+            "url": "https://theplayroom.sa/ar/طاولة-اللعب-الحسي-أفضل-العاب-حسية-للأطفال-غرفة-الألعاب/p1942350190",
+            "image": "https://cdn.salla.sa/pOONr/60a9add2-b0b0-46af-8ea0-420c3248ece9-500x500-rydr6egY5pqemCEKlNSkczIy3sYPfJBaAcJOUbag.jpg"
+          },
+          {
+            "id": 1627185510,
+            "name": "شبك التسلق و جدار التسلق و مثلث بيكلر الخشبي و المرسم مجانا",
+            "url": "https://theplayroom.sa/ar/شبك-التسلق-أفضل-شبك-تسلق-للأطفال-في-السعودية-غرفة-الألعاب/p1627185510",
+            "image": "https://cdn.salla.sa/pOONr/7f2cc773-923d-42f2-9c24-13c03fde6ed0-500x500-wPN9ej7SNama5k61J1QRgek1woyx9VEsAp3G0dVd.jpg"
+          },
+          {
+            "id": 428303642,
+            "name": "جدار التسلق و شبك التسلق و الاستاند و مرجيحة اليونيكورن",
+            "url": "https://theplayroom.sa/ar/جدار-تسلق-للأطفال-غرفة-الألعاب/p428303642",
+            "image": "https://cdn.salla.sa/pOONr/abb40158-c86c-407c-86e8-4138cc74b9f4-500x500-PBvdY3AHAnh0FUJZ8m9DFjlEEcSvcIdMyrJr4V70.jpg"
+          },
+          {
+            "id": 711047964,
+            "name": "بيت الطاحونة و لوح التوازن",
+            "url": "https://theplayroom.sa/ar/بيت-الطاحونة-أفضل-ألعاب-الأطفال-الخشبية-في-السعودية-غرفة-الألعاب/p711047964",
+            "image": "https://cdn.salla.sa/pOONr/bef18452-3220-4d7a-b8a2-e63ddd67ea07-500x500-4dCG7i0UL4nutmvDqfLMsQ6OdI0oX5YZLJhf7Sg9.jpg"
+          },
+          {
+            "id": 1055566851,
+            "name": "مثلث بيكلر  و لوح التوازن  و سلم تسلق مجانا",
+            "url": "https://theplayroom.sa/ar/مثلث-بيكلر-الخشبي-للأطفال-غرفة-الألعاب/p1055566851",
+            "image": "https://cdn.salla.sa/pOONr/05e489be-8052-405e-810d-523d65ad612a-500x500-D4Ffq35pwvgUoowGa4nqJAfDEe0dVvJH3rR8yy8n.jpg"
+          },
+          {
+            "id": 6186553,
+            "name": "مجموعة المغامرة مع  الاستاند و مرجيحة اليونيكورن",
+            "url": "https://theplayroom.sa/ar/مجموعة-المغامرة-مع-الاستاند-و-مرجيحة-اليونيكورن/p6186553",
+            "image": "https://cdn.salla.sa/pOONr/fe6bad9e-2597-4da6-a7bc-e84d39787133-500x500-tANaayX6aoO66UMqkR147yUJxBDJKGWMDsR4LjQF.jpg"
+          },
+          {
+            "id": 1298918188,
+            "name": "شبك التسلق و صندوق التخزين",
+            "url": "https://theplayroom.sa/ar/شبك-التسلق-و-صندوق-التخزين/p1298918188",
+            "image": "https://cdn.salla.sa/pOONr/1462d4dd-04fe-49ae-8400-c5977e9e0f87-500x500-DH6fzJ2xAPFIX20LtEyj6oHxB8PBs1b1p4CQ3lTU.jpg"
+          },
+          {
+            "id": 672219175,
+            "name": "جدار التسلق و بيت الألعاب",
+            "url": "https://theplayroom.sa/ar/بيت-الالعاب-الخشبي-للأطفال-غرفة-الألعاب/p672219175",
+            "image": "https://cdn.salla.sa/pOONr/c4df4b59-8ebf-45be-965b-f1231a2b34d4-500x500-WHSXnUMhNJChoto8rQLej7Wm4mD3cwX1PDH1g6Ek.jpg"
+          }
+        ],
+        "button_url": "https://theplayroom.sa/ar/-/c851891340",
+        "btn_text": "اطلب الان",
+        "desc_section": "خصم يصل الى 15%",
+        "title_section": "تخفيضات الجمعة البيضاء"
       }
     },
     {
-      "id": "b-c7b1b9fcf328",
-      "path": "reels-section",
+      "id": "b-cd0c8c6ede15",
+      "path": "products-section",
       "fields": {
-        "key": "0729141b-3274-41c7-97b5-5fa034835270",
-        "title_section": "لحظات من اللعب",
-        "desc_section": "شاهد لحظات سعيدة من أطفالنا الرائعين",
-        "all_products": [],
-        "reels": [
+        "key": "a55fde15-f7e6-4796-acec-b1f982f32ea3",
+        "products": [
           {
-            "video_url": "https://reels.theplayroom.silverback.sa/video4%20(1).mp4",
-            "poster": "",
+            "id": 1571449334,
+            "name": "السلم السويدي",
+            "url": "https://theplayroom.sa/ar/سلم-سويدي/p1571449334",
+            "image": "https://cdn.files.salla.network/products/1437537113/381cd60a-5225-4e73-91ac-32c5ae90e963_900x900.webp"
+          },
+          {
+            "id": 856189762,
+            "name": "جدار التسلق",
+            "url": "https://theplayroom.sa/ar/جدار-تسلق-للأطفال-غرفة-الألعاب/p856189762",
+            "image": "https://cdn.salla.sa/pOONr/1ae5f89f-d273-4992-9ae6-a9268d23a5c3-500x500-Fp7tDei0HqVewuGb1l3cMHYVNnzaJHe6XFgZpmfn.jpg"
+          },
+          {
+            "id": 1949686711,
+            "name": "شبك التسلق",
+            "url": "https://theplayroom.sa/ar/شبك-التسلق-أفضل-شبك-تسلق-للأطفال-في-السعودية-غرفة-الألعاب/p1949686711",
+            "image": "https://cdn.salla.sa/pOONr/a4ae74cb-f939-4e64-a5a0-6300035d6705-500x500-5lN90rSyyI0raWW8T5woc4tjdXFZGIygBiBcOyRq.jpg"
+          },
+          {
+            "id": 636012869,
+            "name": "المجموعة الجدارية",
+            "url": "https://theplayroom.sa/ar/المجموعة-الجدارية-للأطفال-شبك-وجدار-تسلق-مع-السلم-السويدي/p636012869",
+            "image": "https://cdn.salla.sa/pOONr/86497f53-7ce6-45f2-a04e-8aa2d17a334f-500x500-aY2S3Gnf99Y53QXnSUJ4no0XALcXFGvC5mA1QHAP.jpg"
+          },
+          {
+            "id": 1610945770,
+            "name": "السلم السويدي و جدار التسلق",
+            "url": "https://theplayroom.sa/ar/السلم-السويدي-وجدار-التسلق-مجموعة-غرفة-الألعاب/p1610945770",
+            "image": "https://cdn.salla.sa/pOONr/6200e2c5-5b41-409c-b479-e460c8eedbeb-500x500-W51X9uj3fnhX3vlq2USc46ETvKikK4yNwo7kK43g.jpg"
+          },
+          {
+            "id": 690103737,
+            "name": "السلم السويدي و شبك التسلق",
+            "url": "https://theplayroom.sa/ar/السلم-السويدي-وشبك-التسلق-مجموعة-غرفة-الألعاب/p690103737",
+            "image": "https://cdn.salla.sa/pOONr/5fc3f2ae-aeb6-4d7d-940b-296f1cfaeebe-500x500-OGYKfkyxtHq7eQ9lV8Xu0e7eQ6TXRjIxwAEajZuw.webp"
+          },
+          {
+            "id": 1038234603,
+            "name": "شبك التسلق و جدار التسلق",
+            "url": "https://theplayroom.sa/ar/شبك-التسلق-وجدار-التسلق-مجموعة-غرفة-الألعاب/p1038234603",
+            "image": "https://cdn.salla.sa/pOONr/907bdad5-7441-412e-8e75-0d1789bfca2e-500x500-QUMVRT8OtRMknfwNzQVLlqxmrOXZiCqyHxgPQVxH.jpg"
+          },
+          {
+            "id": 752899893,
+            "name": "بيت التسلق",
+            "url": "https://theplayroom.sa/ar/بيت-التسلق-للاطفال-أفضال-العاب-التسلق-للأطفال-غرفة-الألعاب/p752899893",
+            "image": "https://cdn.salla.sa/pOONr/d23fa797-48b6-4fd7-863b-99cd99e29484-500x500-Y8dfym63WN98HjGj528bSJC4roxuJeCMW9AndjaS.jpg"
+          },
+          {
+            "id": 293573804,
+            "name": "بيت الطاحونة",
+            "url": "https://theplayroom.sa/ar/بيت-الطاحونة-أفضل-ألعاب-الأطفال-الخشبية-في-السعودية-غرفة-الألعاب/p293573804",
+            "image": "https://cdn.salla.sa/pOONr/06c33992-2e33-42d5-a68f-4259b4f3b0c4-500x500-h23MvDaO797U1TDuzj2h6aQbuVF3PlxL2BOFg1o7.png"
+          },
+          {
+            "id": 1407685868,
+            "name": "مثلث بيكلر",
+            "url": "https://theplayroom.sa/ar/مثلث-بيكلر-الخشبي-للأطفال-غرفة-الألعاب/p1407685868",
+            "image": "https://cdn.salla.sa/pOONr/93ca127e-852b-443d-8c24-e68fa0e51757-500x500-i7tSaSPqj32WD9RBAsF8THpLJPsgxbZRBe3Qp4oM.jpg"
+          },
+          {
+            "id": 943684463,
+            "name": "لوح التوازن",
+            "url": "https://theplayroom.sa/ar/لوح-التوازن-الخشبي-للأطفال-غرفة-الألعاب/p943684463",
+            "image": "https://cdn.salla.sa/pOONr/c71e88b6-cd4f-4c5d-9079-ae13cdc35cfc-500x500-BGPKZwtMO3DWdU4muNaYS2j2Fkjl9Pcc3YaoA3LT.jpg"
+          },
+          {
+            "id": 843002639,
+            "name": "طاولة اللعب الحسي",
+            "url": "https://theplayroom.sa/ar/طاولة-اللعب-الحسي-أفضل-العاب-حسية-للأطفال-غرفة-الألعاب/p843002639",
+            "image": "https://cdn.salla.sa/pOONr/41c0bbac-4c04-4a11-a55e-fb59cffd0109-500x500-WV0i5BBhZKna16VgKs0VFB5xErrGZbHneycwOqTN.jpg"
+          },
+          {
+            "id": 979102582,
+            "name": "صندوق التخزين",
+            "url": "https://theplayroom.sa/ar/صندوق-التخزين/p979102582",
+            "image": "https://cdn.salla.sa/pOONr/233aaaa4-19f3-421c-b244-f2537bd055a7-500x500-dgT5AQOhBOW1yNsFoqtvkbcRhAVY4AGnAH5HlQ3K.jpg"
+          },
+          {
+            "id": 1246641851,
+            "name": "بيت الألعاب",
+            "url": "https://theplayroom.sa/ar/بيت-الالعاب-الخشبي-للأطفال-غرفة-الألعاب/p1246641851",
+            "image": "https://cdn.salla.sa/pOONr/91377671-dc0e-4113-8754-09b6c68de9ef-500x500-g0xoscZGo8jMBJvDzDdj4JlYFDMvNLr3L98jFurG.jpg"
+          },
+          {
+            "id": 208184019,
+            "name": "مرجيحة الاطفال",
+            "url": "https://theplayroom.sa/ar/مرجيحة-الاطفال-المعلقة-غرفة-الألعاب/p208184019",
+            "image": "https://cdn.salla.sa/pOONr/f2456103-521f-4286-9736-cc811ef9ad7d-500x500-XpYuNqHcTLTlPcoj1boVA33yaYOIYmzuWQH04U2q.jpg"
+          },
+          {
+            "id": 1033365500,
+            "name": "مرجيحة الزرافة",
+            "url": "https://theplayroom.sa/ar/مرجيحة-الزرافة-للأطفال-غرفة-الألعاب/p1033365500",
+            "image": "https://cdn.salla.sa/pOONr/aec10903-c9fb-41b1-80a9-fb6de6dde957-500x500-r61Ievlk4bRcf8cLmPujoptNLou2fsIB9ogd4CP6.jpg"
+          },
+          {
+            "id": 1978832066,
+            "name": "مرجيحة اليونيكورن",
+            "url": "https://theplayroom.sa/ar/مرجيحة-اليونيكورن-للأطفال-غرفة-الألعاب/p1978832066",
+            "image": "https://cdn.salla.sa/pOONr/6f59fedb-a093-4c0d-a15d-dd611b3b898a-500x500-Gaoyg2l3OIslFmr829zMEtwrtmQ7saP9YalXdyU4.jpg"
+          },
+          {
+            "id": 431530834,
+            "name": "إستاند للمراجيح",
+            "url": "https://theplayroom.sa/ar/إستاند-للمراجيح-غرفة-الألعاب/p431530834",
+            "image": "https://cdn.salla.sa/pOONr/a59d2901-da5f-426e-83f6-64519af8e760-500x500-ffiwFkqD1UBKIIdUwInnlgbhgcTPcgdKMltvqotl.jpg"
+          },
+          {
+            "id": 1453283837,
+            "name": "المرسم المتنقل (إكسسوار فقط)",
+            "url": "https://theplayroom.sa/ar/اكسسوارات-خشبية-للمرسم-المتنقل-للأطفال-غرفة-الألعاب/p1453283837",
+            "image": "https://cdn.salla.sa/pOONr/b45dbe3d-dc6a-45a4-bc05-fa729fa99e85-500x500-k0TjecHxbZPfKEEcrQ7qFXytpSXL3H3aNmWu0ynJ.jpg"
+          },
+          {
+            "id": 1326209715,
+            "name": "سلم التسلق (إكسسوار فقط)",
+            "url": "https://theplayroom.sa/ar/اكسسوارات-سلم-التسلق-للأطفال-خشب-طبيعي-اعمدة-غرفة-الألعاب/p1326209715",
+            "image": "https://cdn.salla.sa/pOONr/5d506492-3788-4acc-a534-32e84719cc12-500x500-P1UgVaXppjP3Dd8wc7QOu8UfMmzikrOFBUdSKftF.jpg"
+          },
+          {
+            "id": 1049262094,
+            "name": "خيمة (إكسسوار فقط)",
+            "url": "https://theplayroom.sa/ar/اكسسوارات-خيمة-أطفال-قماش-مع-شبابيك-غرفة-الألعاب/p1049262094",
+            "image": "https://cdn.salla.sa/pOONr/d76c6058-ec73-4050-91b7-277f081d52c3-500x500-gLR7kw58ce5086a7qqyFdKehi6gRqWrGMJ5iXUry.jpg"
+          },
+          {
+            "id": 1628948505,
+            "name": "مرتبة لوح التوازن (إكسسوار فقط)",
+            "url": "https://theplayroom.sa/ar/تسوق-مرتبة-اطفال-لوح-التوازن-الخشبي-غرفة-الألعاب/p1628948505",
+            "image": "https://cdn.salla.sa/pOONr/d0bf54aa-15ac-4398-a152-8b1c50d81fff-500x500-di3QKDm9r1cGrWkjE5rEe0uUfN3jMr3muWs8gFHs.jpg"
+          },
+          {
+            "id": 1880665425,
+            "name": "حوض الكور",
+            "url": "https://theplayroom.sa/ar/حوض-الكور-غرفة-الألعاب/p1880665425",
+            "image": "https://cdn.salla.sa/pOONr/ed56a75c-42cb-42c3-88f5-995d4304f0ca-500x500-mJMIvG91vnj0GMEgzZQ2SvP9m1nXYvXJCqOTUyCx.png"
+          },
+          {
+            "id": 754836750,
+            "name": "رول البيت المغناطيسي",
+            "url": "https://theplayroom.sa/ar/رول-البيت-المغناطيسي-غرفة-الألعاب/p754836750",
+            "image": "https://cdn.salla.sa/pOONr/676a4816-1229-499e-8864-2124e93f9f75-500x500-Iwz11JLWG4ErVNt6DtGOsqHQJJDnBIgZIQX03Ihs.webp"
+          }
+        ],
+        "button_url": "https://theplayroom.sa/ar/-/c2118208525",
+        "btn_text": "عرض جميع المنتجات",
+        "desc_section": "محبوبة من قبل الآباء في جميع أنحاء المملكة العربية السعودية",
+        "desc2_section": "ألعابًا تحتضن اللعب الحر والإبداع، وتساعد أطفالكم على النمو والاستكشاف بأمان",
+        "title_section": "الأكثر مبيعاً"
+      }
+    },
+    {
+      "id": "b-0961926bad71",
+      "path": "features-section",
+      "fields": {
+        "key": "2bbbcfb0-5009-4164-bcbe-c9686b60bc26",
+        "features": [
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/a0d1ba4a-af63-4e02-816b-5662bcf6d810.webp",
+            "title": "تنمي المهارات الحركية"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/4740e0b8-5187-4af3-83b2-95025ff2c94a.webp",
+            "title": "بيئة آمنة للعب"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/eb003f93-c020-4f25-8c01-70a2ece9c759.webp",
+            "title": "تنمو مع طفلك"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/b47a7739-13f8-4416-b934-29ef75c1d063.webp",
+            "title": "تقوي العضلات"
+          }
+        ],
+        "title_section": "ألعابنا"
+      }
+    },
+    {
+      "id": "b-2ce70c98240f",
+      "path": "gallery-section",
+      "fields": {
+        "key": "2dd209ac-c98f-4bff-b411-cd6cc1fd61a3",
+        "gallery": [
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/cbce714f-9266-4fbc-8281-6e53e29380ce.webp",
+            "alt_text": ""
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/739e76cc-2163-4ded-b8fa-5ac11b351d39.webp",
+            "alt_text": ""
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/b5e73d4e-3677-4189-8dc4-17651dd00b8f.webp",
+            "alt_text": ""
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/9e2f6142-fcf1-470f-8ee1-549f8de764ee.webp",
+            "alt_text": ""
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/8438cdec-fa63-4e8d-b93e-66ca48fddd5d.webp",
+            "alt_text": ""
+          }
+        ],
+        "button_url": "https://theplayroom.sa/ar/-/c1241225104",
+        "btn_text": "عرض المعرض الكامل",
+        "desc_section": "شاهد كيف تضفي ألعابنا البهجة على المنازل في جميع أنحاء السعودية",
+        "title_section": "تركيباتنا"
+      }
+    },
+    {
+      "id": "b-dcec178e36fb",
+      "path": "modern-banner-section",
+      "fields": {
+        "key": "866b441f-76bd-4a49-9929-4d3fc78d1160",
+        "image": "https://cdn.files.salla.network/homepage/1437537113/55ec76bc-c98a-4545-acf7-b6aa76739662.webp",
+        "features": [
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/23a15827-ada0-45b0-b273-c1b65ad43757_900x900.webp",
+            "desc": "أسعار خاصة للمؤسسات",
+            "title": "خصومات للكميات"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/409fab8c-7225-4d69-ab18-ef139448422b_1440x874.webp",
+            "desc": "داخل المملكة",
+            "title": "توصيل سريع"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/d3c95ac3-87e6-48d0-bb45-e67a2f59c752_900x900.webp",
+            "desc": "فريق متخصص",
+            "title": "تركيب احترافي"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/7845f1c7-e2db-441b-b356-702ae5cb2825_900x900.webp",
+            "desc": "تصميم المساحة",
+            "title": "استشارة مجانية"
+          }
+        ],
+        "hotspots": [
+          {
+            "pos_x": 50,
+            "pos_y": 50,
             "product": [
               {
-                "id": 752899893,
-                "name": "بيت التسلق",
-                "url": "https://theplayroom.sa/ar/بيت-التسلق/p752899893",
-                "image": "https://cdn.salla.sa/pOONr/d23fa797-48b6-4fd7-863b-99cd99e29484-500x500-Y8dfym63WN98HjGj528bSJC4roxuJeCMW9AndjaS.jpg"
+                "id": 636012869,
+                "name": "المجموعة الجدارية",
+                "url": "https://theplayroom.sa/ar/المجموعة-الجدارية-للأطفال-شبك-وجدار-تسلق-مع-السلم-السويدي/p636012869",
+                "image": "https://cdn.salla.sa/pOONr/86497f53-7ce6-45f2-a04e-8aa2d17a334f-500x500-aY2S3Gnf99Y53QXnSUJ4no0XALcXFGvC5mA1QHAP.jpg"
               }
             ]
           },
           {
-            "video_url": "https://reels.theplayroom.silverback.sa/video1.mp4",
-            "poster": "",
+            "pos_x": 35,
+            "pos_y": 50,
             "product": [
               {
                 "id": 1407685868,
                 "name": "مثلث بيكلر",
-                "url": "https://theplayroom.sa/ar/مثلث-بيكلر/p1407685868",
+                "url": "https://theplayroom.sa/ar/مثلث-بيكلر-الخشبي-للأطفال-غرفة-الألعاب/p1407685868",
                 "image": "https://cdn.salla.sa/pOONr/93ca127e-852b-443d-8c24-e68fa0e51757-500x500-i7tSaSPqj32WD9RBAsF8THpLJPsgxbZRBe3Qp4oM.jpg"
               }
             ]
           },
           {
-            "video_url": "https://reels.theplayroom.silverback.sa/video2%20(1).mp4",
-            "poster": "",
-            "product": [
-              {
-                "id": 1326209715,
-                "name": "سلم التسلق (إكسسوار فقط)",
-                "url": "https://theplayroom.sa/ar/سلم-التسلق-إكسسوار-فقط/p1326209715",
-                "image": "https://cdn.salla.sa/pOONr/5d506492-3788-4acc-a534-32e84719cc12-500x500-P1UgVaXppjP3Dd8wc7QOu8UfMmzikrOFBUdSKftF.jpg"
-              }
-            ]
-          },
-          {
-            "video_url": "https://reels.theplayroom.silverback.sa/video3.mp4",
-            "poster": "",
-            "product": [
-              {
-                "id": 1049262094,
-                "name": "خيمة (إكسسوار فقط)",
-                "url": "https://theplayroom.sa/ar/خيمة-إكسسوار-فقط/p1049262094",
-                "image": "https://cdn.salla.sa/pOONr/d76c6058-ec73-4050-91b7-277f081d52c3-500x500-gLR7kw58ce5086a7qqyFdKehi6gRqWrGMJ5iXUry.jpg"
-              }
-            ]
-          },
-          {
-            "video_url": "https://reels.theplayroom.silverback.sa/video5%20(1).mp4",
-            "poster": "",
-            "product": [
-              {
-                "id": 943684463,
-                "name": "لوح التوازن",
-                "url": "https://theplayroom.sa/ar/لوح-التوازن/p943684463",
-                "image": "https://cdn.salla.sa/pOONr/c71e88b6-cd4f-4c5d-9079-ae13cdc35cfc-500x500-BGPKZwtMO3DWdU4muNaYS2j2Fkjl9Pcc3YaoA3LT.jpg"
-              }
-            ]
-          },
-          {
-            "video_url": "https://reels.theplayroom.silverback.sa/video6.mp4",
-            "poster": "",
+            "pos_x": 40,
+            "pos_y": 60,
             "product": []
           },
           {
-            "video_url": "https://reels.theplayroom.silverback.sa/video7.mp4",
-            "poster": "",
+            "pos_x": 70,
+            "pos_y": 50,
             "product": []
+          },
+          {
+            "pos_x": 60,
+            "pos_y": 70,
+            "product": []
+          },
+          {
+            "pos_x": 80,
+            "pos_y": 70,
+            "product": []
+          },
+          {
+            "pos_x": 60,
+            "pos_y": 25,
+            "product": []
+          }
+        ],
+        "text_icon": "للحضانات والمدارس",
+        "desc_footer": "تواصل معنا عبر الواتساب للحصول على استشارة مجانية وعرض سعر مخصص",
+        "desc_section": "حوّل أي مساحة إلى عالم من المرح والتعلم مع ألعابنا الخشبية الآمنة",
+        "title_footer": "جاهز لتجهيز مركزك؟",
+        "whatsapp_msg": "مرحباً، أريد الاستفسار عن تجهيز حضانة/مدرسة بألعابكم الخشبية",
+        "text_on_image": "ألعاب خشبية فاخرة لمساحات التعلم",
+        "title_section": "تجهيز الحضانات والمدارس",
+        "whatsapp_number": "966532603300",
+        "whatsapp_btn_text": "تواصل عبر واتساب"
+      }
+    },
+    {
+      "id": "b-c54635c26fbd",
+      "path": "custom-testimonials",
+      "fields": {
+        "key": "541cc423-90c7-4230-8a33-a0342cfde4ad",
+        "items": [
+          {
+            "name": "فاطمة م.",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/11d79ef5-e14f-4816-965a-6520f51a8625_600x900.webp",
+            "stars": 5,
+            "avatar": "https://res.cloudinary.com/dyttjhl7e/image/upload/q_auto/f_auto/v1781613447/avatar_female_d5aak9.png",
+            "text": "جودة سلم التسلق فاقت توقعاتنا. أطفالي يقضون ساعات في اللعب والتسلق وتطوير مهاراتهم الحركية. آمن وصناعة جميلة."
+          },
+          {
+            "name": "سارة",
+            "image": "https://cdn.files.salla.network/homepage/1437537113/33fdeafe-a01a-48f3-999a-b75f218b00af_600x900.webp",
+            "stars": 5,
+            "avatar": "https://cdn.files.salla.network/homepage/1437537113/1016bef4-0d70-46f3-bd94-635de8e4e37a_240x240.webp",
+            "text": "أفضل شراء لغرفة ألعابنا! الأطفال دائماً نشيطين بدلاً من وقت الشاشة. جودة الخشب ممتازة وآمنة. أنصح بشدة بذا بلايروم!"
+          },
+          {
+            "name": "نورة",
+            "image": "",
+            "stars": 5,
+            "avatar": "https://cdn.files.salla.network/homepage/1437537113/dd00aef8-3c79-4bed-8a93-69e38ef38228_240x240.webp",
+            "text": "ابنتي تحب مثلث التسلق الجديد! ينمو معها وتكتسب الكثير من الثقة. شكراً فريق بلايروم!"
+          },
+          {
+            "name": "لمى",
+            "image": "",
+            "stars": 5,
+            "avatar": "https://cdn.files.salla.network/homepage/1437537113/d5ea655d-32f7-4201-aaf3-98c464cd77fb_240x240.webp",
+            "text": "السلم السويدي رائع! مثالي لشقتنا والأطفال يستخدمونه كل يوم. جودة بناء متينة وتصميم جميل."
           }
         ]
       }
     },
     {
-      "id": "b-7f2e57adc8cb",
-      "path": "features-section",
-      "fields": {
-        "key": "2bbbcfb0-5009-4164-bcbe-c9686b60bc26",
-        "title_section": "",
-        "features": []
-      }
-    },
-    {
-      "id": "b-318f4655ea18",
-      "path": "gallery-section",
-      "fields": {
-        "key": "2dd209ac-c98f-4bff-b411-cd6cc1fd61a3",
-        "title_section": "",
-        "desc_section": "",
-        "gallery": [],
-        "btn_text": "",
-        "button_url": ""
-      }
-    },
-    {
-      "id": "b-724356bb1e2c",
-      "path": "modern-banner-section",
-      "fields": {
-        "key": "866b441f-76bd-4a49-9929-4d3fc78d1160",
-        "text_icon": "",
-        "title_section": "",
-        "desc_section": "",
-        "text_on_image": "",
-        "features": [],
-        "title_footer": "",
-        "desc_footer": "",
-        "whatsapp_msg": "",
-        "whatsapp_number": "",
-        "whatsapp_btn_text": "",
-        "all_products": [],
-        "hotspots": [],
-        "image": ""
-      }
-    },
-    {
-      "id": "b-48b3d16a5ae4",
-      "path": "features2-section",
-      "fields": {
-        "key": "18e6667c-dd09-450a-ba85-799d4bb93b3c",
-        "fatures": []
-      }
-    },
-    {
-      "id": "b-298be6f68717",
-      "path": "common-questions-section",
-      "fields": {
-        "key": "2a7f0380-d760-4e86-8ce8-7c4767094a79",
-        "title_section": "",
-        "questions": []
-      }
-    },
-    {
-      "id": "b-b8807b7cb033",
+      "id": "b-f571b29fe815",
       "path": "instagram-section",
       "fields": {
         "key": "6823f460-29ea-4f9c-946c-c92c6006b666",
-        "page_img": "",
-        "page_name": "",
+        "posts": [
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/d5cdbbc2-319e-46b3-b09b-08ef303b6d18_720x900.webp",
+            "video": "",
+            "like_number": "2000",
+            "video_first": false,
+            "comment_number": "500",
+            "desc": "اهلا فيك فعالم غرفة الالعاب"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/ece2cb66-72db-46ba-85f2-3965fee22fb6_720x900.webp",
+            "video": "",
+            "like_number": "1500",
+            "video_first": false,
+            "comment_number": "200",
+            "desc": "عالمنا مليان مغامرة، ضحكات اطفال و الكثير من الخيال   العابنا خشبية مصممة لدعم خيال و تنمية مهارات وقدرات الاطفال بكل امان   نوفر للطفل بيئة آمنه من أرضيات و العاب تعزز من خياله و تنمي حس الاكتشاف"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/39d41689-3b42-4e73-bdd7-6edf2385bc6f_720x900.webp",
+            "video": "",
+            "like_number": "1",
+            "video_first": false,
+            "comment_number": "1",
+            "desc": "العابنا خشبية مصممة لدعم خيال و تنمية مهارات وقدرات الاطفال بكل امان"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/324e5c49-928f-4e52-97ac-3fd6b4e4df70_720x900.webp",
+            "video": "",
+            "like_number": "234",
+            "video_first": false,
+            "comment_number": "18",
+            "desc": "أطفالنا سعداء بألعابنا الخشبية"
+          },
+          {
+            "img": "",
+            "video": "https://reels.silverback.sa/theplayroom2.mp4",
+            "like_number": "80",
+            "video_first": true,
+            "comment_number": "14",
+            "desc": "اللعبة اللي تكبر مع طفلك  يتسلق، يجرب، ويتعلم بنفسه بكل ثقة  بداية قوية لتطوّر مهاراته"
+          },
+          {
+            "img": "",
+            "video": "https://reels.silverback.sa/theplayroom3.mp4",
+            "like_number": "100",
+            "video_first": true,
+            "comment_number": "20",
+            "desc": "اليوم يكون أجمل لما اللعب يكون ممتع، آمن، ومنظّم! مع ألعاب غرفة الألعاب… طفلك يتحرك، يتعلم، ويستمتع من أول لحظة لآخر لحظة. ركن لعب يعكس روح طفلك… وينظّم يومه. ️"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/9d0cc35e-0ede-4632-90ba-578f8d93077f_720x900.webp",
+            "video": "",
+            "like_number": "200",
+            "video_first": false,
+            "comment_number": "20",
+            "desc": "بيت الألعاب يصنع لطفلك عالمه الخاص! زاوية ترتيب ممتعة تدوم سنوات وتجمع كل الإبداعات"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/283d0001-3e9a-42d2-a7ce-897dd644b5cd_900x900.webp",
+            "video": "",
+            "like_number": "100",
+            "video_first": false,
+            "comment_number": "20",
+            "desc": "مساحة واحدة… وطرق لعب ما تخلص   تسلق، توازن، استكشاف وحركة يومية تساعد طفلك يفرّغ طاقته ويصنع مغامراته الخاصة بكل أمان.  لأن الطفولة أجمل لما تكون مليانة لعب"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/4745092c-49f1-44a8-b63d-c0bec7ff1fac_720x900.webp",
+            "video": "",
+            "like_number": "40",
+            "video_first": false,
+            "comment_number": "15",
+            "desc": "بيت التسلق يعطي طفلك مساحة يتحرك، يتحدى نفسه، ويكتشف قدراته كل يوم  نشاط، قوة، وثقة تبدأ من هنا  خليه يلعب… ويتطوّر بنفس الوقت"
+          },
+          {
+            "img": "https://cdn.files.salla.network/homepage/1437537113/c5f40712-3250-4c19-bb26-502aa2f88d4e_720x900.webp",
+            "video": "",
+            "like_number": "200",
+            "video_first": false,
+            "comment_number": "22",
+            "desc": "اللعبة الصح تصنع الفرق  اختاريها صح… وخليه يبدع"
+          }
+        ],
+        "page_img": "https://cdn.files.salla.network/homepage/1437537113/4b987426-0e2b-4678-9eeb-1a25dd5a0934.webp",
         "page_link": "@theplayroom.sa",
-        "number_posts": "379",
-        "number_followers": "22.1K",
-        "number_following": "12",
-        "follow_btn": "",
-        "posts": [],
-        "showing-btn": ""
+        "page_name": "The Playroom غرفة الألعاب",
+        "follow_btn": "https://www.instagram.com/theplayroom.sa",
+        "showing-btn": "https://www.instagram.com/theplayroom.sa",
+        "number_posts": "398",
+        "number_followers": "24.4K",
+        "number_following": "1"
+      }
+    },
+    {
+      "id": "b-cdcca142b71f",
+      "path": "features2-section",
+      "fields": {
+        "key": "18e6667c-dd09-450a-ba85-799d4bb93b3c",
+        "fatures": [
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/4da7eb62-7e51-4746-b869-fa03f118453a_778x900.webp",
+            "desc": "دهانات غير سامة، حواف ناعمة، واختبارات سلامة صارمة. كل لعبة تلبي معايير السلامة الدولية.",
+            "title": "الأمان أولاً"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/a011d3e0-1839-4819-bfec-630b2a57cae6_899x900.webp",
+            "desc": "مواد صديقة للبيئة تم الحصول عليها بمسؤولية. صُنعت لتدوم لأجيال وتنتقل عبر العائلات.",
+            "title": "خشب مستدام"
+          },
+          {
+            "image": "https://cdn.files.salla.network/homepage/1437537113/8a7eb289-3446-45ae-be50-4b1a3ff5c8dd_1440x796.webp",
+            "desc": "التوصيل في جميع أنحاء المملكة خلال 2-5 أيام. شحن مجاني للطلبات الأكثر من 200 ريال.",
+            "title": "توصيل سريع"
+          }
+        ]
+      }
+    },
+    {
+      "id": "b-d6395a777d53",
+      "path": "common-questions-section",
+      "fields": {
+        "key": "2a7f0380-d760-4e86-8ce8-7c4767094a79",
+        "questions": [
+          {
+            "desc": "لا، الدفع عند الاستلام غير متاح حاليًا. طرق الدفع المتوفرة: تحويل بنكي، Apple Pay، مدى، Visa/Mastercard.",
+            "title": "هل يمكن الدفع عند الاستلام؟ وما هي طرق الدفع؟"
+          },
+          {
+            "desc": "جدة: 2-5 أيام عمل. باقي المملكة: 3-7 أيام عمل.",
+            "title": "كم مدة التوصيل؟"
+          },
+          {
+            "desc": "نعم، نوصل إلى جميع دول الخليج خلال 6-10 أيام عمل. أسعار الشحن: 20 كيلو = 249 ر.س، 30 كيلو = 420 ر.س، كيلو إضافي = 12 ر.س.",
+            "title": "متاح توصيل لدول الخليج؟ وكم مدة التوصيل؟"
+          },
+          {
+            "desc": "نعم، نوفر خدمات الدفع المرنة عبر تابي وتمارا. يمكنك تقسيط المبالغ أثناء إتمام الطلب.",
+            "title": "هل توفر خدمة تابي وتمارا؟"
+          }
+        ],
+        "title_section": "الأسئلة الشائعة"
       }
     },
     {
