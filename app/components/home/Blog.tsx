@@ -12,6 +12,7 @@ import {
   blogArticleId,
   type BlogArticleData,
 } from '../../lib/blogArticle';
+import { resolveLink } from '../../lib/resolveLink';
 
 export interface BlogProps {
   data: {
@@ -43,21 +44,20 @@ function ArticleCard({ article }: { article: BlogArticleData }) {
     typeof createdAt === 'string' && Number.isNaN(Date.parse(createdAt))
       ? createdAt
       : createdAt && format(createdAt);
-  const url = article.url || '#';
+  const url = resolveLink(article.url);
+  const image = article.image && (
+    <Image src={article.image} alt="" className="w-full h-full object-cover" width={640} height={290} />
+  );
 
   return (
     <article className="s-blog-card">
-      <Link to={url} className="s-blog-card__image" {...IMAGE_LINK_PROPS}>
-        {article.image && (
-          <Image
-            src={article.image}
-            alt=""
-            className="w-full h-full object-cover"
-            width={640}
-            height={290}
-          />
-        )}
-      </Link>
+      {url ? (
+        <Link to={url} className="s-blog-card__image" {...IMAGE_LINK_PROPS}>
+          {image}
+        </Link>
+      ) : (
+        image && <div className="s-blog-card__image">{image}</div>
+      )}
       {(date || author) && (
         <div className="s-blog-card__meta">
           {date && (
@@ -74,9 +74,7 @@ function ArticleCard({ article }: { article: BlogArticleData }) {
           )}
         </div>
       )}
-      <h3 className="s-blog-card__title">
-        <Link to={url}>{article.name}</Link>
-      </h3>
+      <h3 className="s-blog-card__title">{url ? <Link to={url}>{article.name}</Link> : article.name}</h3>
       {excerpt && <p className="s-blog-card__excerpt">{excerpt}</p>}
     </article>
   );

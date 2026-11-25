@@ -195,4 +195,32 @@ describe('ProductsSlider', () => {
     await waitFor(() => expect(getAllByTestId('product-card').length).toBe(3));
     expect(queryByLabelText('Next')).toBeNull();
   });
+
+  it('drops excludeId from the list without shrinking below the configured limit', async () => {
+    listMock.mockResolvedValue({
+      items: Array.from({ length: 4 }, (_, index) => ({ id: index + 1, name: `P${index + 1}` })),
+    });
+    const { getAllByTestId } = renderWithClient(
+      <ProductsSlider
+        data={{ products: { source: 'tags', source_value: 1 }, limit: 3 }}
+        excludeId={2}
+      />
+    );
+    await waitFor(() => expect(getAllByTestId('product-card')).toHaveLength(3));
+    expect(getAllByTestId('product-card').map((c) => c.textContent)).not.toContain('P2');
+  });
+
+  it('reports an empty result once excludeId removes everything', async () => {
+    listMock.mockResolvedValue({ items: [{ id: 1, name: 'P1' }] });
+    const onResolve = vi.fn();
+    const { container } = renderWithClient(
+      <ProductsSlider
+        data={{ products: { source: 'tags', source_value: 1 } }}
+        excludeId={1}
+        onResolve={onResolve}
+      />
+    );
+    await waitFor(() => expect(container.firstChild).toBeNull());
+    expect(onResolve).toHaveBeenCalledWith(0);
+  });
 });

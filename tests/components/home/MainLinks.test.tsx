@@ -116,4 +116,23 @@ describe('MainLinks', () => {
     const { container } = render(<MainLinks data={{ links: [] }} />);
     expect(container.firstChild).toBeNull();
   });
+
+  it("reads the manifest's merge_with_top_component field, not a renamed one", async () => {
+    // Regression: this was destructured as `merge_links_with_top_component`, a
+    // field id that doesn't exist in twilight.json (the real one is
+    // `merge_with_top_component`), so the dashboard toggle silently did
+    // nothing. Its only effect (passing a `blockTitle` prop to SallaSlider even
+    // with no title) never reaches the DOM — React drops an `undefined`
+    // attribute — so this spies on the mocked SallaSlider's props directly.
+    vi.resetModules();
+    const sliderSpy = vi.fn().mockReturnValue(null);
+    vi.doMock('@salla.sa/twilight-components-react/slider', () => ({ SallaSlider: sliderSpy }));
+    const { MainLinks: FreshMainLinks } = await import('../../../app/components/home/MainLinks');
+
+    render(<FreshMainLinks data={{ links: mockLinks, merge_with_top_component: true }} />);
+    expect(sliderSpy.mock.calls[0][0]).toHaveProperty('blockTitle');
+
+    vi.doUnmock('@salla.sa/twilight-components-react/slider');
+    vi.resetModules();
+  });
 });

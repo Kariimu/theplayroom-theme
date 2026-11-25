@@ -60,6 +60,9 @@ vi.mock('@salla.sa/twilight-theme-engine/cart', () => ({
   CartSummary: () => null,
   SeoCartWidget: () => null,
 }));
+vi.mock('../../../app/components/cart/CartUpsellSlider', () => ({
+  CartUpsellSlider: () => null,
+}));
 vi.mock('@salla.sa/twilight-theme-engine/providers', () => ({
   useTwilight: () => ({ store: { settings: {} } }),
 }));

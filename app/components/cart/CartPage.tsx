@@ -12,11 +12,8 @@ import { loyalty } from '@salla.sa/twilight-theme-engine/api/loyalty';
 import { cart } from '@salla.sa/twilight-theme-engine/api/cart';
 import type { CartPageProps } from '@salla.sa/twilight-theme-engine/routes/cart';
 import { CartItem } from './CartItem';
-
-/** Whether a failed request was answered 404 (the engine's API client throws ky's `HTTPError`). */
-function isNotFound(error: unknown): boolean {
-  return (error as { response?: { status?: number } } | null)?.response?.status === 404;
-}
+import { CartUpsellSlider } from './CartUpsellSlider';
+import { isNotFound } from '../../lib/http';
 
 /**
  * Theme fork of the engine `CartPage`.
@@ -25,7 +22,9 @@ function isNotFound(error: unknown): boolean {
  * (Products (N) · Quantity · Total) so the flat {@link CartItem} rows read as a
  * table, and an error state with a retry when the cart can't be loaded
  * (upstream keeps its skeleton up for good). A cart the API no longer knows
- * (404) is dropped from the SDK and shown empty. Upgrade notes: `FORKS.md`.
+ * (404) is dropped from the SDK and shown empty. {@link CartUpsellSlider} (06
+ * §8, replaces `products_in_cart`) renders on both the empty and non-empty
+ * states, as in Twig. Upgrade notes: `FORKS.md`.
  */
 function CartPageContent({ page }: CartPageProps) {
   const { store } = useTwilight();
@@ -117,17 +116,20 @@ function CartPageContent({ page }: CartPageProps) {
           actionLabel={t('common.elements.back_home', 'Back to Home')}
           actionUrl="/"
         />
+        {/* Shows on an empty cart too, as in Twig (outside its own item-count check). */}
+        <CartUpsellSlider excludeIds={[]} />
       </div>
     );
   }
 
   return (
-    <div className="container">
+    <div className="container cart-page">
       {/* Analytics — no visible UI, fires GTM checkout events */}
       <SeoCartWidget cart={cartData} />
 
       <Breadcrumb page={page} />
-      <h1 className="sr-only">{t('common.titles.cart', 'Cart')}</h1>
+      {/* h2: MobilePageTitleBar already renders this page's one real <h1> (SEO audit #2) */}
+      <h2 className="sr-only">{t('common.titles.cart', 'Cart')}</h2>
       <SallaConditionalOffer />
 
       <HookSlot name="cart:start" />
@@ -136,7 +138,7 @@ function CartPageContent({ page }: CartPageProps) {
         <div className="main-content w-full lg:w-[calc(100%-384px)]">
           <HookSlot name="cart:items.start" context={{ cartItems: cartData.items }} />
 
-          <div className="cart-titles hidden md:flex rtl:space-x-reverse md:space-x-12 items-center border-b border-gray-200 pb-4 text-sm font-bold text-gray-900 mb-5">
+          <div className="cart-titles hidden md:flex rtl:space-x-reverse md:space-x-12 items-center border-b border-gray-200 pb-4 font-bold text-gray-900 mb-5">
             <span className="flex-1">
               {t('blocks.cart.products', 'Products')} ({cartData.items.length})
             </span>
@@ -193,6 +195,8 @@ function CartPageContent({ page }: CartPageProps) {
       </div>
 
       <HookSlot name="cart:end" />
+
+      <CartUpsellSlider excludeIds={cartData.items.map((item) => Number(item.product_id))} />
     </div>
   );
 }

@@ -34,12 +34,16 @@ body.modal-is-open {
    scrollbar gutter). `clip` doesn't create a scroll container, so it won't
    affect the fixed header or vertical dropdowns.
 
-   `bg-white`: an ordinary browser tab's default canvas is white regardless, so
+   Background: an ordinary browser tab's default canvas is white regardless, so
    this never had to be explicit -- but the Themes Editor renders the storefront
    inside an iframe whose own background shows through anywhere the page itself
    doesn't paint one, which read as a grey/transparent flash behind every
-   section before its own background loaded. */
+   section before its own background loaded. The Playroom's cream `--body-bg`
+   (`01-settings/global.scss`), not plain white -- this wrapper sits on top of
+   `<body>` and otherwise hides its background everywhere a section doesn't
+   paint its own (`reset.scss` set `--body-bg` on `body` for nothing until this
+   changed). */
 .app-inner {
-  @apply bg-white;
+  background-color: var(--body-bg, #fcf9f5);
   overflow-x: clip;
 }

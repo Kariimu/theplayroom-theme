@@ -1,0 +1,214 @@
+/*
+  Modern banner hotspots (`modern-banner-section`, ModernBannerSection.tsx)
+
+  Ported from the Twig theme's `.hotspot-dot` styles (05-utilities/styles.scss):
+  a 32px pin with a pulsing ring; hovering (or focusing) it fades in a product
+  card that links to the product page. Left/right are physical on purpose: the
+  merchant's `pos_x` is "from the left" in both languages.
+
+  The `--flip-*` classes are set by the component when the card would be cut
+  off by the banner's rounded, overflow-hidden frame.
+*/
+.hotspot-dot {
+  position: absolute;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+  cursor: pointer;
+
+  /* pulsing ring */
+  &__ring {
+    position: absolute;
+    inset: -8px;
+    border: 2px solid color-mix(in oklab, var(--color-primary) 30%, transparent);
+    border-radius: 50%;
+    pointer-events: none;
+    animation: hotspot-pulse 2s ease-out infinite;
+  }
+
+  /* pin */
+  &__btn {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: var(--color-primary);
+    color: #fff;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+    transition:
+      transform 0.2s ease,
+      box-shadow 0.2s ease;
+  }
+
+  &:hover &__btn,
+  &:focus-within &__btn {
+    transform: scale(1.18);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
+  }
+}
+
+/* product card */
+.hotspot-popup {
+  position: absolute;
+  bottom: calc(100% + 12px);
+  left: 50%;
+  z-index: 20;
+  display: flex;
+  flex-direction: column;
+  min-width: 220px;
+  padding: 12px;
+  border-radius: 12px;
+  background: #fff;
+  color: inherit;
+  text-decoration: none;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.18);
+  opacity: 0;
+  pointer-events: none;
+  transform: translateX(-50%) translateY(8px);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+
+  &:hover {
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.22);
+  }
+
+  /* Invisible bridge so the card stays open while the mouse moves onto it. */
+  &::after {
+    content: '';
+    position: absolute;
+    inset: -24px;
+    z-index: -1;
+  }
+
+  &__inner {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  &__img {
+    flex-shrink: 0;
+    width: 56px;
+    height: 56px;
+    border-radius: 8px;
+    background: #f5f5f5;
+    object-fit: contain;
+  }
+
+  &__body {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 2px;
+    min-width: 0;
+  }
+
+  &__name {
+    overflow: hidden;
+    color: #1a1a1a;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  &__prices {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 6px;
+  }
+
+  &__price {
+    color: var(--color-primary);
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  &__old-price {
+    color: #aaa;
+    font-size: 11px;
+    font-weight: 400;
+    text-decoration: line-through;
+  }
+
+  &__link-icon {
+    flex-shrink: 0;
+    color: var(--color-primary);
+  }
+
+  &__footer {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px solid #f0f0f0;
+    color: #888;
+    font-size: 11px;
+  }
+}
+
+.hotspot-dot:hover .hotspot-popup,
+.hotspot-dot:focus-within .hotspot-popup {
+  opacity: 1;
+  pointer-events: auto;
+  transform: translateX(-50%) translateY(0);
+}
+
+/* Near the banner's left edge: the card grows rightwards from the pin. */
+.hotspot-dot--flip-left .hotspot-popup {
+  right: auto;
+  left: -16px;
+  transform: translateX(0) translateY(8px);
+}
+
+.hotspot-dot--flip-left:hover .hotspot-popup,
+.hotspot-dot--flip-left:focus-within .hotspot-popup {
+  transform: translateX(0) translateY(0);
+}
+
+/* Near the banner's right edge: the card grows leftwards from the pin. */
+.hotspot-dot--flip-right .hotspot-popup {
+  right: -16px;
+  left: auto;
+  transform: translateX(0) translateY(8px);
+}
+
+.hotspot-dot--flip-right:hover .hotspot-popup,
+.hotspot-dot--flip-right:focus-within .hotspot-popup {
+  transform: translateX(0) translateY(0);
+}
+
+/* Near the banner's top: the card opens below the pin. */
+.hotspot-dot--flip-bottom .hotspot-popup {
+  top: calc(100% + 12px);
+  bottom: auto;
+}
+
+@keyframes hotspot-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+
+  70%,
+  100% {
+    transform: scale(1.9);
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hotspot-dot__ring {
+    animation: none;
+  }
+
+  .hotspot-dot__btn,
+  .hotspot-popup {
+    transition: none;
+  }
+}

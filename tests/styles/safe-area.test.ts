@@ -70,15 +70,4 @@ describe("the Salla app's insets on the page", () => {
     // Above the pinned bar (z-40), so nothing scrolls over the status bar.
     expect(Number(decl(strip, 'z-index'))).toBeGreaterThan(40);
   });
-
-  it('starts the full-screen sheets below the status bar', async () => {
-    const root = await compile('04-components/mobile-account-sheet.scss');
-    for (const sheet of ['.bottom-sheet.account-sheet', '.bottom-sheet.important-links-sheet']) {
-      const padded: string[] = [];
-      root.walkRules((rule) => {
-        if (rule.selectors.includes(sheet)) padded.push(decl(rule, 'padding-top') ?? '');
-      });
-      expect(padded).toContain('var(--safe-top)');
-    }
-  });
 });

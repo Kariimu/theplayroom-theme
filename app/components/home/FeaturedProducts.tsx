@@ -4,6 +4,7 @@ import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { product, type ProductsListSource } from '@salla.sa/twilight-theme-engine/api/product';
 import { ProductCard } from '../product';
 import { useProductCardLayout } from '../../hooks/useProductCardLayout';
+import { scalar, toIds, type PickerValue } from '../../lib/pickerValue';
 import {
   SallaProductsList,
   ProductsListSkeleton,
@@ -62,9 +63,6 @@ export type FeaturedProductsShowMethod =
   | 'special_offer_with_products'
   | 'products_with_special_product';
 
-/** A dropdown-list value as the backend may send it: scalar, `{value|key|id}`, or an array of those. */
-type PickerValue = string | number | { id?: unknown; value?: unknown; key?: unknown } | null | undefined;
-
 export interface FeaturedProductsSection {
   name?: string;
   /** Legacy (pre-custom-component) payload: tab name and pre-hydrated stubs. */
@@ -122,24 +120,6 @@ async function loadTab({ source, sourceValue, random }: TabSource, perPage: numb
   // No next page: a second one would be the next-newest products, not more random ones.
   return { ...pool, items: shuffled(pool.items).slice(0, perPage), next: null };
 }
-
-const scalar = (v: unknown): string => {
-  if (Array.isArray(v)) return scalar(v[0]);
-  if (v && typeof v === 'object') {
-    const o = v as { value?: unknown; key?: unknown; id?: unknown };
-    return scalar(o.value ?? o.key ?? o.id);
-  }
-  return v === null || v === undefined ? '' : String(v);
-};
-
-const toIds = (v: unknown): number[] => {
-  if (v && typeof v === 'object' && !Array.isArray(v) && 'source_value' in v) {
-    return toIds((v as { source_value?: unknown }).source_value);
-  }
-  return (Array.isArray(v) ? v : v === null || v === undefined || v === '' ? [] : [v])
-    .map((x) => Number(scalar(x)))
-    .filter((id) => Number.isFinite(id) && id > 0);
-};
 
 /** Maps one merchant-configured tab to the `product.list` source it should load. */
 function resolveTab(

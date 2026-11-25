@@ -28,24 +28,6 @@ Do not write an engine API from memory. Look it up first:
 | Keep it fast, or lint it                               | `/guide/performance`, `/guide/lint-your-theme`                                       |
 | Use a `<salla-*>` web component                        | `/web-components` (index), then `/web-components/<tag>` for its props, events, slots |
 
-## Layout
-
-```text
-app/start.ts          request middleware. Rarely edited.
-app/router.tsx        createRouter(), registerHomeComponents(), registerThemeHooks()
-app/routes.ts         EDIT: manifest of custom or overriding routes
-app/routes/__root.tsx EDIT: the only hand-maintained route file
-app/routes/*          your route files (declared in routes.ts); the rest are generated
-app/routeTree.gen.ts  GENERATED. Never edit.
-app/components/       EDIT: your components and overrides
-app/hooks/            EDIT: React hooks (useX.ts) + hook-slot registrations (index.tsx)
-app/lib/              EDIT: non-React helpers and constants
-app/styles/           Tailwind + SCSS
-FORKS.md              EDIT: engine components copied into this theme; update on engine upgrades
-locales/{ar,en}.json  EDIT: theme translations
-twilight.json         EDIT: merchant settings, home blocks, features
-```
-
 ## Rules that prevent the usual mistakes
 
 **Routes**
@@ -58,7 +40,7 @@ twilight.json         EDIT: merchant settings, home blocks, features
 
 **Components and registry**
 
-- Only these registry keys are resolved: `product:card`, `product:list-page`, the `home:*` blocks, `account:layout-pending`. Overriding any other name does nothing. For anything else use a hook slot or fork the route.
+- Only these registry keys are resolved: `product:card`, `product:list-page`, the `home:*` blocks, `account:layout-pending`. Overriding any other name does nothing. For anything else use a hook slot (registered in `app/hooks/index.tsx`) or fork the route.
 - To replace the product card call `registry.register('product:card', X)` and then `registry.override('product:card', X)`. `override()` alone is silently ignored.
 - Home blocks are bound by key in `registerHomeComponents({ ...DefaultHomeComponents, key: MyComponent })`. Keep the spread, or you lose the defaults.
 - A block with a `view_style` is looked up as `key:styleN` before `key`. Register both when you replace it.
@@ -101,3 +83,17 @@ pnpm check:manifest   # after editing twilight.json: duplicate ids, missing opti
 ```
 
 Do not start `pnpm dev` yourself; ask the user to run it. Typecheck needs `app/routeTree.gen.ts`, which `pnpm build` or `pnpm dev` generates.
+
+## This project: The Playroom (store-specific rules)
+
+This repo is the React rebuild of the Salla theme for theplayroom.sa (wooden toys, Arabic-first, English supported). It started as the unmodified React Raed starter. The old Twig theme is the live site and the behaviour spec.
+
+- Read `docs/MIGRATION-PLAN.md` before any migration task and follow its phases. Section 5A is binding: no root-level `collection` settings and no product pickers in `twilight.json`; product and category content lives on the product/category (specs, tags, description, category fields), not in theme settings.
+- `docs/legacy/` describes the old theme (settings inventory, custom features, known issues, `old-twilight.json`). Port behaviour, not code. Do not port anything listed in `docs/legacy/09-known-issues.md`.
+- The old theme folder (`../Theplayroom-theme`) is read-only reference. Never edit it.
+- Keep home-block `key` (UUID) and `path` values identical to `docs/legacy/old-twilight.json` for blocks that exist in both themes.
+- Git: work on the `migration` branch (the repo's default branch since 24 Nov 2026, so Salla reads `twilight.json` from it). Never commit to or push `master`, never publish, and never change anything in the Salla Partners Portal; the owner does releases. Salla builds whatever is pushed, and only `master` can be submitted for publication.
+- Every user-visible string goes in both `locales/ar.json` and `locales/en.json`. Check every UI change at `/ar` and `/en`, on mobile and desktop.
+- When you fork an engine component, add the row to `FORKS.md` in the same commit.
+- Partners theme: `Theplayroom_react`, Theme ID `786991395` (imported 24 Nov 2026 as a new theme). The earlier record `Theplayroom_theme`, Theme ID `1869420365`, keeps the old name. Live store for reference only: https://theplayroom.sa/ar
+- `TASK.md` is the ordered checklist of everything left (build stages, SEO, GEO, performance, security audit, PR review, staging, go-live). Work one stage per session and tick it there.

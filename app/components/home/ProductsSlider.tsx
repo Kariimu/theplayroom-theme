@@ -25,6 +25,8 @@ export interface ProductsSliderProps {
    * count is 0 instead of leaving an empty node in the DOM.
    */
   onResolve?: (count: number) => void;
+  /** Drop this id from the list — e.g. a tag-based list includes the current product itself. */
+  excludeId?: number;
 }
 
 function ProductsHeading({ title, displayAllUrl }: { title?: string; displayAllUrl: string }) {
@@ -52,7 +54,7 @@ function ProductsHeading({ title, displayAllUrl }: { title?: string; displayAllU
  * `product_card_layout` applies to grids and lists, not sliders.
  * Styling: `04-components/home-blocks.scss`.
  */
-export function ProductsSlider({ data, onResolve }: ProductsSliderProps) {
+export function ProductsSlider({ data, onResolve, excludeId }: ProductsSliderProps) {
   const { t } = useTranslation();
   const source = data.products?.source;
   const sourceValue = data.products?.source_value ?? undefined;
@@ -71,8 +73,12 @@ export function ProductsSlider({ data, onResolve }: ProductsSliderProps) {
     ...product.queries.list({ source: source as ProductsListSource, sourceValue, perPage: limit }),
     enabled: !!source,
   });
-  // Some sources return a full page whatever `perPage` asks for.
-  const items = result?.items?.slice(0, limit);
+  // Some sources return a full page whatever `perPage` asks for. Exclude first,
+  // then slice, so dropping the current product (a tag-based list includes it)
+  // doesn't shrink the count below what the merchant configured.
+  const items = (
+    excludeId != null ? result?.items?.filter((item) => Number(item.id) !== excludeId) : result?.items
+  )?.slice(0, limit);
 
   // Keep `onResolve` out of this effect's deps — an inline callback would
   // otherwise re-fire on every parent render.

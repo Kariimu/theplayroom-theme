@@ -44,11 +44,11 @@
    so when the bar switches to `fixed` (and leaves the flow) the content below
    it stays put instead of jumping up by a bar-height. */
 .site-header__bar-outer {
-  @apply min-h-[72px] lg:min-h-[88px];
+  @apply min-h-[88px];
 }
 
 .site-header__bar {
-  @apply z-40 border-b border-transparent;
+  @apply z-40 border-b border-transparent bg-transparent;
   transition:
     background-color 0.25s ease,
     border-color 0.25s ease,
@@ -64,8 +64,17 @@
 /* Columns follow the document direction:
    LTR → actions | logo | menu   ·   RTL → menu | logo | actions */
 .site-header__bar-inner {
-  @apply grid grid-cols-[1fr_auto_1fr] items-center gap-4 min-h-[72px] lg:min-h-[88px];
+  /* 88px tall at every size and no gaps, as the old theme's header row; 16px
+     at the sides (not the container's 2rem). The two side columns are equal
+     and may shrink below their content (`minmax(0, 1fr)`), so the logo sits
+     exactly in the middle of the header whatever is on either side. */
+  @apply grid grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-0 min-h-[88px] px-4;
   transition: min-height 0.25s ease;
+}
+
+/* Beats the `.container` utility's own 2rem padding on the same element. */
+.site-header__bar .site-header__bar-inner {
+  padding-inline: 1rem;
 }
 
 .site-header__bar.is-scrolled .site-header__bar-inner {
@@ -73,71 +82,113 @@
 }
 
 .site-header__nav-toggle {
-  @apply flex items-center gap-1.5 lg:gap-4 justify-self-start;
+  @apply flex items-center justify-self-start;
 }
 
 .site-header__actions {
-  @apply flex items-center sm:gap-1.5 lg:gap-4 justify-self-end;
+  @apply flex items-center justify-self-end;
 }
 
-/* Phones: the bottom nav (`mobile-bottom-bar.scss`) carries navigation, so the
-   header is pared right back on the home page — logo + menu + search only, no
-   cart / user menu — and hidden on every other page. Keyed on
-   `.site-header--home` (`Header.tsx`, route match — present in the SSR HTML),
-   not `body.index`, which the engine only adds after hydration.
+/* =========================================================================
+   Header icons and spacing — as the old theme (measured on the live site).
+   Each control carries its own padding and the rows have no gaps:
+     menu 40 (24px icon, p-2) · language 53 (16px icon + "EN", px-2)
+     search 36 / md 40 (20 / 24px icon, p-2) · account 36 / md 40 (the
+     same) · cart 56 (40px box, 20px glyph, p-2)
+   which leaves ~18px between the visible icons. Icons are #2d3e50 (the old
+   theme's foreground), the cart glyph gray-700.
+   ========================================================================= */
+.site-header__bar .header-action {
+  @apply h-auto w-auto p-2 text-[#2d3e50] hover:bg-white/50 hover:text-primary;
+}
 
-   "Hidden" collapses the bar rather than `display: none`-ing the whole
-   `.site-header`: the `<salla-user-menu>` lives in there, and the bottom nav's
-   Account tab opens its (position: fixed) bottom sheet by clicking its trigger.
-   The opened dropdown re-asserts `visibility` and sits fixed, so it escapes. */
+.site-header__bar .header-action svg.site-header__menu-icon {
+  @apply h-6 w-6 md:h-7 md:w-7;
+}
+
+.site-header__bar .header-action.site-header__menu-btn {
+  @apply text-[#222] hover:text-primary;
+}
+
+.site-header__bar .header-action svg.site-header__search-icon {
+  @apply h-5 w-5 md:h-6 md:w-6;
+}
+
+/* Account: our line user icon (Lucide `user`, 1px stroke, like the menu and
+   search icons) at the search icon's size, in place of Salla's avatar photo
+   (signed in) or user-circle (guest). `<salla-user-menu>` renders those
+   itself, so they are hidden and the icon is drawn with a CSS mask. */
+$header-user-icon: "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='1' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2'/%3E%3Ccircle cx='12' cy='7' r='4'/%3E%3C/svg%3E";
+
+.site-header__actions salla-user-menu.header-action {
+  @apply h-auto w-auto p-0;
+}
+
+.site-header__actions salla-user-menu {
+  .s-user-menu-trigger {
+    @apply p-0;
+  }
+
+  .s-user-menu-avatar-wrap,
+  .s-user-menu-login-btn {
+    @apply grid h-9 w-9 place-items-center rounded-full border-0 bg-transparent p-0 text-[#2d3e50] transition-colors hover:bg-white/50 hover:text-primary md:h-10 md:w-10;
+
+    &::before {
+      content: '';
+      @apply block h-5 w-5 md:h-6 md:w-6;
+      background-color: currentColor;
+      -webkit-mask: url($header-user-icon) center / contain no-repeat;
+      mask: url($header-user-icon) center / contain no-repeat;
+    }
+  }
+
+  .s-user-menu-trigger-avatar,
+  .s-user-menu-login-btn > svg {
+    display: none;
+  }
+}
+
+/* Cart: Salla's `sicon-cart` glyph, 20px in a 40px box, padded 8px. */
+.site-header__bar .site-header__cart-trigger {
+  @apply relative;
+
+  .s-cart-summary-wrapper {
+    @apply relative flex h-10 w-10 items-center justify-center;
+  }
+
+  .header-btn__icon {
+    @apply flex h-10 w-10 items-center justify-center text-xl text-gray-700;
+  }
+
+  /* The count's circle touches the edge of the cart: the basket's top-right
+     corner, measured from Salla's `sicon-cart` glyph at about (29px, 14px) of
+     the 40px box. A 20px circle centred ~7px up and right of that point (on
+     the diagonal) just meets it: right -6px, top -3px. Always on the right,
+     Arabic and English alike: the glyph is not mirrored, and on its left is
+     the handle, not the basket. Overrides the plugin's start-side anchor
+     (`left` in LTR, `right` in RTL). */
+  .s-cart-summary-count {
+    top: -3px;
+    right: -6px;
+    left: auto;
+  }
+}
+
+/* Phones: the logo at the old theme's 48px height. Below 380px the cart
+   padding tightens so the row still fits. */
 @media (max-width: 767px) {
-  /* `.site-header--product` (`Header.tsx`) covers the same case from route
-     match state instead of the `body` route class — during a pending
-     navigation *into* the product page the body class can still read the
-     previous route for a moment, leaving this collapse un-applied until it
-     catches up. */
-  .site-header:not(.site-header--home),
-  .site-header--product {
-    .site-header__ad,
-    .site-header__intro {
-      display: none;
-    }
+  .site-header__brand img {
+    @apply h-12 max-w-[110px];
+  }
+}
 
-    .site-header__bar-outer {
-      min-height: 0;
-    }
-
-    .site-header__bar {
-      height: 0;
-      overflow: hidden;
-      visibility: hidden;
-    }
+@media (max-width: 379px) {
+  .site-header__bar .site-header__cart-trigger {
+    @apply p-1;
   }
 
-  /* The bottom nav's Categories tab already opens this same drawer
-     (MobileBottomBar.tsx → HeaderNav), so the header's own trigger is a
-     redundant second way to do it. Only the home page actually shows the bar
-     on mobile to begin with (every other route collapses it above); plain
-     `display: none` is fine here, unlike the dropdown below -- nothing about
-     this trigger needs to stay reachable off-screen. */
-  .site-header__nav-toggle button{
-    display: none;
-  }
-
-  /* Home: the bottom nav owns cart + account. Drop the cart icon; keep the
-     user-menu mounted (its bottom sheet still opens from the Account tab) but
-     take it out of the visible bar. No `opacity`/`display:none` — either would
-     also kill the position:fixed dropdown. */
-  .site-header--home .site-header__actions salla-cart-summary {
-    display: none;
-  }
-
-  .site-header--home .site-header__actions salla-user-menu {
-    position: absolute;
-    width: 0;
-    height: 0;
-    overflow: hidden;
-    visibility: hidden;
+  .site-header__brand img {
+    @apply max-w-[88px];
   }
 }
 
@@ -151,60 +202,28 @@
   }
 }
 
-/* Phones: the bottom bar (`mobile-bottom-bar.scss`, same breakpoint) has its
-   own search tab, so the header's search button goes. */
-@media (max-width: 767px) {
-  .header-action.site-header__search {
-    display: none;
-  }
-}
-
-/* CSS burger — top bar hugs the inline-end at 3/4 width, bottom bar hugs the
-   inline-start at 3/4, middle bar full width. On hover or keyboard focus the
-   short bars grow inward to full width (staggered cascade). Colour follows
-   `currentColor`, so it picks up `.header-action:hover`. */
-.site-header__burger {
-  @apply relative block h-5 w-5;
-
-  span {
-    @apply absolute h-0.5 rounded-full;
-    /* `bg-opacity-*` needs a channel color; `currentColor` has no alpha slot,
-       so mix the transparency in (still follows `.header-action:hover`). */
-    background-color: color-mix(in srgb, currentColor 80%, transparent);
-    transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  span:nth-child(1) {
-    top: 0;
-    inset-inline-end: 0;
-    width: 70%;
-    transition-delay: 0.06s;
-  }
-
-  span:nth-child(2) {
-    top: 7px;
-    inset-inline: 0;
-    width: 100%;
-    transition-delay: 0.03s;
-  }
-
-  span:nth-child(3) {
-    top: 14px;
-    inset-inline-start: 0;
-    width: 70%;
-    transition-delay: 0s;
-  }
-}
-
-.header-action:hover .site-header__burger span,
-.header-action:focus-visible .site-header__burger span {
-  width: 100%;
-}
-
-/* The user-menu web component wraps its avatar in a padded trigger button;
-   drop the padding so it lines up with the other 40px action icons. */
+/* The user-menu trigger: no background or border of its own (its padding is
+   set with the header icons above). */
 .site-header__actions .s-user-menu-trigger {
-  @apply p-0 bg-transparent border-none;
+  @apply bg-transparent border-none;
+}
+
+/* Language switcher — as the old theme: the languages icon and the other
+   language, "EN" on phones, "English" from `md` up. */
+.site-header__language-switcher {
+  @apply inline-flex h-8 shrink-0 items-center justify-center gap-1 whitespace-nowrap rounded-full px-2 text-[#231f1e] transition-colors hover:bg-white/20 md:gap-2 md:px-3;
+
+  svg {
+    @apply h-4 w-4 shrink-0;
+  }
+}
+
+.site-header__language-code {
+  @apply text-[18px] font-bold md:hidden;
+}
+
+.site-header__language-name {
+  @apply hidden text-[18px] font-medium md:inline;
 }
 
 /* The user menu's hydration wrapper div, as a row: a button an app adds beside the menu stays on the line. */
@@ -245,8 +264,7 @@
    The sheet stays mounted and just parks off-screen when closed — with
    `pointer-events: none` on the layer it's fully inert, so no `visibility`
    juggling is needed. `visibility: visible` is set explicitly because the
-   `salla-user-menu` host is `visibility: hidden` on the home page (it's pulled
-   out of the visible bar there — see above). */
+   host may be clipped by the bar while the sheet opens. */
 @media (max-width: 767px) {
   .site-header__actions .s-user-menu-toggler {
     @apply fixed inset-0 z-[210];
@@ -271,8 +289,7 @@
 
   .site-header__actions .s-user-menu-dropdown {
     @apply absolute inset-x-0 bottom-0 max-h-[85vh] overflow-y-auto overscroll-contain rounded-t bg-white shadow-2xl;
-    /* clear the mobile bottom bar, which sits on top (z-220) */
-    padding-bottom: calc(76px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
     transform: translateY(100%);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
@@ -304,7 +321,6 @@
   .site-header__bar,
   .site-header__bar-inner,
   .site-header__brand img,
-  .site-header__burger span,
   .site-nav-drawer,
   .site-nav-drawer__foot,
   .site-nav-drawer__back {
@@ -487,9 +503,7 @@
     border-start-start-radius: 1rem;
     border-start-end-radius: 1rem;
     transform: translateY(100%);
-    /* the mobile bottom bar overlays the sheet (z-220); pad so the footer bar
-       and the last links clear it */
-    padding-bottom: calc(76px + var(--safe-bottom));
+    padding-bottom: var(--safe-bottom);
 
     /* grab handle */
     &::before {
@@ -673,17 +687,14 @@
   @apply h-4 w-px shrink-0 bg-gray-200;
 }
 
-/* Cart summary bubble */
+/* Cart summary bubble — as the old theme: a 20px orange count (the plugin's
+   own size); the header places it on the cart glyph above. */
 .s-cart-summary-total {
   @apply hidden;
 }
 
 .s-cart-summary-count {
-  /* Smaller than the plugin default (h-5 w-5, p-1) so it clears the bag icon;
-     `top/right: auto` cancel the plugin's corner anchor so the values below win. */
-  @apply h-4 w-4 p-0 text-[10px] leading-none -bottom-1.5 left-1/2 -translate-x-1/2 bg-red-700;
-  top: auto !important;
-  right: auto;
+  @apply bg-[#f47e4d] text-white;
 }
 
 /* =========================================================================
@@ -916,8 +927,10 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
       @apply relative my-0 items-center;
     }
 
-    .s-menu-root-level > a {
-      @apply inline-flex items-center gap-1 whitespace-nowrap rounded px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary;
+    /* `:is(a, button)`: every root item is a link except "More" (HeaderMainMenu.tsx),
+       a `<button>` since it opens a panel rather than navigating. */
+    .s-menu-root-level > :is(a, button) {
+      @apply inline-flex items-center gap-1 whitespace-nowrap rounded border-0 bg-transparent px-3 py-2 text-sm font-medium text-gray-700 transition-colors hover:text-primary;
     }
 
     /* rows inside a panel — stacked */
@@ -1075,7 +1088,7 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
          no-wrap row squeezes them instead (their text breaks onto 2-3 lines),
          so they measure as fitting and nothing ever moves into "More". */
       .s-menu-root-level,
-      .s-menu-root-level > a {
+      .s-menu-root-level > :is(a, button) {
         flex-shrink: 0;
         white-space: nowrap;
       }
@@ -1099,7 +1112,7 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
     }
 
     /* caret — sallaicons chevron, flips on an open top-level item */
-    .s-menu-has-children > a::after {
+    .s-menu-has-children > :is(a, button)::after {
       font-family: 'sallaicons';
       content: '\e970';
       @apply ms-1 inline-block text-base leading-none opacity-50 transition-transform;
@@ -1107,15 +1120,15 @@ body.topnav-is-dark .site-header--lite .site-header__bar {
 
     /* `\e970` points left, the way a nested panel flies out in Arabic; in LTR
        it flies out to the right, so the caret does too. */
-    .s-menu-non-root-level.s-menu-has-children > a:where([dir='ltr'] *)::after {
+    .s-menu-non-root-level.s-menu-has-children > :is(a, button):where([dir='ltr'] *)::after {
       transform: scaleX(-1);
     }
 
-    .s-menu-root-level.s-menu-has-children > a::after {
+    .s-menu-root-level.s-menu-has-children > :is(a, button)::after {
       content: '\e96e';
     }
 
-    .s-menu-root-level.s-menu-has-children:hover > a::after {
+    .s-menu-root-level.s-menu-has-children:hover > :is(a, button)::after {
       @apply opacity-100;
       transform: scaleY(-1);
     }

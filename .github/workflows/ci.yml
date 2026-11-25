@@ -1,0 +1,40 @@
+# Runs the four checks every stage needs (TASK.md "Rules for every stage")
+# on each pull request and on pushes to migration. GitHub-only: Salla builds
+# the theme from the branch's files and does not run this.
+name: CI
+
+on:
+  pull_request:
+  push:
+    branches: [migration]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.34.9
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+
+      # Build first: it generates app/routeTree.gen.ts, which typecheck needs.
+      - run: pnpm build
+      - run: pnpm typecheck
+      - run: pnpm test
+      - run: pnpm check:manifest

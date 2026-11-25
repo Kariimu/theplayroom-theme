@@ -1,4 +1,4 @@
-import { Fragment, useRef, useState, type MouseEvent } from 'react';
+import { useId, useRef, useState, type MouseEvent } from 'react';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { HookName } from '@salla.sa/twilight-theme-engine/types/hooks';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
@@ -10,40 +10,26 @@ import type { Product } from '@salla.sa/twilight-theme-engine/types';
 import { SallaRatingStars } from '@salla.sa/twilight-components-react/rating-stars';
 import { SallaSocialShare } from '@salla.sa/twilight-components-react/social-share';
 import { SallaInstallment } from '@salla.sa/twilight-components-react/installment';
-import { useHydrated } from '../../hooks/useHydrated';
-import { useMobileViewport } from '../../hooks/useMobileViewport';
 import { youtubeFacades } from '../../lib/descriptionVideos';
-import { ProductMetadata } from './ProductMetadata';
 import { WishlistHeartButton } from './WishlistHeartButton';
 
 interface ProductDetailsProps {
   product: Product;
-  /** Live SKU of the selected variant; defaults to `product.sku`. */
-  sku?: string | null;
-  /** Live barcode of the selected variant; defaults to `product.barcode`. */
-  barcode?: string | null;
-  showTags?: boolean;
 }
 
 /**
  * Theme fork of the engine `ProductDetails`.
  *
- * Differs from the engine version: the data-column blocks (title, SKU row,
- * availability, sold / remaining quantity) render flat: no `bg-white`, no
+ * Differs from the engine version: the data-column blocks (title,
+ * availability, sold / remaining quantity; SKU and barcode moved to
+ * `ProductInfoSection` in `AddToCartForm.tsx`) render flat: no `bg-white`, no
  * `rounded`, no card padding. The `.product-form` `gap` / element `mb`
  * classes control the vertical rhythm. The brand logo passes `objectFit="contain"`
  * to `<Image>` rather than an `object-contain` class, which the component's own
  * `object-cover` default overrides. Upgrade notes: `FORKS.md`.
  */
-export function ProductDetails({
-  product,
-  sku = product.sku,
-  barcode = product.barcode,
-  showTags = true,
-}: ProductDetailsProps) {
+export function ProductDetails({ product }: ProductDetailsProps) {
   const { t } = useTranslation();
-  const hydrated = useHydrated();
-  const isMobile = useMobileViewport();
 
   // Context for all product hooks - contains product data
   const productHookContext = { product };
@@ -69,9 +55,9 @@ export function ProductDetails({
 
       <div className="mb-2.5 flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-xl md:text-2xl leading-10 font-bold text-gray-800">{product.name}</h1>
+          <h1 className="text-4xl leading-10 font-bold text-gray-800">{product.name}</h1>
           {product.subtitle && (
-            <h2 className="product-entry__sub-title text-sm text-gray-500 leading-6 font-normal">
+            <h2 className="product-entry__sub-title text-lg text-gray-500 leading-6 font-normal">
               {product.subtitle}
             </h2>
           )}
@@ -89,63 +75,26 @@ export function ProductDetails({
 
       {product.rating && (
         <div className="product-details__rating">
+          {/* `SallaRatingStars` is a Stencil web component that defers hydration past
+              first paint, so its stars/count never reach the SSR HTML (GEO audit #5) —
+              the same numbers are already in the Product JSON-LD, but only as schema, not
+              as text a crawler reads directly. This repeats them as real text. */}
+          <span className="sr-only">
+            {t('pages.products.rating_summary', ':stars out of 5, :count reviews')
+              .replace(':stars', String(product.rating.stars))
+              .replace(':count', String(product.rating.count))}
+          </span>
           <SallaRatingStars value={product.rating.stars} reviews={product.rating.count} />
         </div>
       )}
 
       {product.is_taxable && (
-        <small className="color-grey">{t('pages.products.tax_included')}</small>
+        <small className="color-grey text-lg">{t('pages.products.tax_included')}</small>
       )}
 
       <ProductPrice product={product} />
 
-      <ProductDescription product={product} />
-
-      {/* Metadata / specs — mobile only. On `md`+ it renders under the gallery
-          slider instead (`ProductGallery`) — same hydration-gated mounting
-          there, so together the two never run two `<SallaMetadata>` instances
-          at once past first paint; see the comment on that copy. */}
-      {product.has_metadata && (!hydrated || isMobile) && (
-        <ProductMetadata className="mb-3 md:hidden" />
-      )}
-
-      {!!product.tags?.length && showTags && (
-        <div className="mb-3">
-          {product.tags.map((tag, index, tags) => (
-            <Fragment key={tag.name}>
-              <Link
-                to={tag.url}
-                className="rtl:ml-2 ltr:mr-2 inline-flex text-gray-500 hover:text-primary underline text-sm mb-1"
-              >
-                {tag.name}
-              </Link>
-              {index < tags.length - 1 && ','}
-            </Fragment>
-          ))}
-        </div>
-      )}
-
       <ProductQuantityInfo product={product} />
-
-      {sku && (
-        <div className="mb-4 flex justify-between sm:grid sm:grid-cols-3">
-          <div className="flex items-center">
-            <i className="sicon-barcode mx-1"></i>
-            {t('pages.products.sku')}
-          </div>
-          <div className="text-unicode">{sku}</div>
-        </div>
-      )}
-
-      {barcode && (
-        <div className="mb-4 flex justify-between sm:grid sm:grid-cols-3">
-          <div className="flex items-center">
-            <i className="sicon-barcode mx-1"></i>
-            {t('pages.products.barcode')}
-          </div>
-          <div className="text-unicode">{barcode}</div>
-        </div>
-      )}
 
       {product.show_availability && (
         <section className="mb-5 last:mb-0">
@@ -215,7 +164,7 @@ function ProductPrice({ product }: { product: Product }) {
       <div
         className={`${product.is_on_sale ? '' : 'hidden'} space-x-2 rtl:space-x-reverse whitespace-nowrap`}
       >
-        <p className="text-red-800 font-bold text-xl inline-block">
+        <p className="text-primary font-bold text-3xl inline-block">
           {product.sale_price} <CurrencySymbol currency={priceCurrency} />
         </p>
         <span className="text-gray-500 line-through">
@@ -224,7 +173,7 @@ function ProductPrice({ product }: { product: Product }) {
       </div>
       <div className={`gap-4 ${product.is_on_sale ? 'hidden' : 'flex'}`}>
         {product.starting_price && <span>{t('pages.products.starting_price')}</span>}
-        <p className="font-bold text-xl inline-block">
+        <p className="text-primary font-bold text-3xl inline-block">
           {product.starting_price ?? product.price} <CurrencySymbol currency={priceCurrency} />
         </p>
       </div>
@@ -244,12 +193,30 @@ function lazyIframes(html: string): string {
   );
 }
 
-function ProductDescription({ product }: { product: Product }) {
+interface ProductDescriptionProps {
+  product: Product;
+  /** Extra classes on the wrapper. */
+  className?: string;
+  /**
+   * Always the full text, ignoring the store's "read more" setting. Set
+   * inside the "Product Details" section of `ProductInfo`, which is already
+   * a collapsed panel, so a second click to read it would be redundant.
+   */
+  expanded?: boolean;
+}
+
+/**
+ * The product's description (merchant HTML). Rendered inside the "Product
+ * Details" section of {@link ProductInfo}. `useId` keeps the "read more" ids
+ * unique if more than one copy is ever on the page.
+ */
+export function ProductDescription({ product, className, expanded }: ProductDescriptionProps) {
   const { t } = useTranslation();
   const [isExpanded, setIsExpanded] = useState(false);
   const articleRef = useRef<HTMLElement>(null);
   // YouTube videos the shopper pressed play on; the rest stay thumbnails.
   const [playingVideos, setPlayingVideos] = useState<ReadonlySet<number>>(() => new Set());
+  const moreContentId = `${useId()}-more-content`;
 
   if (!product.description) return null;
 
@@ -267,13 +234,13 @@ function ProductDescription({ product }: { product: Product }) {
     setPlayingVideos((current) => new Set(current).add(index));
   };
 
-  if (product.has_read_more) {
+  if (product.has_read_more && !expanded) {
     return (
-      <div className="product__description leading-7 mb-3">
+      <div className={`product__description leading-7 mb-3${className ? ` ${className}` : ''}`}>
         <article
           ref={articleRef}
           className="article article--main relative leading-8 overflow-hidden transition-[max-height] duration-300 py-4 focus:outline-none"
-          id="more-content"
+          id={moreContentId}
           tabIndex={-1}
           style={{ maxHeight: isExpanded ? 'none' : '5.25rem' }}
           onClick={playVideo}
@@ -283,11 +250,10 @@ function ProductDescription({ product }: { product: Product }) {
             rather than dropping to the top of the page. */}
         <button
           type="button"
-          id="btn-show-more"
           aria-expanded={isExpanded}
-          aria-controls="more-content"
+          aria-controls={moreContentId}
           inert={isExpanded}
-          className={`link--primary inline-block mt-2 cursor-pointer bg-transparent border-0 p-0 ${isExpanded ? 'is-expanded' : ''}`}
+          className={`btn-show-more link--primary inline-block mt-2 cursor-pointer bg-transparent border-0 p-0 ${isExpanded ? 'is-expanded' : ''}`}
           onClick={() => {
             setIsExpanded(true);
             articleRef.current?.focus({ preventScroll: true });
@@ -300,7 +266,7 @@ function ProductDescription({ product }: { product: Product }) {
   }
 
   return (
-    <div className="product__description leading-7 mb-3">
+    <div className={`product__description leading-7 mb-3${className ? ` ${className}` : ''}`}>
       <article
         className="article--main pb-1"
         onClick={playVideo}
@@ -319,7 +285,7 @@ function ProductQuantityInfo({ product }: { product: Product }) {
   }
 
   return (
-    <div className="mb-5 inline-flex text-sm">
+    <div className="mb-5 inline-flex text-lg">
       {(product.sold_quantity ?? 0) > 0 && (
         <div className="px-4 only:px-0 !text-red-800">
           <i className="sicon-fire rtl:ml-1.5 ltr:mr-1.5"></i> {t('pages.products.sold')}{' '}

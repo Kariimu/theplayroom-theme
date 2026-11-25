@@ -5,6 +5,7 @@ import { getCdnImageSrcSet, getCdnImageUrl } from '@salla.sa/twilight-theme-engi
 import { parseSlideVideo, youtubeEmbedUrl } from '../../lib/slideVideo';
 import { useMotionAllowed } from '../../hooks/useMotionAllowed';
 import { useFirstInteraction } from '../../hooks/useFirstInteraction';
+import { resolveLink } from '../../lib/resolveLink';
 
 /** CDN widths for a full-width slide, from phones to wide desktops. */
 const SLIDE_WIDTHS = [640, 828, 1080, 1280, 1920] as const;
@@ -219,6 +220,7 @@ export function SlideVideo({ url, poster }: { url?: string; poster?: string }) {
 }
 
 function SlideText({ slide, poster }: { slide: SliderBanner; poster?: boolean }) {
+  const ctaUrl = resolveLink(slide.url) ?? resolveLink(slide.link);
   return (
     <div className="flex-center container py-16 sm:py-0 home-slider__content relative h-full">
       <div className="w-4/6 text-center md:w-7/12 lg:w-5/12 text-white">
@@ -235,10 +237,11 @@ function SlideText({ slide, poster }: { slide: SliderBanner; poster?: boolean })
             {slide.subtitle || slide.description}
           </p>
         )}
-        {/* A button text shows the button; legacy `slider_banner` data can still switch it off. */}
-        {slide.btnname?.trim() && slide.show_button !== false && (
+        {/* A button text shows the button; legacy `slider_banner` data can still switch it off.
+            No real URL: skip the button rather than render a dead `#` link. */}
+        {slide.btnname?.trim() && slide.show_button !== false && ctaUrl && (
           <Link
-            to={slide.url || slide.link || '#'}
+            to={ctaUrl}
             data-swiper-parallax="-100"
             className="home-slider__cta"
             // The poster is aria-hidden, so its copy stays out of the tab order. Both link
@@ -308,7 +311,7 @@ export const EnhancedSlider = memo(function EnhancedSlider({ data }: EnhancedSli
                 {slide.image && (
                   <img
                     {...slideImage(slide.image)}
-                    alt=""
+                    alt={slide.title || ''}
                     loading={index === 0 ? 'eager' : 'lazy'}
                     decoding="async"
                     className="absolute inset-0 w-full h-full object-cover object-center"
@@ -330,7 +333,7 @@ export const EnhancedSlider = memo(function EnhancedSlider({ data }: EnhancedSli
             >
               <img
                 {...slideImage(first.image)}
-                alt=""
+                alt={first.title || ''}
                 fetchPriority="high"
                 loading="eager"
                 decoding="async"

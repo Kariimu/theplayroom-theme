@@ -12,8 +12,37 @@ salla-slider{
       display: none;
     }
 
+    /* Thumbs render as plain light-DOM children until Stencil wraps them
+       post-hydration — hide the strip until then so it doesn't flash as an
+       unstyled stack of full-width images (any breakpoint). */
+    &:not(.hydrated) [slot='thumbs']{
+      @apply hidden;
+    }
+
+    /* Legacy's framed-card look: an 8px-padded, 24px-rounded outer shell,
+       transparent (no border) — the white/ring card below sits inset inside
+       it, with a soft primary-tinted drop shadow instead of a hard edge. */
     .s-slider-container{
-      @apply bg-white border-[1px] rounded;
+      padding: 8px;
+      border-radius: 24px;
+      background: transparent;
+      border: 0;
+    }
+
+    .s-slider-container .swiper-wrapper{
+      /* Swiper's own vendor CSS sets `box-sizing: content-box` on this
+         element — without overriding it back, this `padding` adds 8px on top
+         of Swiper's own computed `width` instead of eating into it, pushing
+         the wrapper 8px past the container's inline-start edge. */
+      box-sizing: border-box;
+      border-radius: 24px;
+      padding: 4px;
+      box-shadow: rgba(244, 126, 77, 0.2) 8px 8px !important;
+    }
+
+    .s-slider-container .swiper-wrapper a{
+      border-radius: 24px;
+      overflow: hidden;
     }
 
     .swiper-slide{
@@ -42,19 +71,14 @@ salla-slider{
       @apply hidden sm:flex;
     }
 
-    /* Desktop keeps the thumb strip; the auto-rendered dots are for mobile. */
+    /* The thumb strip now shows on every breakpoint (`ProductGallery`) —
+       Swiper's auto-rendered dot pagination is redundant everywhere. */
     .swiper-pagination{
       @apply hidden;
     }
 
-    /* Mobile: no thumbs — a frosted pill of dots over the image instead.
-       The active dot elongates. */
+    /* Mobile: flat, edge-to-edge images — no rounded corners / hairline frame. */
     @media (max-width: 767px){
-      .s-slider-thumbs{
-        @apply hidden;
-      }
-
-      /* flat, edge-to-edge images — no rounded corners / hairline frame */
       .s-slider-container,
       .swiper-slide,
       .swiper-slide img,
@@ -64,27 +88,6 @@ salla-slider{
 
       .swiper-slide{
         @apply ring-0;
-      }
-
-      .swiper-pagination.swiper-pagination-bullets{
-        @apply absolute inset-x-0 bottom-4 z-[3] mx-auto flex w-max items-center justify-center gap-1.5;
-        padding: 5px 12px;
-        border-radius: 9999px;
-        background: rgba(255, 255, 255, 0.6);
-        backdrop-filter: blur(4px);
-      }
-
-      .swiper-pagination-bullet{
-        @apply block h-1.5 w-1.5 rounded-full opacity-100;
-        margin: 0 !important;
-        background: rgba(0, 0, 0, 0.25);
-        transition:
-          width 0.25s ease,
-          background-color 0.25s ease;
-      }
-
-      .swiper-pagination-bullet-active{
-        @apply w-5 bg-gray-900;
       }
     }
   }

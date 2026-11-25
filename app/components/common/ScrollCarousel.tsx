@@ -17,6 +17,31 @@ export interface ScrollCarouselProps {
   nextLabel: string;
   /** Scroll forward one slide on a timer, back to the start at the end. Off by default. */
   autoPlay?: boolean;
+  /**
+   * Where the arrows go. `nav` (default): beside the heading, or in a bar under
+   * the row. `sides`: round white buttons over the row's left and right edges,
+   * vertically centred.
+   */
+  arrows?: 'nav' | 'sides';
+}
+
+/** Lucide chevrons for the `sides` arrows. */
+function Chevron({ side }: { side: 'left' | 'right' }) {
+  return (
+    <svg
+      width="24"
+      height="24"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d={side === 'left' ? 'm15 18-6-6 6-6' : 'm9 18 6-6-6-6'} />
+    </svg>
+  );
 }
 
 /** One slide and the gap after it. */
@@ -65,6 +90,49 @@ function readRail(el: HTMLElement): RailState {
   };
 }
 
+/**
+ * The `sides` arrows: a button on the row's left and right edge. The left one
+ * scrolls the row leftward, which is "next" in Arabic and "previous" in
+ * English; each is disabled at its own end.
+ */
+function SideArrows({
+  rtl,
+  atStart,
+  atEnd,
+  prevLabel,
+  nextLabel,
+  onPage,
+}: {
+  rtl: boolean;
+  atStart: boolean;
+  atEnd: boolean;
+  prevLabel: string;
+  nextLabel: string;
+  onPage: (dir: 1 | -1) => void;
+}) {
+  const leftDir = rtl ? 1 : -1;
+  const sides = [
+    { side: 'left' as const, dir: leftDir },
+    { side: 'right' as const, dir: -leftDir as 1 | -1 },
+  ];
+  return (
+    <>
+      {sides.map(({ side, dir }) => (
+        <button
+          key={side}
+          type="button"
+          className={`scroll-carousel__side-arrow scroll-carousel__side-arrow--${side}`}
+          aria-label={dir === 1 ? nextLabel : prevLabel}
+          disabled={dir === 1 ? atEnd : atStart}
+          onClick={() => onPage(dir as 1 | -1)}
+        >
+          <Chevron side={side} />
+        </button>
+      ))}
+    </>
+  );
+}
+
 /** How long each slide stays before {@link ScrollCarousel}'s `autoPlay` moves on. */
 const AUTO_PLAY_INTERVAL_MS = 5000;
 
@@ -83,6 +151,7 @@ export function ScrollCarousel({
   prevLabel,
   nextLabel,
   autoPlay = false,
+  arrows = 'nav',
 }: ScrollCarouselProps) {
   const { t } = useTranslation();
   const track = useRef<HTMLDivElement>(null);
@@ -91,9 +160,14 @@ export function ScrollCarousel({
   // that fits never flashes them and a row that scrolls doesn't move anything.
   const [rail, setRail] = useState<RailState | null>(null);
 
+  // The row's reading direction, for the `sides` arrows (left is "next" in RTL).
+  const [isRtl, setIsRtl] = useState(false);
+
   const sync = useCallback(() => {
     const el = track.current;
-    if (el) setRail(readRail(el));
+    if (!el) return;
+    setRail(readRail(el));
+    setIsRtl(forwardSign(el) === -1);
   }, []);
 
   useEffect(() => {
@@ -196,24 +270,36 @@ export function ScrollCarousel({
       {heading && (
         <div className="scroll-carousel__head">
           <div className="scroll-carousel__heading">{heading}</div>
-          {nav}
+          {arrows === 'nav' && nav}
         </div>
       )}
 
-      <div
-        ref={track}
-        className={['scroll-carousel__track hide-scroll', dragging && 'is-dragging', className]
-          .filter(Boolean)
-          .join(' ')}
-        onScroll={sync}
-        {...drag}
-      >
-        {children}
+      <div className={arrows === 'sides' ? 'scroll-carousel__stage' : undefined}>
+        <div
+          ref={track}
+          className={['scroll-carousel__track hide-scroll', dragging && 'is-dragging', className]
+            .filter(Boolean)
+            .join(' ')}
+          onScroll={sync}
+          {...drag}
+        >
+          {children}
+        </div>
+        {arrows === 'sides' && rail && !rail.fits && (
+          <SideArrows
+            rtl={isRtl}
+            atStart={rail.atStart}
+            atEnd={rail.atEnd}
+            prevLabel={prevLabel}
+            nextLabel={nextLabel}
+            onPage={page}
+          />
+        )}
       </div>
 
       <CarouselDots track={track} visible={rail?.visible ?? 1} progress={rail?.progress ?? 0} />
 
-      {!heading && nav && <div className="scroll-carousel__foot">{nav}</div>}
+      {arrows === 'nav' && !heading && nav && <div className="scroll-carousel__foot">{nav}</div>}
     </div>
   );
 }

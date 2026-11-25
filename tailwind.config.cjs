@@ -25,14 +25,19 @@ module.exports = {
   theme: {
     container: {
       center: true,
-      padding: '10px',
+      // Matches the live site: a 1280px cap (vs. Tailwind's default 1536px)
+      // left the page's side margins noticeably wider on large screens.
+      padding: '2rem',
       screens: {
-        '2xl': '1280px',
+        '2xl': '1536px',
       },
     },
     fontFamily: {
       sans: ['var(--font-main)', '-apple-system', 'BlinkMacSystemFont'],
       primary: 'var(--font-main)',
+      // The Playroom display font (self-hosted @font-face in 01-settings/fonts.scss);
+      // available as `font-dongol`, not applied globally.
+      dongol: ['Dongol', 'dongol', 'var(--font-main)', 'sans-serif'],
     },
     extend: {
       transitionTimingFunction: {
@@ -47,6 +52,18 @@ module.exports = {
         danger: '#AE0A0A',
         primary: 'var(--color-primary)',
         'primary-dark': 'var(--color-primary-dark)',
+        // The Playroom soft brand tints (hex so `/opacity` utilities work);
+        // mirrored as CSS vars in 01-settings/global.scss.
+        'brand-yellow-light': '#fdf1d3',
+        'brand-blue-light': '#e9edf2',
+        'brand-orange-light': '#feece5',
+        'brand-red-light': '#f9ebeb',
+        // Dark navy for big section headings, matching the reference demo's
+        // heading color (not the same as `dark`, which is near-black).
+        'brand-navy': '#2d3e50',
+        // The Playroom accent (star ratings, badges) — not merchant-configurable,
+        // unlike `primary`; a fixed brand color like the tints above.
+        accent: '#f5a623',
       },
       spacing: {
         3.75: '15px',

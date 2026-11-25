@@ -1,13 +1,18 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { Product } from '@salla.sa/twilight-theme-engine/routes/product';
-import type { ProductPageProps } from '@salla.sa/twilight-theme-engine/routes/product';
 import { ProductDetailSkeleton } from '@salla.sa/twilight-theme-engine/skeleton';
-import { withHead } from '@salla.sa/twilight-theme-engine/tanstack';
-import { ProductPage } from '../components/product/ProductPage';
+import { withHead, getTwilightContext } from '@salla.sa/twilight-theme-engine/tanstack';
+import { home } from '@salla.sa/twilight-theme-engine/api/home';
+import type { HomeComponentData } from '@salla.sa/twilight-theme-engine/types';
+import { ProductPage, type ProductPageWithFaq } from '../components/product/ProductPage';
 import { redirectHomeIfNotFound } from '../lib/productNotFound';
+import { faqJsonLdFromQuestions } from '../lib/faqJsonLd';
+import { resolveProductFaq } from '../lib/productFaq';
+import { devPreviewBlocks } from '../lib/homeBlocks';
+import { hasFeatureTags, productFeatures, type ProductFeature } from '../lib/productFeatures';
 
 export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
-  loader: async ({ params, preload }): Promise<ProductPageProps> => {
+  loader: async ({ params, preload }): Promise<ProductPageWithFaq> => {
     // Keep the product's own category trail instead of the page the visitor came from.
     try {
       if (typeof window !== 'undefined') {
@@ -17,19 +22,58 @@ export const Route = createFileRoute('/{-$locale}/$slug/p{$id}')({
       /* private mode */
     }
     try {
-      return await Product.loader({ params: { id: params.id }, locale: params.locale });
+      return await Product.loader(
+        { params: { id: params.id }, locale: params.locale },
+        async (data) => {
+          const { queryClient, locale } = getTwilightContext();
+          const [storeComponents, featureLibrary, previewComponents] = await Promise.all([
+            // Only feeds the FAQ and in-use blocks: a failed home-blocks fetch
+            // leaves them empty instead of breaking the whole product page.
+            queryClient
+              .ensureQueryData(home.queries.components())
+              .catch((): HomeComponentData[] => []),
+            // Only a product with a `feature-` tag pays for the blog lookup. A
+            // failed or missing library never breaks the product page.
+            hasFeatureTags(data.product.tags)
+              ? queryClient
+                  .ensureQueryData(productFeatures.queries.library(locale))
+                  .catch((): ProductFeature[] => [])
+              : Promise.resolve(undefined),
+            // `pnpm dev` only: the dev panel's home layout, when its overrides
+            // are on, so blocks added there (FAQ, in-use gallery) show here too.
+            devPreviewBlocks(),
+          ]);
+          const faqComponents = previewComponents ?? storeComponents;
+          return { faqComponents, featureLibrary };
+        }
+      );
     } catch (error) {
       // Hidden or deleted product: home page with a "Page not found" toast, not the 404 page.
       return redirectHomeIfNotFound(error, { locale: params.locale, preload });
     }
   },
-  head: withHead(Product),
+  head: withHead<ProductPageWithFaq>(Product, (result, ctx, data) => {
+    const existing = Array.isArray(result.jsonLd)
+      ? result.jsonLd
+      : result.jsonLd
+        ? [result.jsonLd]
+        : [];
+    const faq = result.canonical
+      ? faqJsonLdFromQuestions(
+          // The same questions ProductFaq shows: the product's own, else the store-wide list.
+          resolveProductFaq(data.faqComponents, data.product.tags).questions,
+          ctx.locale,
+          result.canonical
+        )
+      : undefined;
+    return faq ? { ...result, jsonLd: [...existing, faq] } : result;
+  }),
   pendingComponent: () => <ProductDetailSkeleton />,
   component: ProductComponent,
 });
 
 function ProductComponent() {
-  const data: ProductPageProps = Route.useLoaderData();
+  const data: ProductPageWithFaq = Route.useLoaderData();
   // Remount for each product so the previous product's state resets.
   return <ProductPage key={data.product.id} {...data} />;
 }

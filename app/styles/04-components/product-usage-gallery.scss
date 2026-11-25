@@ -1,0 +1,92 @@
+/* =========================================================================
+   Product in-use gallery (`ProductUsageGallery`): photo, title, description
+   per card, above the universal features. From `md` up it is the shared
+   `.scroll-carousel` row, three cards across. On phones the same track
+   becomes a one-column grid (image, title, description, next card): no
+   horizontal scroll, no dots.
+   ========================================================================= */
+
+.product-usage-gallery {
+  margin-block: 48px;
+
+  @media (min-width: 768px) {
+    margin-block: 64px;
+  }
+
+  /* Title centred across the whole section: the arrows (shown only when
+     there are more cards than fit) sit at the inline end, out of the flow,
+     so they never push the title off centre. */
+  .scroll-carousel__head {
+    position: relative;
+    justify-content: center;
+  }
+
+  .scroll-carousel__heading {
+    flex: 0 1 auto;
+    text-align: center;
+  }
+
+  .scroll-carousel__nav {
+    position: absolute;
+    inset-inline-end: 0;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &__heading {
+    @apply font-black text-gray-900;
+    font-size: 32px;
+    line-height: 1.25;
+  }
+
+  &__card {
+    margin: 0;
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+
+    @media (min-width: 768px) {
+      width: calc((100% - 2 * 1rem) / 3); /* md:gap-4 */
+    }
+
+    @media (min-width: 1024px) {
+      width: calc((100% - 2 * 1.5rem) / 3); /* lg:gap-6 */
+    }
+  }
+
+  &__image {
+    @apply block w-full rounded-2xl bg-gray-100 object-cover;
+    aspect-ratio: 1 / 1;
+    height: auto;
+  }
+
+  &__caption {
+    @apply mt-4 text-start;
+  }
+
+  &__title {
+    @apply text-xl font-black;
+    color: #222222;
+  }
+
+  &__desc {
+    @apply mt-1 text-lg;
+    color: #222222;
+  }
+
+  @media (max-width: 767px) {
+    .scroll-carousel__track.product-usage-gallery__track {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 2rem;
+      overflow: visible;
+      margin-inline: 0;
+      padding-inline: 0;
+      cursor: auto;
+      scroll-snap-type: none;
+    }
+
+    .carousel-dots {
+      display: none;
+    }
+  }
+}

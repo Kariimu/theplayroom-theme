@@ -1,72 +1,170 @@
 /*
-  Product listing (category) toolbar — a single rounded bar: filter show/hide at
-  the start, product count · grid/list switch · styled sort at the end.
-  Markup: app/components/product/ProductListPage.tsx
+  Category hero — the category's own image/description banner plus a
+  sub-category card row, above the toolbar. Markup: app/components/category/CategoryHero.tsx
 */
-.s-catalog-toolbar {
-  @apply mb-6 flex min-h-[3.25rem] flex-wrap items-center justify-between gap-x-3 gap-y-1 rounded-full border border-gray-200 bg-white px-3;
+.category-hero {
+  @apply container mb-6 flex flex-col gap-4;
+
+  &__banner {
+    @apply w-full rounded-lg bg-gray-100;
+  }
+
+  &__description {
+    @apply text-sm text-gray-500;
+  }
+
+  &__subcats {
+    @apply flex gap-4 overflow-x-auto pb-1;
+  }
+
+  &__subcat {
+    @apply flex shrink-0 flex-col items-center gap-2 text-center;
+    width: 4.5rem;
+
+    &-image {
+      @apply h-16 w-16 rounded-full bg-gray-100;
+    }
+
+    &-initial {
+      @apply flex h-16 w-16 items-center justify-center rounded-full bg-gray-100 text-lg font-bold text-gray-500;
+    }
+
+    &-name {
+      @apply line-clamp-2 text-xs font-medium text-gray-700;
+    }
+  }
+}
+
+/*
+  Merchant "Group-Value" tag filters (age range, color, skills…) — alongside
+  native `<salla-filters>` in the same sidebar/bottom sheet. Markup:
+  app/components/product/TagGroupFilters.tsx
+*/
+.tag-group-filters {
+  @apply mt-6 rounded-2xl p-4;
+  background-color: #feece54d;
+  color: #222222;
+
+  /* First in the filter column now that the native filters are off. */
+  &:first-child {
+    margin-top: 0;
+  }
+
+  &__head {
+    @apply mb-3 flex items-center justify-between;
+  }
+
+  /* Headers 18px, values 16px, all #222222 (owner request). */
+  &__title {
+    @apply font-bold;
+    font-size: 18px;
+    color: #222222;
+  }
+
+  &__clear {
+    @apply text-xs font-bold text-primary hover:underline;
+  }
 
   &__group {
-    @apply flex items-center;
+    @apply mb-5 border-b border-gray-100 pb-5 last:mb-0 last:border-b-0 last:pb-0;
   }
 
-  /* pushes the options group to the far end when there is no filter group */
+  &__group-title {
+    @apply mb-3 font-bold;
+    font-size: 18px;
+    color: #222222;
+  }
+
   &__options {
-    @apply ms-auto divide-x rtl:divide-x-reverse divide-gray-200;
+    @apply flex flex-col gap-3;
   }
 
-  &__filters {
-    @apply gap-1;
-  }
+  &__option {
+    @apply flex cursor-pointer items-center gap-3;
+    font-size: 16px;
+    color: #222222;
 
-  &__views {
-    @apply flex items-center gap-1 px-3;
+    /* A square checkbox in the store colour (the theme's `rounded` is 16px,
+       which made the old 16px box a circle): a tinted outline, filled with
+       a white tick when checked. */
+    input {
+      @apply relative m-0 shrink-0 cursor-pointer;
+      appearance: none;
+      width: 20px;
+      height: 20px;
+      border: 2px solid color-mix(in oklab, var(--color-primary) 45%, transparent);
+      border-radius: 6px;
+      background-color: #fff;
+      /* No @tailwindcss/forms tick image: the ::after below draws ours. */
+      background-image: none;
+      transition:
+        background-color 0.15s ease,
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
 
-    button {
-      @apply inline-flex h-8 w-8 items-center justify-center rounded text-gray-400 transition-colors hover:text-gray-700;
-
-      svg {
-        @apply h-[18px] w-[18px];
+      &::after {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background-color: #fff;
+        mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='black' stroke-width='3.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M5 12.5l4.5 4.5L19 7.5'/%3E%3C/svg%3E")
+          center / 14px 14px no-repeat;
+        transform: scale(0);
+        transition: transform 0.15s ease;
       }
 
-      &[aria-pressed='true'] {
-        @apply bg-gray-100 text-gray-900;
+      &:hover {
+        border-color: var(--color-primary);
+      }
+
+      &:checked {
+        border-color: var(--color-primary);
+        background-color: var(--color-primary);
+        background-image: none;
+
+        &::after {
+          transform: scale(1);
+        }
+      }
+
+      &:focus-visible {
+        outline: none;
+        box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary) 30%, transparent);
       }
     }
   }
+}
 
-  &__sort {
-    /* raw `cursor: pointer` — the `.cursor-pointer` utility also sets
-       `pointer-events: none` on every child (common.scss), which would stop the
-       overlaid <select> from opening. */
-    @apply relative flex items-center gap-1.5 whitespace-nowrap px-4 text-sm text-gray-700;
-    cursor: pointer;
+/* The listing's title (category name), 36px. */
+.s-catalog-title {
+  @apply mb-4 font-bold;
+  font-size: 36px;
+  line-height: 1.25;
+}
+
+/*
+  Phones only: the Filters pill that opens the filter sheet (the old toolbar
+  with sort and the grid/list switch was removed). Markup:
+  app/components/product/ProductListPage.tsx (`MobileFiltersButton`)
+*/
+.s-catalog-filters-button {
+  @apply inline-flex h-10 items-center gap-2 rounded-full border bg-white py-1 pe-4 ps-1 text-[18px] font-bold transition-colors;
+  border-color: color-mix(in oklab, var(--color-primary) 25%, transparent);
+  color: #222222;
+
+  /* The icon in a round store-colour tint, like the home labels' pills. */
+  &__icon {
+    @apply flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-primary;
+    background-color: color-mix(in oklab, var(--color-primary) 10%, transparent);
 
     svg {
-      @apply h-4 w-4 shrink-0 text-gray-400;
-    }
-
-    select {
-      @apply absolute inset-0 h-full w-full opacity-0;
-      cursor: pointer;
-      pointer-events: auto;
+      @apply h-[18px] w-[18px];
     }
   }
 
-  &__filters-toggle {
-    @apply h-9 items-center gap-2 rounded-full px-3 text-sm font-medium text-gray-700 transition-colors hover:bg-gray-100;
-
-    svg {
-      @apply h-[18px] w-[18px] text-gray-400;
-    }
-  }
-
-  &__filters-trigger {
-    @apply inline-flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100;
-
-    svg {
-      @apply h-5 w-5;
-    }
+  &:hover,
+  &:focus-visible {
+    background-color: color-mix(in oklab, var(--color-primary) 6%, white);
   }
 }
 
@@ -84,6 +182,18 @@
     &:last-child {
       @apply border-b-0;
     }
+  }
+
+  /* Hidden per owner request: the per-group heading ("Price", "Category", …)
+     inside the native filters widget. The checkboxes/options below it stay. */
+  .s-filters-widget-title {
+    display: none;
+  }
+
+  /* Hidden per owner request: the search box the native widget adds above a
+     filter group with more than 5 options. */
+  .s-filters-widget-search-wrapper {
+    display: none;
   }
 }
 
@@ -123,44 +233,28 @@
   }
 }
 
-/* Phones: the toolbar pins under the sticky title bar (`.mobile-page-title`,
-   3rem) once it reaches it, slides out of view while the page scrolls down and
+/* Phones: the Filters bar pins under the pinned site header (56px; its `top` is
+   set inline by `ProductListPage.tsx`, 0 when the sticky header is off) once
+   it reaches it, slides out of view while the page scrolls down and
    back in when it scrolls up. `ProductListPage.tsx` (`MobileStickyToolbar`)
-   sets `is-stuck` / `is-hidden`. Its white band keeps the products from
-   showing behind the bar; its padding is taken back with a negative top
+   sets `is-stuck` / `is-hidden`. Its band (the page background) keeps the
+   products from showing behind the bar; its padding is taken back with a negative top
    margin, so in its own place the layout is unchanged. */
 @media (max-width: 767px) {
   .s-catalog-toolbar-sticky {
-    @apply sticky z-20 -mx-2.5 -mt-2 mb-4 bg-white px-2.5;
-    top: calc(var(--app-safe-area-top, 0px) + 3rem);
+    @apply sticky z-20 -mx-2.5 -mt-2 mb-4 px-2.5;
+    /* The page's own background, so the bar blends in (and still hides the
+       products scrolling behind it). */
+    background-color: var(--body-bg, #fcf9f5);
+    top: calc(var(--app-safe-area-top, 0px) + 3.5rem);
     transition:
       transform 0.25s ease,
       box-shadow 0.25s ease;
 
-    /* No rounded box on phones: the filter button and grid/list switch at the
-       start, the sort (and count) at the end. The options group is unwrapped
-       so its items can sit on either side. */
-    .s-catalog-toolbar {
-      @apply mb-0 flex-nowrap rounded-none border-0 px-0;
-      /* A slimmer bar than the desktop's 3.25rem: the 32px view buttons plus 6px
-         above and below. */
-      min-height: 2.75rem;
-    }
-
-    /* its divider lines went with the items it separated */
-    .s-catalog-toolbar__options {
-      @apply divide-x-0;
-      display: contents;
-    }
-
-    .s-catalog-toolbar__views {
-      @apply order-1 px-0;
-      margin-inline-end: auto;
-    }
-
-    .s-catalog-toolbar__sort {
-      @apply order-3 px-0;
-    }
+    /* The bar around the Filters pill: same 2.75rem height as before. */
+    display: flex;
+    align-items: center;
+    min-height: 2.75rem;
 
     &.is-stuck {
       @apply shadow-sm;

@@ -1,0 +1,109 @@
+/* =========================================================================
+   Product information: four collapsible sections under the add-to-cart form
+   (Product Details, Specifications, Assembly, Shipping & Returns), from
+   `app/components/product/ProductInfo.tsx`. Native `<details>`; all closed
+   on load. Reference: the avenlur.com product page.
+
+   Headers keep the look of the old facts accordion (20px bold #222222, navy
+   chevron); a thin line separates the sections, like the reference.
+   ========================================================================= */
+
+.product-info {
+  @apply mt-6 text-start;
+
+  &__item {
+    border-bottom: 1px solid #e5e7eb;
+
+    &:first-child {
+      border-top: 1px solid #e5e7eb;
+    }
+  }
+
+  &__summary {
+    @apply flex cursor-pointer select-none list-none items-center justify-between gap-3 py-4;
+
+    &::-webkit-details-marker {
+      display: none;
+    }
+
+    &:focus-visible {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+  }
+
+  &__title {
+    @apply font-bold;
+    font-size: 20px;
+    line-height: 1.4;
+    color: #222222;
+  }
+
+  &__chevron {
+    @apply h-4 w-4 shrink-0 text-brand-navy transition-transform duration-200;
+  }
+
+  &__body {
+    @apply flex flex-col gap-5 pb-5 text-lg leading-relaxed text-slate-600;
+  }
+
+  /* the description already has its own article spacing */
+  &__description {
+    @apply mb-0;
+
+    .article--main {
+      @apply pb-0;
+    }
+  }
+
+  &__group {
+    @apply flex flex-col gap-2;
+  }
+
+  &__group-title {
+    @apply m-0 text-lg font-bold;
+    color: #222222;
+  }
+
+  /* a labelled field: label, then value, side by side from `sm` */
+  &__row {
+    @apply flex flex-col gap-0.5 sm:flex-row sm:gap-3;
+  }
+
+  &__label {
+    @apply shrink-0 font-bold sm:w-40;
+    color: #222222;
+  }
+
+  &__value {
+    @apply min-w-0;
+    overflow-wrap: anywhere;
+  }
+
+  &__text {
+    overflow-wrap: anywhere;
+  }
+
+  &__list {
+    @apply m-0 flex list-none flex-col gap-1 p-0;
+
+    li {
+      @apply flex items-start gap-2;
+    }
+  }
+
+  &__check {
+    @apply mt-1.5 h-4 w-4 shrink-0 text-brand-navy;
+  }
+
+  &__link {
+    @apply font-bold underline underline-offset-4;
+    color: var(--color-primary);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__chevron {
+      transition: none;
+    }
+  }
+}

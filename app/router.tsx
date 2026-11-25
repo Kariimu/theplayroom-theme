@@ -6,28 +6,16 @@ import {
   registerHomeComponentConfig,
   DefaultHomeComponents,
 } from '@salla.sa/twilight-theme-engine/routes/home';
-import { SliderSkeleton } from '@salla.sa/twilight-components-react';
+import { ProductsListSkeleton, SliderSkeleton } from '@salla.sa/twilight-components-react';
 import { routeTree } from './routeTree.gen';
-import {
-  Brands,
-  CustomTestimonials,
-  EnhancedSlider,
-  FeaturedProducts,
-  featuredProductsConfig,
-  FixedProducts,
-  LatestProducts,
-  MainLinks,
-  PhotosSlider,
-  ProductsSlider,
-  SliderProductsWithHeader,
-  EnhancedSquareBanners,
-} from './components/home';
-import { Blog } from './components/home/Blog';
-import {
-  FeaturedProductsSpecialOffer,
-  FeaturedProductsWithSpecialProduct,
-} from './components/home/FeaturedProducts';
-import { PhotosSliderWithText } from './components/home/PhotosSliderWithText';
+// `ProductsSlider` is reused directly by the product page (`ProductPage.tsx`,
+// `SuggestedGames.tsx`), so lazy-loading it here wouldn't save anything there
+// — every other home block below is registry-only and gets `lazyHomeBlock`.
+// Imported from their own files, not the `./components/home` barrel: importing
+// through the barrel pulls every sibling export's module graph in too.
+import { ProductsSlider } from './components/home/ProductsSlider';
+import { featuredProductsConfig } from './components/home/FeaturedProducts';
+import { lazyHomeBlock } from './components/home/lazyHomeBlock';
 import { registerThemeHooks } from './hooks';
 import { ProductListSkeleton } from './components/product/ProductListSkeleton';
 
@@ -35,11 +23,116 @@ const ProductListPage = lazy(() =>
   import('./components/product/ProductListPage').then((m) => ({ default: m.ProductListPage }))
 );
 
+// Stage 11 performance audit: these were static imports from the `./components/home`
+// barrel, which every route paid for through `router.tsx` — confirmed as a ~580KB
+// "shared" chunk loaded on the product/cart/account pages too, none of which render a
+// home block. Each import below targets its own file (not the barrel), so Vite splits
+// it into its own chunk, fetched only when that block is actually registered on a page.
+const BannerSection = lazyHomeBlock(() =>
+  import('./components/home/BannerSection').then((m) => ({ default: m.BannerSection }))
+);
+const Brands = lazyHomeBlock(() =>
+  import('./components/home/Brands').then((m) => ({ default: m.Brands }))
+);
+const CommonQuestionsSection = lazyHomeBlock(() =>
+  import('./components/home/CommonQuestionsSection').then((m) => ({
+    default: m.CommonQuestionsSection,
+  }))
+);
+const CustomBrandsSection = lazyHomeBlock(() =>
+  import('./components/home/CustomBrandsSection').then((m) => ({ default: m.CustomBrandsSection }))
+);
+const CustomTestimonials = lazyHomeBlock(() =>
+  import('./components/home/CustomTestimonials').then((m) => ({ default: m.CustomTestimonials }))
+);
+const EnhancedSlider = lazyHomeBlock(() =>
+  import('./components/home/EnhancedSlider').then((m) => ({ default: m.EnhancedSlider }))
+);
+const EnhancedSquareBanners = lazyHomeBlock(() =>
+  import('./components/home/EnhancedSquareBanners').then((m) => ({
+    default: m.EnhancedSquareBanners,
+  }))
+);
+const FeaturedProducts = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({ default: m.FeaturedProducts }))
+);
+const FeaturedProductsSpecialOffer = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({
+    default: m.FeaturedProductsSpecialOffer,
+  }))
+);
+const FeaturedProductsWithSpecialProduct = lazyHomeBlock(() =>
+  import('./components/home/FeaturedProducts').then((m) => ({
+    default: m.FeaturedProductsWithSpecialProduct,
+  }))
+);
+const Features2Section = lazyHomeBlock(() =>
+  import('./components/home/Features2Section').then((m) => ({ default: m.Features2Section }))
+);
+const FeaturesSection = lazyHomeBlock(() =>
+  import('./components/home/FeaturesSection').then((m) => ({ default: m.FeaturesSection }))
+);
+const FixedProducts = lazyHomeBlock(() =>
+  import('./components/home/FixedProducts').then((m) => ({ default: m.FixedProducts }))
+);
+const GallerySection = lazyHomeBlock(() =>
+  import('./components/home/GallerySection').then((m) => ({ default: m.GallerySection }))
+);
+const InstagramSection = lazyHomeBlock(() =>
+  import('./components/home/InstagramSection').then((m) => ({ default: m.InstagramSection }))
+);
+const LatestProducts = lazyHomeBlock(() =>
+  import('./components/home/LatestProducts').then((m) => ({ default: m.LatestProducts }))
+);
+const MainLinks = lazyHomeBlock(() =>
+  import('./components/home/MainLinks').then((m) => ({ default: m.MainLinks }))
+);
+const ModernBannerSection = lazyHomeBlock(() =>
+  import('./components/home/ModernBannerSection').then((m) => ({ default: m.ModernBannerSection }))
+);
+const PhotosSlider = lazyHomeBlock(() =>
+  import('./components/home/PhotosSlider').then((m) => ({ default: m.PhotosSlider }))
+);
+const PhotosSliderWithText = lazyHomeBlock(() =>
+  import('./components/home/PhotosSliderWithText').then((m) => ({
+    default: m.PhotosSliderWithText,
+  }))
+);
+const ProductsSection = lazyHomeBlock(() =>
+  import('./components/home/ProductsSection').then((m) => ({ default: m.ProductsSection }))
+);
+const ReelsSection = lazyHomeBlock(() =>
+  import('./components/home/ReelsSection').then((m) => ({ default: m.ReelsSection }))
+);
+const ReviewsSection = lazyHomeBlock(() =>
+  import('./components/home/ReviewsSection').then((m) => ({ default: m.ReviewsSection }))
+);
+const ShoppingSection = lazyHomeBlock(() =>
+  import('./components/home/ShoppingSection').then((m) => ({ default: m.ShoppingSection }))
+);
+const SliderProductsWithHeader = lazyHomeBlock(() =>
+  import('./components/home/SliderProductsWithHeader').then((m) => ({
+    default: m.SliderProductsWithHeader,
+  }))
+);
+const Blog = lazyHomeBlock(() =>
+  import('./components/home/Blog').then((m) => ({ default: m.Blog }))
+);
+
 // Register theme-level hooks (AddProductToast, DigitalFilesSettings, etc.)
 registerThemeHooks();
 
 registry.register('product:list-page', ProductListPage);
 registry.register('product:list-skeleton', ProductListSkeleton);
+
+// NOTE: we deliberately do NOT register `product:card`. The theme `ProductCard`
+// wraps the engine `ProductCard`, which itself resolves `product:card` from the
+// registry — registering the wrapper makes it re-resolve to itself and recurse
+// infinitely (freezes the page when a product list mounts; the recipe warns
+// "do not render the engine card inside your override"). The theme card is used
+// directly in the home blocks (FeaturedProducts etc.), which is safe. A global
+// override would need a from-scratch card (no engine-card wrap); the forked list
+// page (`ProductListPage`) imports the theme card directly instead.
 
 registerHomeComponents({
   ...DefaultHomeComponents,
@@ -77,12 +170,37 @@ registerHomeComponents({
   'slider-products-with-header': SliderProductsWithHeader,
   'enhanced-square-banners': EnhancedSquareBanners,
   blog: Blog,
+  'banner-section': BannerSection,
+  'features-section': FeaturesSection,
+  'features2-section': Features2Section,
+  'common-questions-section': CommonQuestionsSection,
+  'products-section': ProductsSection,
+  'shopping1-section': ShoppingSection,
+  'custom-brands-section': CustomBrandsSection,
+  'reviews-section': ReviewsSection,
+  'gallery-section': GallerySection,
+  'modern-banner-section': ModernBannerSection,
+  'reels-section': ReelsSection,
+  'instagram-section': InstagramSection,
+  // Data-only block: it holds the product page's in-use gallery cards
+  // (`app/lib/productUsageGallery.ts`) and draws nothing on the home page.
+  // Registered so the engine doesn't show its "Unknown component" fallback.
+  'product-usage-gallery': () => null,
+  // Data-only block: the gallery category page's photos and videos
+  // (`app/lib/galleryPage.ts`); draws nothing on the home page.
+  'gallery-page': () => null,
+  // Data-only block: per-product FAQ questions (`app/lib/productFaq.ts`).
+  'product-faq': () => null,
 });
 
 // Wrapper `<section>` classes for `featured-products` — the engine only styles
 // the literal `styleN` values; this covers the semantic `view_style`s too.
-// `custom-testimonials` gets `s-block--full-bg` so the gray band runs edge-to-edge.
 registerHomeComponentConfig({
+  // The data-only in-use gallery block: a hidden, zero-height shell, so the
+  // engine's lazy wrapper doesn't reserve its default 400px on the home page.
+  'product-usage-gallery': { className: 'hidden', height: '0px', placeholder: null },
+  'gallery-page': { className: 'hidden', height: '0px', placeholder: null },
+  'product-faq': { className: 'hidden', height: '0px', placeholder: null },
   'featured-products': featuredProductsConfig,
   'featured-products-special-offer': featuredProductsConfig,
   'featured-products-special-product': featuredProductsConfig,
@@ -91,8 +209,62 @@ registerHomeComponentConfig({
     className: 's-block s-block--blog s-block--full-bg',
     height: 'clamp(480px, 45vw, 660px)',
   },
+  // A single `image_desktop` (640×427) or `image_mobile` (1200×300) banner, no
+  // slider — same ratio-based clamp idea as the slider entries below, sized to
+  // the container (not the full viewport) since the image sits in `.container`.
+  'banner-section': {
+    height: 'clamp(140px, 30vw, 427px)',
+  },
+  // A row of up to 4 icon+title items, 2 per row on phones, on the page
+  // background, with a section heading above it.
+  'features-section': {
+    height: 'clamp(200px, 26vw, 300px)',
+  },
+  // Up to 3 larger feature cards (icon, title, description), on the page
+  // background — a horizontal-scroll row on phones, a 3-col grid on desktop.
+  'features2-section': {
+    height: 'clamp(240px, 28vw, 330px)',
+  },
+  // A collapsed accordion of up to 15 Q&As; closed-row height × a handful visible.
+  'common-questions-section': {
+    height: '400px',
+  },
+  'products-section': {
+    height: '450px',
+    placeholder: <ProductsListSkeleton />,
+  },
+  // A 2–5 column card grid, up to 10 image+title+subtitle tiles.
+  'shopping1-section': {
+    height: 'clamp(280px, 40vw, 420px)',
+  },
+  // A logo row (grid or marquee), one line of ~100px-tall logos.
+  'custom-brands-section': {
+    height: '140px',
+  },
+  // A centered rating number, heading, description and CTA.
+  'reviews-section': {
+    height: '220px',
+  },
+  // Up to 5 photo tiles (2–5 columns), square on phones, portrait on desktop.
+  'gallery-section': {
+    height: 'clamp(260px, 36vw, 420px)',
+  },
+  // Header + a 16:9/21:9 banner with hotspots + a feature grid + a WhatsApp footer.
+  'modern-banner-section': {
+    height: 'clamp(560px, 70vw, 900px)',
+  },
+  // A 9:16 video card (220px wide, 280px from md) plus its product row and
+  // the heading: ~560px on phones, ~690px on desktop.
+  'reels-section': {
+    height: 'clamp(560px, 50vw, 690px)',
+    placeholder: <SliderSkeleton />,
+  },
+  // Boxed, no background band, no vertical padding of its own — matches the
+  // reference demo's native reviews container exactly (`s-reviews-container`:
+  // transparent, 0 padding, just `max-w-4xl mx-auto` and the generic block
+  // top-margin everything else gets).
   'custom-testimonials': {
-    className: 's-block s-block--custom-testimonials s-block--full-bg',
+    className: 's-block s-block--custom-testimonials',
   },
   // Lazy placements (blocks 4+): reserve the loaded blocks' height and show the
   // same SliderSkeleton the SSR path shows (sized in home-blocks.scss), not the
@@ -110,7 +282,7 @@ registerHomeComponentConfig({
     placeholder: <SliderSkeleton />,
     // Keeps the engine entry's merge classes; theme config replaces, not merges.
     className: (data) => {
-      const mergeWithTop = data.merge_links_with_top_component;
+      const mergeWithTop = data.merge_with_top_component;
       return [
         's-block',
         's-block--main-links',
@@ -138,6 +310,10 @@ registerHomeComponentConfig({
     placeholder: <SliderSkeleton />,
     className: (data) =>
       `s-block s-block--photos-slider-with-text${data.in_container ? ' s-block--photos-slider-with-text-boxed' : ''}`,
+  },
+  // Profile header + a 2–5 column post grid, up to 20 square tiles.
+  'instagram-section': {
+    height: 'clamp(480px, 60vw, 760px)',
   },
 });
 

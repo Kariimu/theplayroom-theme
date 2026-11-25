@@ -1,5 +1,13 @@
 /*
   Block Title
+
+  `shopping1-section`, `gallery-section` and `products-section` style their own
+  big centered/start-aligned `<h2>` + `<p>` directly (matching the reference
+  demo's large section headers) and so deliberately don't carry this class on
+  their title wrapper: `.s-block__title h2`/`p` below are descendant selectors
+  and would out-specificity any single utility class those components set,
+  silently shrinking their headers back to this generic size regardless of
+  source order.
 */
 .s-block {
   &__title {
@@ -82,7 +90,7 @@
 
 .s-block--enhanced-slider .s-skeleton-slider-image {
   height: auto !important;
-  aspect-ratio: 4 / 3; /* EnhancedSlider's slide ratio, below */
+  aspect-ratio: 16 / 9; /* EnhancedSlider's slide ratio, below */
 
   @media (min-width: 640px) {
     aspect-ratio: 12 / 5;
@@ -361,9 +369,10 @@
     }
   }
 
-  /* Tabs only: five in a row on desktop, three on tablets. */
+  /* Tabs only: four in a row on desktop (matches the engine's native
+     products-list default), three on tablets. */
   .s-products-list-wrapper.s-products-list-vertical-cards {
-    @apply md:grid-cols-3 lg:grid-cols-5 lg:gap-6;
+    @apply md:grid-cols-3 lg:grid-cols-4 lg:gap-6;
   }
 
   /* Special offer: the title at the start and compact tabs at the end of one
@@ -885,8 +894,12 @@
 }
 
 
+/* One gap between every home section: 40px on phones, 64px from `md` up.
+   Blocks on the page background add no vertical padding of their own, so
+   this margin is the whole gap; only a block with its own coloured band
+   (brands' white strip, full-bg blocks) pads inside that band. */
 .s-block {
-  @apply mt-8 sm:mt-16;
+  @apply mt-10 md:mt-16;
 
   &:first-of-type {
     @apply mt-5;
@@ -985,10 +998,11 @@
 }
 
 /*
-  Fixed Products Grid
+  Fixed Products Grid — four columns, matching the engine's native
+  `<salla-products-list>` default (the old theme never overrides this).
 */
 .s-products-list-wrapper.s-products-list-vertical-cards {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1rem;
 
   @media (max-width: 767px) {
@@ -1121,9 +1135,15 @@
   }
 
   /* Slides (and the SSR poster): 12:5 is too short on a phone for the title,
-     the description and the arrows, so phones get 4:3. */
+     the description and the arrows, so phones get a taller box — but the
+     merchant's hero art is shot at 12:5 (confirmed against the reference
+     site: the live hero image's own natural ratio matches its container to
+     a fraction of a percent, i.e. no `object-fit: cover` cropping at all).
+     4:3 was too tall a jump from that: `object-cover` was cropping away
+     nearly half the image's width, reading as "zoomed in". 16:9 keeps most
+     of the width while still giving noticeably more height than 12:5. */
   .swiper-slide {
-    aspect-ratio: 4 / 3;
+    aspect-ratio: 16 / 9;
 
     @media (min-width: 640px) {
       aspect-ratio: 12 / 5;
@@ -1225,11 +1245,12 @@
 }
 
 /*
-  Custom testimonials — full-width gray band around a row of whole cards.
-  Markup: app/components/home/CustomTestimonials.tsx
+  Custom testimonials — boxed, transparent, no padding of its own: matches the
+  reference demo's native reviews container (`s-reviews-container`) exactly,
+  not a gray band. Markup: app/components/home/CustomTestimonials.tsx
 */
 .s-block--custom-testimonials {
-  @apply bg-gray-50 py-10 lg:py-16 overflow-hidden;
+  @apply overflow-hidden;
 }
 
 /*
@@ -1241,69 +1262,203 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   display: none;
 }
 
+/* Customer reviews, as the old theme's `custom-testimonials` (measured on the
+   live site): one review at a time in a 896px stage, cross-fading in place,
+   an orange chevron on each side, orange dots below. Markup:
+   `common/TestimonialsCarousel.tsx`. */
 .s-testimonials {
-  &__title {
-    @apply text-xl font-bold text-gray-900 lg:text-2xl;
-  }
+  @apply max-w-4xl;
+}
 
-  &__desc {
-    @apply mt-1 text-sm text-gray-500;
+.s-testimonials__stage {
+  @apply relative pt-10;
+}
+
+/* Every slide in the same grid cell: the stage is as tall as the longest
+   review, so changing slides never moves the page. */
+.s-testimonials__slides {
+  @apply grid;
+}
+
+.s-testimonials__slide {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity 0.3s ease,
+    visibility 0.3s;
+
+  &.is-active {
+    opacity: 1;
+    visibility: visible;
   }
 }
 
-/* Three whole cards on desktop, and any fewer share the row between them. */
+.s-testimonials__arrow {
+  @apply absolute top-1/2 z-[1] grid h-10 w-10 place-items-center text-[#f47e4d] transition-opacity;
+
+  svg {
+    @apply h-8 w-8;
+  }
+
+  &:disabled {
+    @apply cursor-default opacity-35;
+  }
+}
+
+/* Prev at the reading start (right in Arabic), next at the end; each chevron
+   points outward. */
+.s-testimonials__arrow--prev {
+  inset-inline-start: 0;
+
+  svg {
+    @apply ltr:rotate-90 rtl:-rotate-90;
+  }
+}
+
+.s-testimonials__arrow--next {
+  inset-inline-end: 0;
+
+  svg {
+    @apply ltr:-rotate-90 rtl:rotate-90;
+  }
+}
+
+.s-testimonials__dots {
+  @apply mt-4 flex justify-center gap-4;
+}
+
+.s-testimonials__dot {
+  @apply h-2 w-2 rounded-full bg-[#f3c6b6] opacity-50 transition;
+
+  &.is-active {
+    @apply bg-[#f47e4d] opacity-100;
+  }
+}
+
 .testimonial-card {
-  @apply m-0 flex flex-col gap-4 rounded-2xl border border-gray-100 bg-white p-5 lg:p-7;
-  flex: 1 0 calc(100% - 2.5rem);
-  scroll-snap-align: start;
+  @apply m-0 p-0;
 
-  @media (min-width: 640px) {
-    flex-basis: calc((100% - 1rem) / 2);
-  }
-
-  @media (min-width: 1024px) {
-    flex-basis: calc((100% - 3rem) / 3);
-  }
-
-  &__head {
-    @apply flex items-center justify-between gap-3;
+  /* 768px of text, leaving room for the arrows at the sides. */
+  &__inner {
+    @apply mx-auto flex max-w-3xl cursor-pointer flex-col items-center px-10 text-center md:px-0;
   }
 
   &__quote {
-    @apply h-5 w-auto shrink-0 text-primary lg:h-6;
+    @apply mb-4 h-[60px] w-20;
+  }
+
+  &__text {
+    @apply m-0 mb-8 text-xl font-medium leading-7 text-[#4a6b8a] md:text-2xl md:leading-8;
   }
 
   &__stars {
-    @apply inline-flex shrink-0 gap-0.5;
+    @apply inline-flex shrink-0 gap-3;
 
     svg {
-      @apply h-4 w-4 fill-current text-gray-200 lg:h-[18px] lg:w-[18px];
+      @apply h-4 w-4 fill-current text-gray-300;
 
       &.is-on {
-        @apply text-amber-400;
+        @apply text-[#fbbf24];
       }
     }
   }
 
-  &__text {
-    @apply m-0 flex-1 text-base leading-7 text-gray-800 line-clamp-5;
+  &__inner > &__stars {
+    @apply mb-4;
   }
 
   &__person {
-    @apply flex items-center gap-3 rtl:text-right ltr:text-left;
+    @apply mb-2 flex items-center justify-center gap-1.5;
   }
 
   &__name {
-    @apply min-w-0 truncate text-sm font-bold text-gray-900;
+    @apply text-lg font-bold text-[#4a6b8a];
   }
 
-  &__avatar {
-    @apply h-11 w-11 shrink-0 rounded-full bg-gray-100 object-cover;
+  &__verified {
+    @apply h-4 w-4 shrink-0 text-green-600;
+  }
 
-    &.is-initial {
-      @apply inline-flex items-center justify-center font-bold text-primary;
+  &__view-photo {
+    @apply mt-1 text-xs text-gray-400 underline transition-colors duration-200 hover:text-primary;
+  }
+
+  &__photo {
+    @apply aspect-video w-full rounded-2xl bg-gray-100 object-cover;
+  }
+}
+
+/* The review in full (the old theme's `salla-modal`, width md): a bottom sheet
+   on phones, a centred rounded dialog from `md` up. */
+.testimonial-sheet {
+  .bottom-sheet__head {
+    @apply border-b px-6 py-4;
+  }
+
+  .bottom-sheet__body {
+    @apply p-6;
+  }
+
+  @media (min-width: 768px) {
+    @apply rounded-3xl;
+    inset: auto;
+    top: 50%;
+    left: 50%;
+    width: min(600px, 92vw);
+    max-height: 90vh;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.96);
+    transition:
+      transform 0.3s ease,
+      opacity 0.3s ease;
+
+    .bottom-sheet-root.is-open & {
+      opacity: 1;
+      transform: translate(-50%, -50%);
+    }
+
+    .bottom-sheet__handle {
+      display: none;
     }
   }
+}
+
+.testimonial-sheet__person {
+  @apply flex items-center gap-3;
+
+  .testimonial-card__stars {
+    @apply mt-1 gap-1;
+  }
+}
+
+.testimonial-sheet__avatar {
+  @apply flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full;
+  background-color: color-mix(in srgb, var(--color-primary) 20%, transparent);
+
+  img {
+    @apply h-full w-full object-cover;
+  }
+}
+
+.testimonial-sheet__name {
+  @apply block font-bold text-gray-900;
+}
+
+.testimonial-details__text {
+  @apply mb-6 text-lg leading-relaxed text-gray-900;
+}
+
+.testimonial-details__photos {
+  @apply space-y-4;
+}
+
+.testimonial-details__photos-title {
+  @apply font-bold text-gray-900;
+}
+
+.testimonial-details__verified {
+  @apply mt-6 flex items-center gap-2 font-medium text-green-600;
 }
 
 /*
@@ -1312,6 +1467,45 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   and the product page's "similar products". Each block sets its slide widths. On
   phones the row runs on past the container to the screen's edge.
 */
+
+/* `ScrollCarousel` with `arrows="sides"`: round white buttons over the row's
+   left and right edges, vertically centred on it. */
+/* Reels, as the old theme: each slide is exactly its video card (220px,
+   280px from `md`), 16px apart at every size. Not the products row's
+   percentage slides, which left each reel in a box wider than its video. */
+.scroll-carousel__track.reels-track {
+  gap: 1rem;
+}
+
+.reels-slide {
+  flex: 0 0 auto;
+  scroll-snap-align: start;
+}
+
+.scroll-carousel__stage {
+  @apply relative;
+}
+
+.scroll-carousel__side-arrow {
+  @apply absolute top-1/2 z-10 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full bg-white/80 text-primary shadow-lg transition-opacity;
+
+  svg {
+    @apply h-6 w-6;
+  }
+
+  &--left {
+    @apply left-2;
+  }
+
+  &--right {
+    @apply right-2;
+  }
+
+  &:disabled {
+    @apply cursor-default opacity-40;
+  }
+}
+
 .scroll-carousel {
   &__head {
     @apply mb-4 flex items-center gap-4 lg:mb-6;
@@ -1410,6 +1604,17 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
 @media (max-width: 767px) {
   .scroll-carousel__nav,
   .scroll-carousel__foot {
+    display: none;
+  }
+}
+
+/*
+  Instagram section — the phone post pager (app/components/home/InstagramSection.tsx)
+  uses the round side arrows (`arrows="sides"`, as the reels row), so it
+  drops the dots every other `ScrollCarousel` row shows on phones.
+*/
+@media (max-width: 767px) {
+  .instagram-section__pager .carousel-dots {
     display: none;
   }
 }
@@ -1715,4 +1920,21 @@ salla-reviews:not(:has(.s-reviews-swiper-slide)) {
   &__excerpt {
     @apply mt-2 text-sm leading-relaxed text-gray-500 line-clamp-2 lg:mt-3 lg:text-base;
   }
+}
+
+/* custom-brands-section: a continuous logo strip. The track is the brand list
+   twice (CustomBrandsSection.tsx); animating exactly half its width loops it
+   seamlessly. Only animated when motion is allowed — otherwise it's a plain
+   scrollable row. */
+@keyframes custom-brands-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+.custom-brands-marquee__track--animated {
+  animation: custom-brands-marquee 30s linear infinite;
 }

@@ -8,13 +8,14 @@ import { useTwilight } from '@salla.sa/twilight-theme-engine/providers';
 import { useTranslation } from '@salla.sa/twilight-theme-engine/i18n';
 import { HookSlot } from '@salla.sa/twilight-theme-engine/hooks';
 import { Image } from '@salla.sa/twilight-theme-engine/common';
-import { MapPinIcon, SearchIcon, ShoppingBagIcon } from '../icons';
+import { MapPinIcon } from '../icons';
 import { useAppSafeAreaTop } from '../../hooks/useAppSafeAreaTop';
 import { useNavHasContent } from '../../hooks/useNavHasContent';
 import { HOME_ROUTE_ID, PRODUCT_ROUTE_ID } from '../../lib/routeIds';
 import { HeaderMainMenu } from './HeaderMainMenu';
 import { HeaderNav } from './HeaderNav';
 import { HeaderTopnav } from './HeaderTopnav';
+import { LanguageSwitcher } from './LanguageSwitcher';
 import { PageAdvertisements } from './PageAdvertisements';
 
 /** Opens the Salla search modal (the `<SallaSearch />` at the end of the header). */
@@ -22,9 +23,56 @@ const openSearch = () => window.salla?.event?.dispatch('search::open');
 
 const openScopes = () => window.salla?.event?.dispatch('scopes::open');
 
+/**
+ * Opens the side cart drawer (`<CartDrawer />`, mounted at `body:end`), D4 —
+ * same `window.salla.event` convention as `search::open`/`scopes::open`, kept
+ * as a literal (not a shared import) so the header doesn't pull in the cart
+ * component tree just for an event name; `CartDrawer.tsx` listens for the
+ * same string.
+ */
+const openCartDrawer = () => window.salla?.event?.dispatch('theme::cart-drawer.open');
+
 // What the component will render: <salla-social> skips WhatsApp.
 const hasSocialLinks = (social?: object) =>
   Object.entries(social ?? {}).some(([key, value]) => Boolean(value) && key !== 'whatsapp');
+
+/** The old theme's header icons (Lucide, 1px stroke). */
+function MenuIcon() {
+  return (
+    <svg
+      className="site-header__menu-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <line x1="4" x2="20" y1="12" y2="12" />
+      <line x1="4" x2="20" y1="6" y2="6" />
+      <line x1="4" x2="20" y1="18" y2="18" />
+    </svg>
+  );
+}
+
+function SearchGlassIcon() {
+  return (
+    <svg
+      className="site-header__search-icon"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <circle cx="11" cy="11" r="8" />
+      <path d="m21 21-4.3-4.3" />
+    </svg>
+  );
+}
 
 /** Search trigger — opens the Salla search modal via the `search::open` event. */
 function SearchButton({ label }: { label: string }) {
@@ -35,7 +83,7 @@ function SearchButton({ label }: { label: string }) {
       aria-label={label}
       onClick={openSearch}
     >
-      <SearchIcon aria-hidden="true" />
+      <SearchGlassIcon />
     </button>
   );
 }
@@ -58,20 +106,48 @@ function ScopeButton({ label }: { label: string }) {
   );
 }
 
+/**
+ * Wraps `<SallaCartSummary>` to open the cart drawer instead of following its
+ * link straight to `/cart` — on a plain left-click only, so ctrl/cmd/middle
+ * click and "open in new tab" still work normally. Delegated on a wrapping
+ * `<div>` rather than passed as `onClick` to the web-component wrapper itself:
+ * the component renders its own light-DOM `<a>` ({@link SallaCartSummary}'s
+ * source), and a native click on it bubbles through this div either way, so
+ * this doesn't depend on whether that generated wrapper forwards arbitrary
+ * DOM props.
+ */
+function CartSummaryTrigger() {
+  const handleClick = (event: React.MouseEvent) => {
+    if (!(event.target as HTMLElement).closest('a')) return;
+    if (event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) {
+      return;
+    }
+    event.preventDefault();
+    openCartDrawer();
+  };
+
+  return (
+    <div className="header-action site-header__cart-trigger" onClick={handleClick}>
+      {/* The old theme's cart: Salla's own `sicon-cart` glyph. */}
+      <SallaCartSummary>
+        <i slot="icon" className="header-btn__icon icon sicon-cart" aria-hidden="true" />
+      </SallaCartSummary>
+    </div>
+  );
+}
+
 /** Store name, description and social links, under the main bar. The store's
  *  phone and email are in the footer, under its description. */
-function HeaderIntro({ isHomePage }: { isHomePage: boolean }) {
+function HeaderIntro() {
   const { store } = useTwilight();
-  // The page's `<h1>` on home. `isHomePage` is the route match, which the server
-  // and the client agree on (unlike `useIsHome()`, e.g. on a 404), so the `<h1>`
-  // is in the SSR HTML without a hydration mismatch.
-  const Title = isHomePage ? 'h1' : 'p';
   const hasSocial = hasSocialLinks(store?.social);
 
   return (
     <div className="site-header__intro">
       <div className="container site-header__intro-inner">
-        <Title className="site-header__intro-title">{store?.name}</Title>
+        {/* Not the page's `<h1>`: the home page always has its own real one now
+            (`app/routes/index.tsx`, SEO audit #2). */}
+        <p className="site-header__intro-title">{store?.name}</p>
         {store?.description && (
           <div
             className="site-header__intro-text"
@@ -106,8 +182,8 @@ function HeaderIntro({ isHomePage }: { isHomePage: boolean }) {
  * hook slots are kept for installed apps.
  *
  * The drawer's open state can be lifted: pass `navOpen` + `onNavOpenChange` and
- * the header renders controlled (ThemeLayout does this so the mobile bottom bar
- * shares the same drawer). Left unset, the header owns the state itself.
+ * the header renders controlled (ThemeLayout does this so it can close the drawer
+ * on route changes). Left unset, the header owns the state itself.
  */
 interface HeaderProps {
   navOpen?: boolean;
@@ -151,7 +227,9 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
     !isDefaultLayout &&
     introSettings?.header_show_store_info === true &&
     (introSettings?.header_store_info_home_only === false || isHomePage);
-  const BrandName = isHomePage && !showIntro ? 'h1' : 'span';
+  // Not `isHomePage`-conditional: the home page always has its own real `<h1>`
+  // now (`app/routes/index.tsx`, SEO audit #2), so this is never the page's h1.
+  const BrandName = 'span';
   // Marker in the flow, right where the main bar sits. The bar pins once this
   // scrolls out the top of the viewport (see below).
   const stickySentinelRef = useRef<HTMLDivElement>(null);
@@ -235,20 +313,15 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
               {navHasContent && (
                 <button
                   type="button"
-                  className="header-action"
+                  className="header-action site-header__menu-btn"
                   aria-label={t('blocks.header.main_menu', 'Menu')}
                   aria-expanded={navOpen}
                   onClick={() => setNavOpen(true)}
                 >
-                  {/* CSS burger — staggered bars that even out on hover/focus
-                      (styles: header.scss `.site-header__burger`). */}
-                  <span className="site-header__burger" aria-hidden="true">
-                    <span />
-                    <span />
-                    <span />
-                  </span>
+                  <MenuIcon />
                 </button>
               )}
+              <LanguageSwitcher />
             </div>
 
             <a className="site-header__brand" href={store?.url || '/'}>
@@ -273,21 +346,20 @@ export function Header({ navOpen: navOpenProp, onNavOpenChange }: HeaderProps = 
               </nav>
             )}
 
+            {/* Old theme order: search, account, cart. */}
             <div className="site-header__actions">
+              <SearchButton label={searchLabel} />
               <SallaUserMenu avatarOnly showHeader relativeDropdown className="header-action" />
               {store?.scope && (
                 <ScopeButton label={store.scope.name || t('blocks.header.branches', 'Branches')} />
               )}
-              <SallaCartSummary className="header-action">
-                <ShoppingBagIcon slot="icon" aria-hidden="true" />
-              </SallaCartSummary>
-              <SearchButton label={searchLabel} />
+              <CartSummaryTrigger />
             </div>
           </div>
         </div>
       </div>
 
-      {showIntro && <HeaderIntro isHomePage={isHomePage} />}
+      {showIntro && <HeaderIntro />}
 
       <HeaderNav open={navOpen} onClose={() => setNavOpen(false)} />
 

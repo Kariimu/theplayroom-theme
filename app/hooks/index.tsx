@@ -1,7 +1,8 @@
 import { hookRegistry, HookName, type HookContext } from '@salla.sa/twilight-theme-engine/hooks';
 import type { Product } from '@salla.sa/twilight-theme-engine/types';
-import { AddProductToast } from '../components/cart';
+import { AddProductToast, CartDrawer } from '../components/cart';
 import { DigitalFilesSettings } from '../components/product';
+import { FloatingWhatsApp } from '../components/layout/FloatingWhatsApp';
 
 export function registerThemeHooks() {
   // Register AddProductToast at body:end hook slot. Default on (twilight.json
@@ -14,6 +15,24 @@ export function registerThemeHooks() {
       return <AddProductToast />;
     },
     50
+  );
+
+  // Side cart drawer (D4) — always mounted, opens on the header cart icon's
+  // `theme::cart-drawer.open` event.
+  hookRegistry.register(HookName.BODY_END, () => <CartDrawer />, 45);
+
+  // Floating WhatsApp button after the footer, when `show_whatsapp` is on
+  // (old theme's `.wa-float-btn`). Number from the `whatsapp_number` setting.
+  hookRegistry.register(
+    HookName.BODY_END,
+    (context: HookContext) => {
+      const settings = context.twilight?.theme?.settings as
+        | { show_whatsapp?: boolean; whatsapp_number?: string | number }
+        | undefined;
+      if (!settings?.show_whatsapp) return null;
+      return <FloatingWhatsApp number={settings.whatsapp_number} />;
+    },
+    40
   );
 
   // Register DigitalFilesSettings at product:single.description hook slot

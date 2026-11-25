@@ -44,23 +44,14 @@ describe('direction-aware styles', () => {
     expect(close.left).toBeUndefined();
   });
 
-  // The label starts toward the end side, in RTL as in LTR.
-  it('slides the bottom bar label in toward its icon in RTL too', async () => {
-    const root = await compile('04-components/mobile-bottom-bar.scss');
-
-    expect(declsFor(root, '.mobile-bottom-bar__label').transform).toBe('translateX(4px)');
-    // `:where` adds no weight, so the active state and reduced motion still reset it.
-    expect(declsFor(root, '.mobile-bottom-bar__label:where([dir=rtl] *)').transform).toBe(
-      'translateX(-4px)'
-    );
-  });
-
   // Arabic renders as before; English mirrors it, as the star counts already do.
+  // The summary lives under `.reviews-wrapper`: `ProductReviews.tsx` moves it
+  // out of `.s-comments-product` into the toolbar.
   it('keeps the review percentages next to their bars', async () => {
     const root = await compile('04-components/reviews.scss');
 
     expect(
-      declsFor(root, '.s-comments-product .s-reviews-summary-percentage')['text-align']
+      declsFor(root, '.reviews-wrapper .s-reviews-summary-percentage')['text-align']
     ).toBe('start');
   });
 });

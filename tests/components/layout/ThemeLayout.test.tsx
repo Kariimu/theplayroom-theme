@@ -22,13 +22,6 @@ vi.mock('@salla.sa/twilight-theme-engine/hooks/useUser', () => ({
 }));
 vi.mock('../../../app/components/layout/Footer', () => ({ Footer: () => <footer /> }));
 vi.mock('../../../app/components/layout/Header', () => ({ Header: () => null }));
-vi.mock('../../../app/components/layout/ImportantLinksSheet', () => ({
-  ImportantLinksSheet: () => null,
-}));
-vi.mock('../../../app/components/layout/MobileAccountSheet', () => ({
-  MobileAccountSheet: () => null,
-}));
-vi.mock('../../../app/components/layout/MobileBottomBar', () => ({ MobileBottomBar: () => null }));
 vi.mock('../../../app/components/layout/MobilePageTitleBar', () => ({
   MobilePageTitleBar: () => null,
 }));
