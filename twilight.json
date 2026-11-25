@@ -1,8 +1,8 @@
 {
     "type": "react",
     "name": {
-        "en": "Theplayroom_react",
-        "ar": "Theplayroom_react"
+        "ar": "Theplayroom_react",
+        "en": "Theplayroom_react"
     },
     "repository": "https://github.com/Kariimu/theplayroom-theme",
     "author_email": "karmezt123@gmail.com",
@@ -5087,9 +5087,9 @@
             ]
         }
     ],
-    "support_url": null,
+    "support_url": "https://theplayroom.sa/ar",
     "description": {
-        "en": "",
-        "ar": ""
+        "ar": "",
+        "en": ""
     }
 }
